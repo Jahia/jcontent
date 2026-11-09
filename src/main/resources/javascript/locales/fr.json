@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Edition rapide"
         },
-        "show": "Afficher l'aperçu"
+        "show": "Afficher l'aperçu",
+        "viewport": "{{width}} px ({{percent}} %)"
       },
       "rename": "Renommer",
       "workInProgress": "Travail en cours: {{wipLang}} (propriétés communes exclues)",
@@ -180,6 +181,7 @@
         "title": "Arborescence"
       },
       "browsePages": "Parcourir les pages",
+      "browseSamples": "Parcourir les exemples",
       "refresh": "Rafraîchir",
       "listColumns": {
         "createdBy": "Créé par",
@@ -201,11 +203,26 @@
         "asXml": "Exporter sous forme de fichier XML",
         "exportDetails": "Exporté sous forme de fichier zip par défaut"
       },
+      "copyToSamples": {
+        "action": "Enregistrer comme exemple",
+        "savedAsPage": "Page enregistrée dans Exemples / Pages.",
+        "savedAsComponent": "Contenu enregistré dans Exemples / Composants.",
+        "failed": "L'exemple n'a pas pu être enregistré.",
+        "existsTitle": "Cet exemple existe déjà",
+        "existsText": "Un exemple nommé « {{name}} » est déjà enregistré ici. Le remplacer par le contenu actuel ?",
+        "replace": "Remplacer",
+        "scopeTitle": "Enregistrer comme exemple",
+        "scopeText": "Ce contenu a des enfants. Que doit contenir l’exemple ?",
+        "scopeWithChildren": "Ce contenu et ses enfants",
+        "scopeItemOnly": "Ce contenu uniquement",
+        "save": "Enregistrer"
+      },
       "navigation": {
         "savedSearches": "Recherches sauvegardées",
         "workflow": "Workflow",
         "media": "Médias",
         "pages": "Pages",
+        "samples": "Exemples",
         "contentFolders": "Dossiers de contenu",
         "forms": "Formulaires",
         "apps": {
@@ -659,6 +676,16 @@
       "pageTitle": "Catégories"
     },
     "contentEditor": {
+      "samples": {
+        "selectType": "Sélectionnez un type de contenu pour en voir un exemple.",
+        "noSample": "Aucun exemple n'est encore disponible pour ce type de contenu sur ce site.",
+        "cannotRender": "Cet exemple ne peut pas être prévisualisé : ce site n'a aucune page permettant de l'afficher.",
+        "useSample": "Utiliser l'exemple",
+        "createEmpty": "Créer un contenu vide",
+        "pageTemplatesGroup": "Modèles",
+
+        "pageSamplesGroup": "Exemples de pages"
+      },
       "create": {
         "title": "Créer {{type}}",
         "createButton": {

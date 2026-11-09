@@ -47,6 +47,9 @@
         <canSeeAdvancedOptionsTab jcr:primaryType="jnt:permission"/>
         <setContentLimitsOnAreas jcr:primaryType="jnt:permission"/>
     </contentEditor>
+    <contentSamples jcr:primaryType="jnt:permission">
+        <samplesAccordionAccess jcr:primaryType="jnt:permission"/>
+    </contentSamples>
     <site-admin jcr:primaryType="jnt:permission">
         <tagManager jcr:primaryType="jnt:permission"/>
     </site-admin>

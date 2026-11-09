@@ -1,0 +1,95 @@
+export const SAMPLES_FOLDER_NAME = 'samples';
+export const SAMPLES_FOLDER_TYPE = 'jnt:samplesFolder';
+export const SAMPLES_CATEGORY_TYPE = 'jnt:samplesCategory';
+
+export const SAMPLES_PAGES_NAME = 'pages';
+export const SAMPLES_COMPONENTS_NAME = 'components';
+
+/**
+ * Path of a site's samples branch, where every content sample of that site lives.
+ *
+ * @param {string} sitePath - path of the site, e.g. /sites/digitall
+ * @returns {string} - path of the samples branch
+ */
+export const getSamplesPath = sitePath => `${sitePath}/${SAMPLES_FOLDER_NAME}`;
+
+/**
+ * Which of the two categories a sample belongs to.
+ *
+ * The node type decides, so saving a sample never asks the author where to put it - that question
+ * was the whole complaint about the first version of this flow.
+ *
+ * @param {boolean} isPage - whether the node being saved is a page
+ * @returns {string} - name of the category node
+ */
+export const getSampleCategoryName = isPage => (isPage ? SAMPLES_PAGES_NAME : SAMPLES_COMPONENTS_NAME);
+
+/**
+ * Path of the category a sample of this kind is stored in.
+ *
+ * @param {string} sitePath - path of the site
+ * @param {boolean} isPage - whether the node being saved is a page
+ * @returns {string} - path of the category node
+ */
+export const getSampleCategoryPath = (sitePath, isPage) =>
+    `${getSamplesPath(sitePath)}/${getSampleCategoryName(isPage)}`;
+
+/**
+ * The site a path belongs to, which is what scopes the samples branch: samples are per-site,
+ * because the same content type is laid out differently from one site's template set to the next.
+ *
+ * @param {string} path - any JCR path
+ * @returns {string|null} - the site path, or null when the path is not inside a site
+ */
+export const getSitePath = path => /^(\/sites\/[^/]+)(\/.*)?$/.exec(path)?.[1] ?? null;
+
+/**
+ * The page whose rendering supplies the CSS a sample preview is dressed in.
+ *
+ * A sample renders on its own as a module, which returns its markup but collects no stylesheet, so
+ * the preview fetches a page alongside it purely for the <link> tags in its head. Any page of the
+ * site will do; integrators wanting a neutral frame can point this at a dedicated showcase template.
+ *
+ * @param {string} [homePagePath] - the site's home page, used when nothing is configured
+ * @returns {string|undefined} - the page to take CSS from
+ */
+export const getSamplesPreviewPagePath = homePagePath => {
+    const configured = contextJsParameters.config.jcontent?.['samples.previewPagePath'];
+    return configured?.trim() ? configured.trim() : homePagePath;
+};
+
+/**
+ * Check whether a path sits in a site's content samples branch (/sites/<site>/samples).
+ *
+ * Samples are never published - the branch root is a jnt:samplesFolder and therefore jmix:nolive,
+ * which drops the whole subtree out of publication. The sample pages *under* it are ordinary
+ * jnt:page nodes though, so anything that keys off the nolive mixin alone still sees them as
+ * publishable; that is what this path check covers.
+ *
+ * @param {string} path - JCR path to test
+ * @returns {boolean} - True if the path is the samples root or anything below it
+ */
+export const isSamplePath = path => {
+    return /^\/sites\/[^/]+\/samples((\/.*)|$)/.test(path);
+};
+
+/**
+ * Whether a node is a sample that previews as a component, i.e. everything under the samples branch
+ * except the sample pages, which render as ordinary pages and carry their own CSS.
+ *
+ * @param {object} node - node with { path, isPage }
+ * @returns {boolean} - true for a component sample
+ */
+export const isSampleContent = node => Boolean(node?.path) && isSamplePath(node.path) && !node.isPage;
+
+/**
+ * Whether a node is previewable because it is a sample.
+ *
+ * jContent does not preview pages, folders or content folders in the side panel - a page is read in
+ * Page Builder instead. A sample page is the exception: it is kept precisely to be looked at, and
+ * there is nothing else in the Samples accordion to look at it with.
+ *
+ * @param {object} node - node with { path }
+ * @returns {boolean} - true for anything inside the samples branch
+ */
+export const isSampleNode = node => Boolean(node?.path) && isSamplePath(node.path);

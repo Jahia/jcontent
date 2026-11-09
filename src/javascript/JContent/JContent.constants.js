@@ -55,6 +55,7 @@ const JContentConstants = /** @type {const} */ ({
         contentFolderAccordionAccess: 'contentFolderAccordionAccess',
         mediaAccordionAccess: 'mediaAccordionAccess',
         additionalAccordionAccess: 'additionalAccordionAccess',
+        samplesAccordionAccess: 'samplesAccordionAccess',
         formAccordionAccess: 'formAccordionAccess'
     },
     tableView: {

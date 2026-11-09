@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
-import {ellipsizeText, getLanguageLabel, isMarkedForDeletion, uppercaseFirst} from '../JContent.utils';
+import {ellipsizeText, getLanguageLabel, isMarkedForDeletion, isSamplePath, uppercaseFirst} from '../JContent.utils';
 import * as _ from 'lodash';
 import {useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -11,7 +11,7 @@ import {isDefinitelyHidden} from './utils/nodeVisibilityUtils';
 
 function checkAction(res, node, publishType, isPublishingAllLanguages) {
     let enabled = true;
-    let isVisible = res.checksResult && node.operationsSupport.publication;
+    let isVisible = res.checksResult && node.operationsSupport.publication && !isSamplePath(node.path);
 
     if (publishType === 'unpublish') {
         isVisible = isVisible &&

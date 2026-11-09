@@ -7,6 +7,7 @@ import {
     isDescendant,
     isPageBuilderContent,
     isPageBuilderNode,
+    isSamplePath,
     JahiaRenderedModulesUtil,
     toNamedPlaceholders,
     removeFileExtension,
@@ -548,5 +549,31 @@ describe('resolveEffectiveSite', () => {
         expect(result.isSharedContext).toBe(false);
         expect(result.switchHost).toBe(false);
         expect(result.effectiveSite).toBe(node.site);
+    });
+});
+
+describe('isSamplePath', () => {
+    it('should match the samples root and its descendants', () => {
+        expect(isSamplePath('/sites/digitall/samples')).toBe(true);
+        expect(isSamplePath('/sites/digitall/samples/components')).toBe(true);
+        expect(isSamplePath('/sites/digitall/samples/components/hero-1')).toBe(true);
+    });
+
+    it('should not match content outside the samples branch', () => {
+        expect(isSamplePath('/sites/digitall/home')).toBe(false);
+        expect(isSamplePath('/sites/digitall/contents')).toBe(false);
+        expect(isSamplePath('/sites/digitall')).toBe(false);
+    });
+
+    it('should not match a sibling whose name merely starts with samples', () => {
+        expect(isSamplePath('/sites/digitall/samples-archive')).toBe(false);
+    });
+
+    it('should not match a samples folder nested deeper in a site', () => {
+        expect(isSamplePath('/sites/digitall/home/samples')).toBe(false);
+    });
+
+    it('should be false for a missing path rather than throwing', () => {
+        expect(isSamplePath(undefined)).toBe(false);
     });
 });

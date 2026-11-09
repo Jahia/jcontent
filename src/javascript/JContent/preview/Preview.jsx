@@ -4,6 +4,7 @@ import {Paper} from '@material-ui/core';
 import {Button, Maximize, Minimize} from '@jahia/moonstone';
 import styles from './Preview.scss';
 import {PreviewFetcher} from './PreviewFetcher';
+import {supportsViewport, useViewportScale, ViewportFrame, ViewportSelector} from './viewport';
 
 /**
  * Shared Preview shell.
@@ -19,6 +20,10 @@ import {PreviewFetcher} from './PreviewFetcher';
  *   onFullScreenToggle   — optional; renders fullscreen button when provided
  *   onRefetchReady       — (refetch) => void — wire to caller's refetch bus (Decision #4)
  *   onRefetchInvalidated — () => void (Decision #4)
+ *   hasViewportSelector  — render the preview at a chosen viewport width, scaled to fit the pane.
+ *                          Left unset, it follows the node: on for rendered content, off for a file or
+ *                          a folder, where a full-width render gains nothing and the control would
+ *                          just be noise. Pass a boolean to override.
  *   header               — optional React node rendered above the preview (badges, info, etc.)
  *   footer               — optional React node rendered below the preview (name/size card, etc.)
  */
@@ -30,9 +35,12 @@ export const Preview = ({
     onFullScreenToggle = null,
     onRefetchReady = null,
     onRefetchInvalidated = null,
+    hasViewportSelector = null,
     header = null,
     footer = null
 }) => {
+    const {viewportWidth, setViewportWidth, frameRef, frameSize, scale, scaleFor} = useViewportScale();
+    const isViewportSelectorShown = hasViewportSelector ?? supportsViewport(nodeData);
     const [useFallback, setUseFallback] = useState(false);
     const [shouldDisplay, setShouldDisplay] = useState(false);
 
@@ -55,9 +63,16 @@ export const Preview = ({
 
     return (
         <Paper className={styles.previewShell}>
-            {(header || onFullScreenToggle) && (
+            {(header || onFullScreenToggle || isViewportSelectorShown) && (
                 <div className={styles.header}>
                     <div>{header}</div>
+                    {isViewportSelectorShown && (
+                        <ViewportSelector
+                            scaleFor={scaleFor}
+                            viewportWidth={viewportWidth}
+                            onChange={setViewportWidth}
+                        />
+                    )}
                     {onFullScreenToggle && (
                         <Button
                             data-sel-role="preview-fullscreen-toggle"
@@ -69,17 +84,30 @@ export const Preview = ({
                     )}
                 </div>
             )}
-            {shouldDisplay && (
-                <PreviewFetcher
-                    key={useFallback ? 'fallback' : 'primary'}
-                    isFullScreen={isFullScreen}
-                    nodeData={nodeData}
-                    previewContext={activeContext}
-                    onContentNotFound={handleContentNotFound}
-                    onRefetchInvalidated={onRefetchInvalidated}
-                    onRefetchReady={onRefetchReady}
-                />
-            )}
+            {shouldDisplay && (() => {
+                const fetcher = (
+                    <PreviewFetcher
+                        key={useFallback ? 'fallback' : 'primary'}
+                        isFullScreen={isFullScreen}
+                        nodeData={nodeData}
+                        previewContext={activeContext}
+                        onContentNotFound={handleContentNotFound}
+                        onRefetchInvalidated={onRefetchInvalidated}
+                        onRefetchReady={onRefetchReady}
+                    />
+                );
+
+                return isViewportSelectorShown ? (
+                    <ViewportFrame
+                        frameRef={frameRef}
+                        frameSize={frameSize}
+                        scale={scale}
+                        viewportWidth={viewportWidth}
+                    >
+                        {fetcher}
+                    </ViewportFrame>
+                ) : fetcher;
+            })()}
             {footer}
         </Paper>
     );
@@ -95,6 +123,7 @@ Preview.propTypes = {
     onFullScreenToggle: PropTypes.func,
     onRefetchReady: PropTypes.func,
     onRefetchInvalidated: PropTypes.func,
+    hasViewportSelector: PropTypes.bool,
     header: PropTypes.node,
     footer: PropTypes.node
 };

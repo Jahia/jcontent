@@ -13,7 +13,8 @@
           "metadata": "Metadata",
           "quickEdit": "Quick Edit"
         },
-        "show": "Show Preview"
+        "show": "Show Preview",
+        "viewport": "{{width}} px ({{percent}}%)"
       },
       "rename": "Rename",
       "workInProgress": "Work in progress: {{wipLang}} (excluding non-localized properties)",
@@ -184,6 +185,7 @@
         "title": "Tree"
       },
       "browsePages": "Browse Pages",
+      "browseSamples": "Browse Samples",
       "refresh": "Refresh",
       "listColumns": {
         "createdBy": "Created By",
@@ -205,11 +207,26 @@
         "asXml": "Export as an XML file",
         "exportDetails": "Exported as a zip file by default"
       },
+      "copyToSamples": {
+        "action": "Save as sample",
+        "savedAsPage": "Page saved in Samples / Pages.",
+        "savedAsComponent": "Content saved in Samples / Components.",
+        "failed": "The sample could not be saved.",
+        "existsTitle": "This sample already exists",
+        "existsText": "A sample named \"{{name}}\" is already saved here. Replace it with the current content?",
+        "replace": "Replace",
+        "scopeTitle": "Save as sample",
+        "scopeText": "This content has children. What should the sample contain?",
+        "scopeWithChildren": "This content and its children",
+        "scopeItemOnly": "This content only",
+        "save": "Save"
+      },
       "navigation": {
         "savedSearches": "Saved searches",
         "workflow": "Workflow",
         "media": "Media",
         "pages": "Pages",
+        "samples": "Samples",
         "contentFolders": "Content Folders",
         "forms": "Forms",
         "apps": {
@@ -665,6 +682,16 @@
       "pageTitle": "Categories"
     },
     "contentEditor": {
+      "samples": {
+        "selectType": "Select a content type to see an example of it.",
+        "noSample": "No example is available for this content type on this site yet.",
+        "cannotRender": "This example cannot be previewed: this site has no page to render it with.",
+        "useSample": "Use example",
+        "createEmpty": "Create empty",
+        "pageTemplatesGroup": "Templates",
+
+        "pageSamplesGroup": "Page samples"
+      },
       "create": {
         "title": "Create {{type}}",
         "createButton": {

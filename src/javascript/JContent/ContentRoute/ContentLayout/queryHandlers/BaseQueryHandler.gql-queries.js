@@ -114,6 +114,11 @@ export const QueryHandlersFragments = {
                 ...NodePreviewFields
                 site {
                     ...NodeCacheRequiredFields
+                    # Default page a sample preview borrows its stylesheet from.
+                    homePage {
+                        ...NodeCacheRequiredFields
+                        path
+                    }
                 }
                 parent {
                     ...NodeCacheRequiredFields

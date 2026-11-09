@@ -1,5 +1,6 @@
 import React from 'react';
 import {menuAction} from '@jahia/ui-extender';
+import {CopyToSamplesActionComponent} from './actions/copyToSamples';
 
 import {
     AddFolder,
@@ -17,6 +18,7 @@ import {
     FileZip,
     Lock,
     MoreVert,
+    Palette,
     NoCloud,
     OpenInBrowser,
     Paste,
@@ -260,6 +262,11 @@ export const jContentActions = registry => {
         hideOnNodeTypes: ['jnt:virtualsite', 'jnt:page', 'jmix:isAreaList'],
         hideForPaths: [PATH_FILES_ITSELF, PATH_CONTENTS_ITSELF, PATH_CATEGORIES_ITSELF],
         component: CopyCutActionComponent
+    });
+    registry.add('action', 'copyToSamples', {
+        buttonIcon: <Palette/>,
+        buttonLabel: 'jcontent:label.contentManager.copyToSamples.action',
+        component: CopyToSamplesActionComponent
     });
     registry.add('action', 'copyPageMenu', menuActionWithRenderer, {
         buttonIcon: <Copy/>,

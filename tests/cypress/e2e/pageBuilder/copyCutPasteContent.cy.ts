@@ -12,6 +12,7 @@ import {
     uploadFile
 } from '@jahia/cypress';
 import {JContent, JContentPageBuilder} from '../../page-object';
+import {GraphqlUtils} from '../../utils/graphqlUtils';
 
 // Migrated from the Selenium class CopyCutPasteContent, split in https://github.com/Jahia/selenium/issues/1668.
 // Each describe is one legacy journey: its tests run in order, and a nested before() plays the next act.
@@ -54,13 +55,16 @@ const homeArea = (site: string) => `${homePath(site)}/${AREA}`;
 const subPagePath = (f: Fixture) => `${homePath(f.siteA)}/${f.subPage}`;
 const subPageArea = (f: Fixture) => `${subPagePath(f)}/${AREA}`;
 
+const publish = (path: string) => publishAndWaitJobEnding(path, ['en']);
+const publishSite = (site: string) => publish(`/sites/${site}`);
+
 // A previous run whose after() failed leaves its sites and users behind: remove them first.
 const removeStaleFixtures = () => {
     cy.apollo({
         queryFile: 'jcontent/copyCutPasteContent/staleFixtures.graphql',
         variables: {
             sitesQuery: `SELECT * FROM [jnt:virtualsite] WHERE ISCHILDNODE('/sites') AND localname() LIKE '${PREFIX}%'`,
-            usersQuery: `SELECT * FROM [jnt:user] WHERE localname() LIKE '${PREFIX}%'`
+            usersQuery: `SELECT * FROM [jnt:user] WHERE ISDESCENDANTNODE('/users') AND localname() LIKE '${PREFIX}%'`
         }
     }).then(({data}) => {
         data.jcr.sites.nodes.forEach(({name}) => deleteSite(name));
@@ -69,7 +73,7 @@ const removeStaleFixtures = () => {
 };
 
 const createEditorSite = (site: string, user: string) => {
-    createSite(site, {templateSet: 'dx-base-demo-templates', serverName: 'localhost', locale: 'en'});
+    createSite(site);
     addNode({parentPathOrId: homePath(site), name: AREA, primaryNodeType: 'jnt:contentList'});
     grantRoles(`/sites/${site}`, ['editor-in-chief'], user, 'USER');
 };
@@ -104,7 +108,7 @@ const createFixture = (f: Fixture, sites: string[], withSubPage: boolean) => {
             {name: 'desc', value: `<p>Body of ${f.newsTitle}</p>`, language: 'en'}
         ]
     });
-    sites.forEach(site => publishAndWaitJobEnding(`/sites/${site}`, ['en']));
+    sites.forEach(publishSite);
 };
 
 const deleteFixture = (f: Fixture, sites: string[]) => {
@@ -113,16 +117,29 @@ const deleteFixture = (f: Fixture, sites: string[]) => {
     deleteUser(f.user);
 };
 
-// The legacy test publishes the site once the file reference is on the home page, before it copies or cuts it.
+// Registers the hooks of one journey, on site A alone or on sites A and B, and returns its fixture.
+const useFixture = ({crossSite}: {crossSite: boolean}): Fixture => {
+    const f = newFixture();
+    const sites = crossSite ? [f.siteA, f.siteB] : [f.siteA];
+    before(() => createFixture(f, sites, !crossSite));
+    after(() => deleteFixture(f, sites));
+    beforeEach(() => cy.login(f.user, PASSWORD));
+    return f;
+};
+
+// The legacy test publishes the whole site here. Only the file and its reference are published, so the news
+// that the first test of the journey pasted or cut stays unpublished until the publication under test.
 const addPublishedFileReference = (f: Fixture) => {
+    const filePath = `/sites/${f.siteA}/files/${f.fileName}`;
     uploadFile('/assets/uploadMedia/myfile.pdf', `/sites/${f.siteA}/files`, f.fileName, 'application/pdf');
     addNode({
         parentPathOrId: homeArea(f.siteA),
         name: f.fileRef,
         primaryNodeType: 'jnt:fileReference',
-        properties: [{name: 'j:node', value: `/sites/${f.siteA}/files/${f.fileName}`, type: 'REFERENCE'}]
+        properties: [{name: 'j:node', value: filePath, type: 'REFERENCE'}]
     });
-    publishAndWaitJobEnding(`/sites/${f.siteA}`, ['en']);
+    publish(filePath);
+    publish(`${homeArea(f.siteA)}/${f.fileRef}`);
 };
 
 const openPageBuilder = (site: string, page = 'home'): JContentPageBuilder =>
@@ -140,8 +157,7 @@ const switchSite = (jcontent: JContentPageBuilder, site: string): JContentPageBu
 const putInClipboard = (jcontent: JContentPageBuilder, path: string, role: Role) => {
     getNodeByPath(path).its('data.jcr.nodeByPath.uuid').as('sourceUuid');
     // Not forced, or the right-click may open the context menu of the page
-    const contextMenu = jcontent.getModule(path, false).contextMenu(true, false);
-    cy.waitUntil(() => contextMenu.selectByRole(role));
+    jcontent.getModule(path, false).contextMenu(true, false).selectByRole(role);
     cy.get('#message-id').should('contain', 'in the clipboard');
 };
 
@@ -167,43 +183,63 @@ const shouldKeepIdentity = (path: string, role: Role) => {
     });
 };
 
-// Each check opens the page anew: after a paste, the frame of Page Builder reloads under the alias of the old one.
-const shouldShowModule = (site: string, page: string, path: string, text?: string) => {
-    const module = openPageBuilder(site, page).getModule(path);
-    if (text) {
-        module.get().should('contain', text);
+type Item = 'news' | 'fileRef';
+
+// What shows that a module renders its item: the title of the news, or the link of the file reference.
+const shouldRenderItem = (module: JQuery, f: Fixture, item: Item) => {
+    if (item === 'news') {
+        expect(module).to.contain(f.newsTitle);
+    } else {
+        expect(module.find(`a[href*="${f.fileName}"]`)).to.have.length.greaterThan(0);
     }
 };
 
-// The area renders before the absence is read, so an empty frame cannot pass.
-const shouldNotShowModule = (site: string, areaPath: string, path: string) => {
-    const jcontent = openPageBuilder(site);
-    jcontent.getModule(areaPath);
-    jcontent.iframe().get().find(`[jahiatype="module"][path="${path}"]`).should('not.exist');
+// Opens the page anew: after a paste, the frame of Page Builder reloads under the alias of the old one.
+const shouldShowModule = ({site, page, path}: {site: string; page: string; path: string}, f: Fixture, item: Item) => {
+    openPageBuilder(site, page).getModule(path).get().should(module => shouldRenderItem(module, f, item));
+};
+
+// The steps the edit-mode tests share: copy or cut an item of the home page of site A, paste it on the
+// sub-page or on site B, then check the pasted node in Page Builder and the source in the repository.
+const transfer = (f: Fixture, role: Role, item: Item, {crossSite}: {crossSite: boolean}) => {
+    const name = item === 'news' ? f.news : f.fileRef;
+    const source = `${homeArea(f.siteA)}/${name}`;
+    const targetArea = crossSite ? homeArea(f.siteB) : subPageArea(f);
+    const target = `${targetArea}/${name}`;
+
+    const jcontent = openPageBuilder(f.siteA);
+    putInClipboard(jcontent, source, role);
+    pasteInto(crossSite ? switchSite(jcontent, f.siteB) : openSubPage(jcontent, f), targetArea);
+    shouldKeepIdentity(target, role);
+    shouldShowModule({
+        site: crossSite ? f.siteB : f.siteA,
+        page: crossSite ? 'home' : `home/${f.subPage}`,
+        path: target
+    }, f, item);
+    GraphqlUtils.getNode(source).should(role === 'copy' ? 'exist' : 'not.exist');
 };
 
 type Workspace = 'live' | 'default';
 
-// What a rendered page shows. An undefined item is not read.
-type Shown = {news?: boolean; fileRef?: boolean};
+// What a rendered page shows.
+type Shown = {news: boolean; fileRef: boolean};
 
 const BOTH: Shown = {news: true, fileRef: true};
 const NONE: Shown = {news: false, fileRef: false};
 
 // The home link of the navigation proves that the page rendered, before an absence is read.
-const visitRendered = (workspace: Workspace, site: string, page = 'home') => {
-    cy.visit(`/cms/render/${workspace}/en/sites/${site}/${page}.html`);
+const shouldHaveRendered = (site: string) => {
     cy.get(`a[href$="/sites/${site}/home.html"]`).should('exist');
 };
 
-const shouldRender = (f: Fixture, shown: Shown) => {
-    if (shown.news !== undefined) {
-        cy.get('body').should(shown.news ? 'contain' : 'not.contain', f.newsTitle);
-    }
+const visitRendered = (workspace: Workspace, site: string) => {
+    cy.visit(`/cms/render/${workspace}/en/sites/${site}/home.html`);
+    shouldHaveRendered(site);
+};
 
-    if (shown.fileRef !== undefined) {
-        cy.get(`a[href*="${f.fileName}"]`).should(shown.fileRef ? 'exist' : 'not.exist');
-    }
+const shouldRender = (f: Fixture, shown: Shown) => {
+    cy.get('body').should(shown.news ? 'contain' : 'not.contain', f.newsTitle);
+    cy.get(`a[href*="${f.fileName}"]`).should(shown.fileRef ? 'exist' : 'not.exist');
 };
 
 // Live is read as a visitor, since publication is what makes content public. Preview needs the editor.
@@ -215,6 +251,7 @@ const checkSameSite = (workspace: Workspace, f: Fixture, home: Shown, subPage: S
     shouldRender(f, home);
     cy.contains('a', f.subPageTitle).click({force: true});
     cy.url().should('contain', `/${f.subPage}.html`);
+    shouldHaveRendered(f.siteA);
     shouldRender(f, subPage);
 };
 
@@ -231,23 +268,11 @@ describe('Page builder - copy, cut and paste content', () => {
     });
 
     describe('Copy on the same site', () => {
-        const f = newFixture();
-        const sites = [f.siteA];
-
-        before(() => createFixture(f, sites, true));
-
-        after(() => deleteFixture(f, sites));
-
-        beforeEach(() => cy.login(f.user, PASSWORD));
+        const f = useFixture({crossSite: false});
 
         it('FT-001: Copied news is pasted on another page of the same site', () => {
             context.tag('copy-paste', 'same-site', 'news', 'edit-mode', 'testrail-case-2924367');
-            const jcontent = openPageBuilder(f.siteA);
-            putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'copy');
-            pasteInto(openSubPage(jcontent, f), subPageArea(f));
-            shouldKeepIdentity(`${subPageArea(f)}/${f.news}`, 'copy');
-            shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.news}`, f.newsTitle);
-            shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.news}`, f.newsTitle);
+            transfer(f, 'copy', 'news', {crossSite: false});
         });
 
         describe('once a published file reference is on the home page', () => {
@@ -255,23 +280,18 @@ describe('Page builder - copy, cut and paste content', () => {
 
             it('FT-002: Copied file reference is pasted on another page of the same site', () => {
                 context.tag('copy-paste', 'same-site', 'file-reference', 'edit-mode', 'testrail-case-2924367');
-                const jcontent = openPageBuilder(f.siteA);
-                putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'copy');
-                pasteInto(openSubPage(jcontent, f), subPageArea(f));
-                shouldKeepIdentity(`${subPageArea(f)}/${f.fileRef}`, 'copy');
-                shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.fileRef}`);
-                shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.fileRef}`);
+                transfer(f, 'copy', 'fileRef', {crossSite: false});
             });
 
             it('FT-004: Copies on the same site are rendered in preview before publication', () => {
                 context.tag('copy-paste', 'same-site', 'preview-mode', 'testrail-case-2924367');
                 checkSameSite('default', f, BOTH, BOTH);
                 asVisitor();
-                checkSameSite('live', f, {fileRef: true}, {fileRef: false});
+                checkSameSite('live', f, BOTH, NONE);
             });
 
             describe('once site A is published', () => {
-                before(() => publishAndWaitJobEnding(`/sites/${f.siteA}`, ['en']));
+                before(() => publishSite(f.siteA));
 
                 it('FT-003: Copies on the same site are rendered in live after publication', () => {
                     context.tag('copy-paste', 'same-site', 'live-mode', 'testrail-case-2924367');
@@ -283,23 +303,11 @@ describe('Page builder - copy, cut and paste content', () => {
     });
 
     describe('Cut on the same site', () => {
-        const f = newFixture();
-        const sites = [f.siteA];
-
-        before(() => createFixture(f, sites, true));
-
-        after(() => deleteFixture(f, sites));
-
-        beforeEach(() => cy.login(f.user, PASSWORD));
+        const f = useFixture({crossSite: false});
 
         it('FT-005: Cut news is moved to another page of the same site', () => {
             context.tag('cut-paste', 'same-site', 'news', 'edit-mode', 'testrail-case-2924368');
-            const jcontent = openPageBuilder(f.siteA);
-            putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'cut');
-            pasteInto(openSubPage(jcontent, f), subPageArea(f));
-            shouldKeepIdentity(`${subPageArea(f)}/${f.news}`, 'cut');
-            shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.news}`, f.newsTitle);
-            shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.news}`);
+            transfer(f, 'cut', 'news', {crossSite: false});
         });
 
         describe('once a published file reference is on the home page', () => {
@@ -307,23 +315,18 @@ describe('Page builder - copy, cut and paste content', () => {
 
             it('FT-006: Cut file reference is moved to another page of the same site', () => {
                 context.tag('cut-paste', 'same-site', 'file-reference', 'edit-mode', 'testrail-case-2924368');
-                const jcontent = openPageBuilder(f.siteA);
-                putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'cut');
-                pasteInto(openSubPage(jcontent, f), subPageArea(f));
-                shouldKeepIdentity(`${subPageArea(f)}/${f.fileRef}`, 'cut');
-                shouldShowModule(f.siteA, `home/${f.subPage}`, `${subPageArea(f)}/${f.fileRef}`);
-                shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.fileRef}`);
+                transfer(f, 'cut', 'fileRef', {crossSite: false});
             });
 
             it('FT-008: Cut content on the same site is moved in preview before publication', () => {
                 context.tag('cut-paste', 'same-site', 'preview-mode', 'testrail-case-2924368');
                 checkSameSite('default', f, NONE, BOTH);
                 asVisitor();
-                checkSameSite('live', f, {fileRef: true}, {fileRef: false});
+                checkSameSite('live', f, BOTH, NONE);
             });
 
             describe('once site A is published', () => {
-                before(() => publishAndWaitJobEnding(`/sites/${f.siteA}`, ['en']));
+                before(() => publishSite(f.siteA));
 
                 it('FT-007: Cut content on the same site is moved in live after publication', () => {
                     context.tag('cut-paste', 'same-site', 'live-mode', 'testrail-case-2924368');
@@ -335,23 +338,11 @@ describe('Page builder - copy, cut and paste content', () => {
     });
 
     describe('Copy to another site', () => {
-        const f = newFixture();
-        const sites = [f.siteA, f.siteB];
-
-        before(() => createFixture(f, sites, false));
-
-        after(() => deleteFixture(f, sites));
-
-        beforeEach(() => cy.login(f.user, PASSWORD));
+        const f = useFixture({crossSite: true});
 
         it('FT-009: Copied news is pasted on another site', () => {
             context.tag('copy-paste', 'cross-site', 'news', 'edit-mode', 'testrail-case-2924369');
-            const jcontent = openPageBuilder(f.siteA);
-            putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'copy');
-            pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
-            shouldKeepIdentity(`${homeArea(f.siteB)}/${f.news}`, 'copy');
-            shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.news}`, f.newsTitle);
-            shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.news}`, f.newsTitle);
+            transfer(f, 'copy', 'news', {crossSite: true});
         });
 
         describe('once a published file reference is on the home page of site A', () => {
@@ -359,12 +350,7 @@ describe('Page builder - copy, cut and paste content', () => {
 
             it('FT-010: Copied file reference is pasted on another site', () => {
                 context.tag('copy-paste', 'cross-site', 'file-reference', 'edit-mode', 'testrail-case-2924369');
-                const jcontent = openPageBuilder(f.siteA);
-                putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'copy');
-                pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
-                shouldKeepIdentity(`${homeArea(f.siteB)}/${f.fileRef}`, 'copy');
-                shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.fileRef}`);
-                shouldShowModule(f.siteA, 'home', `${homeArea(f.siteA)}/${f.fileRef}`);
+                transfer(f, 'copy', 'fileRef', {crossSite: true});
             });
 
             it('FT-012: Cross-site copies are rendered in preview before publication', () => {
@@ -375,7 +361,7 @@ describe('Page builder - copy, cut and paste content', () => {
             });
 
             describe('once site B is published', () => {
-                before(() => publishAndWaitJobEnding(`/sites/${f.siteB}`, ['en']));
+                before(() => publishSite(f.siteB));
 
                 it('FT-011: Cross-site copies are rendered in live after publication', () => {
                     context.tag('copy-paste', 'cross-site', 'live-mode', 'testrail-case-2924369');
@@ -387,23 +373,11 @@ describe('Page builder - copy, cut and paste content', () => {
     });
 
     describe('Cut to another site', () => {
-        const f = newFixture();
-        const sites = [f.siteA, f.siteB];
-
-        before(() => createFixture(f, sites, false));
-
-        after(() => deleteFixture(f, sites));
-
-        beforeEach(() => cy.login(f.user, PASSWORD));
+        const f = useFixture({crossSite: true});
 
         it('FT-013: Cut news is moved to another site', () => {
             context.tag('cut-paste', 'cross-site', 'news', 'edit-mode', 'testrail-case-2924370');
-            const jcontent = openPageBuilder(f.siteA);
-            putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.news}`, 'cut');
-            pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
-            shouldKeepIdentity(`${homeArea(f.siteB)}/${f.news}`, 'cut');
-            shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.news}`, f.newsTitle);
-            shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.news}`);
+            transfer(f, 'cut', 'news', {crossSite: true});
         });
 
         describe('once a published file reference is on the home page of site A', () => {
@@ -411,25 +385,20 @@ describe('Page builder - copy, cut and paste content', () => {
 
             it('FT-014: Cut file reference is moved to another site', () => {
                 context.tag('cut-paste', 'cross-site', 'file-reference', 'edit-mode', 'testrail-case-2924370');
-                const jcontent = openPageBuilder(f.siteA);
-                putInClipboard(jcontent, `${homeArea(f.siteA)}/${f.fileRef}`, 'cut');
-                pasteInto(switchSite(jcontent, f.siteB), homeArea(f.siteB));
-                shouldKeepIdentity(`${homeArea(f.siteB)}/${f.fileRef}`, 'cut');
-                shouldShowModule(f.siteB, 'home', `${homeArea(f.siteB)}/${f.fileRef}`);
-                shouldNotShowModule(f.siteA, homeArea(f.siteA), `${homeArea(f.siteA)}/${f.fileRef}`);
+                transfer(f, 'cut', 'fileRef', {crossSite: true});
             });
 
             it('FT-016: Cross-site cut content is moved in preview before publication', () => {
                 context.tag('cut-paste', 'cross-site', 'preview-mode', 'testrail-case-2924370');
                 checkCrossSite('default', f, NONE, BOTH);
                 asVisitor();
-                checkCrossSite('live', f, {fileRef: true}, {fileRef: false});
+                checkCrossSite('live', f, BOTH, NONE);
             });
 
             describe('once site B, then site A, are published', () => {
                 before(() => {
-                    publishAndWaitJobEnding(`/sites/${f.siteB}`, ['en']);
-                    publishAndWaitJobEnding(`/sites/${f.siteA}`, ['en']);
+                    publishSite(f.siteB);
+                    publishSite(f.siteA);
                 });
 
                 it('FT-015: Cross-site cut content is moved in live after publication', () => {

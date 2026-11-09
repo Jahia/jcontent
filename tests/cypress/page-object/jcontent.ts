@@ -345,7 +345,7 @@ export class JContentPageBuilder extends JContent {
     // The header of jContent shows the page title even when the frame renders a blank or an error page
     shouldDisplayPage(path: string): PageBuilderModule {
         const module = this.getMainModule(path);
-        module.parentFrame.get().should('not.contain', 'An error occurred during the rendering of the content');
+        module.parentFrame.get().find('[data-sel-role^="renderingFailure"]').should('not.exist');
         return module;
     }
 

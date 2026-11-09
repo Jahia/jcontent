@@ -6,6 +6,15 @@
       "of": "of"
     },
     "contentManager": {
+      "undo": {
+        "action": "Undo",
+        "partial": "{{count}} item could not be restored",
+        "partial_plural": "{{count}} items could not be restored",
+        "markedForDeletion": {
+          "single": "\"{{name}}\" marked for deletion",
+          "some": "{{count}} items marked for deletion"
+        }
+      },
       "preview": {
         "hide": "Hide Preview",
         "tabs": {

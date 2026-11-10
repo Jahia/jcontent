@@ -161,8 +161,6 @@ const putInClipboard = (jcontent: JContentPageBuilder, path: string, role: Role)
     cy.get('#message-id').should('contain', 'in the clipboard');
 };
 
-// The clipboard is carried to the sub-page inside jContent, as the legacy openPage did: a full page load
-// restores the clipboard from localStorage, which jContent fails to write for a node that has a j:node.
 const openSubPage = (jcontent: JContentPageBuilder, f: Fixture): JContentPageBuilder => {
     const pages = jcontent.getAccordionItem('pages');
     pages.expandTreeItem('home');

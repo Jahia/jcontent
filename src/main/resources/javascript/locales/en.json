@@ -366,6 +366,7 @@
       "copyPaste": {
         "cut": "Cut",
         "copy": "Copy",
+        "copyValue": "Copy {{label}}",
         "copyPageOnly": "Page only",
         "copyPageWithSubPages": "Page with Sub-pages",
         "paste": "Paste",

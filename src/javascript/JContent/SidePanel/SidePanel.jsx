@@ -67,6 +67,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                         className={styles.closeButton}
                         variant="ghost"
                         icon={<Close/>}
+                        aria-label={t('jcontent:label.contentEditor.close')}
                         data-sel-role="side-panel-close"
                         data-cm-role="preview-drawer-close"
                         onClick={onClose}

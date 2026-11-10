@@ -4,8 +4,10 @@ import {Button, Menu, MoreVert} from '@jahia/moonstone';
 import {MenuItemRenderer} from '~/JContent/MenuItemRenderer';
 import {getButtonLimitValue, getMenuActions} from './utils.headerActions';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 
 const HeaderThreeDotsActions = ({targetActionKey}) => {
+    const {t} = useTranslation('jcontent');
     const menuContainerRef = React.useRef(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const limit = getButtonLimitValue();
@@ -20,6 +22,7 @@ const HeaderThreeDotsActions = ({targetActionKey}) => {
             <Button
                 variant="ghost"
                 icon={<MoreVert/>}
+                aria-label={t('jcontent:label.contentEditor.edit.action.moreOptions')}
                 onClick={() => setAnchorEl(menuContainerRef)}
             />
             <Menu

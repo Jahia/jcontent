@@ -5,10 +5,12 @@ import {shallowEqual, useDispatch, useSelector} from 'react-redux';
 import {cmGoto} from '~/JContent/redux/JContent.redux';
 import JContentConstants from '~/JContent/JContent.constants';
 import styles from './SearchInput.scss';
+import {useTranslation} from 'react-i18next';
 
 let timeOut;
 
 const SearchInput = () => {
+    const {t: translate} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {searchTerms, searchContentType, searchPath} = useSelector(state => ({
         searchTerms: state.jcontent.params.searchTerms,
@@ -42,14 +44,14 @@ const SearchInput = () => {
 
     return (
         <div className={styles.searchInput}>
-            <Button disabled variant="ghost" className={styles.iconButton} icon={<Search/>}/>
+            <Button disabled variant="ghost" className={styles.iconButton} icon={<Search/>} aria-label={translate('label.contentManager.search.search')}/>
             <InputBase
                 className={styles.input}
                 value={t}
                 inputProps={{'aria-label': 'search'}}
                 onChange={performSearchDebounced(500)}
             />
-            <Button variant="ghost" className={styles.iconButton} icon={<Close/>} onClick={performSearchDebounced(0, '')}/>
+            <Button variant="ghost" className={styles.iconButton} icon={<Close/>} aria-label={translate('label.contentManager.search.clear')} onClick={performSearchDebounced(0, '')}/>
         </div>
     );
 };

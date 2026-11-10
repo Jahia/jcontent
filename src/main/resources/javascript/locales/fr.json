@@ -351,6 +351,14 @@
         "unPublishedBy": "Dépublié par {{userName}} le",
         "moreOptions": "Plus d'options"
       },
+      "pdfViewer": {
+        "firstPage": "Première page",
+        "previousPage": "Page précédente",
+        "nextPage": "Page suivante",
+        "lastPage": "Dernière page",
+        "zoomOut": "Zoom arrière",
+        "zoomIn": "Zoom avant"
+      },
       "copyPaste": {
         "cut": "Couper",
         "copy": "Copier",
@@ -423,7 +431,8 @@
         "clearMultipleSelection": "Vider la sélection",
         "emptyContextMenu": "Aucune action n'est disponible pour ces éléments",
         "removed": "{{count}} éléments précédemment sélectionnés ont été enlevés de la sélection, car non affichés dans cette vue",
-        "addTo": "Ajouter à la sélection"
+        "addTo": "Ajouter à la sélection",
+        "removeFrom": "Retirer de la sélection"
       },
       "editImage": {
         "action": "Editeur d'images",
@@ -459,6 +468,7 @@
         "savedMessage": "Enregistré",
         "ratioLocked": "Ratio bloqué",
         "ratioUnlocked": "Ratio débloqué",
+        "keepRatio": "Conserver le ratio",
         "confirmSaveDialog": {
           "title": "Remplacer le fichier existant",
           "text": "Un fichier avec ce nom existe déjà. Etes-vous sûr de vouloir continuer ?",
@@ -1177,6 +1187,8 @@
     "ok": "OK",
     "cancel": "Annuler",
     "no": "Non",
-    "yes": "Oui"
+    "yes": "Oui",
+    "back": "Retour",
+    "loading": "Chargement..."
   }
 }

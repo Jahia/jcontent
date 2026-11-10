@@ -157,7 +157,7 @@ export const TagManagerDrawer = ({
     if (loading) {
         drawerContent = (
             <div className={styles.drawerLoader}>
-                <Loader size="big"/>
+                <Loader size="big" i18n={{loadingLabel: t('jcontent:label.loading')}}/>
             </div>
         );
     } else if (error) {
@@ -192,6 +192,7 @@ export const TagManagerDrawer = ({
                                         variant="ghost"
                                         size="big"
                                         data-cm-role="tag-manager-edit-node-tag"
+                                        aria-label={t('jcontent:label.contentManager.tagManager.table.actions.editTagOnContent')}
                                         icon={<Edit/>}
                                         onClick={() => setEditNodeTarget(node)}
                                     />
@@ -202,6 +203,7 @@ export const TagManagerDrawer = ({
                                         size="big"
                                         color="danger"
                                         data-cm-role="tag-manager-delete-node-tag"
+                                        aria-label={t('jcontent:label.contentManager.tagManager.table.actions.removeFromContent')}
                                         disabled={deletingNodeId === node.uuid}
                                         icon={<DeletePermanently/>}
                                         onClick={() => setDeleteTarget(node)}
@@ -249,7 +251,7 @@ export const TagManagerDrawer = ({
                                 {t('jcontent:label.contentManager.tagManager.drawer.subtitle', {count: totalCount})}
                             </Typography>
                         </div>
-                        <Button data-cm-role="tag-manager-close-drawer" variant="ghost" icon={<Close/>} onClick={onClose}/>
+                        <Button data-cm-role="tag-manager-close-drawer" variant="ghost" icon={<Close/>} aria-label={t('jcontent:label.contentEditor.close')} onClick={onClose}/>
                     </div>
 
                     {drawerContent}

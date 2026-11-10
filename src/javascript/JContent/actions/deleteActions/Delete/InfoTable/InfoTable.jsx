@@ -86,7 +86,7 @@ export const InfoTable = ({paths, dialogType}) => {
         <div className={clsx('flexFluid', 'flexCol_nowrap', tableStyles.tableWrapper)}>
             { layoutLoading && (
                 <div className={clsx('flexCol_center', 'alignCenter', styles.loader)}>
-                    <Loader size="big"/>
+                    <Loader size="big" i18n={{loadingLabel: t('jcontent:label.loading')}}/>
                 </div>
             )}
             <div className="flexFluid flexRow_between">

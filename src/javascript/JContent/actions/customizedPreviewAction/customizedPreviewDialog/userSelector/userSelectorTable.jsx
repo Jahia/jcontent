@@ -105,7 +105,7 @@ export const UserSelectorTable = ({newValue, onSelection, onDblClick}) => {
                 <TableBody {...getTableBodyProps()} className={styles.userContent}>
                     {loading && (
                         <div className="flexFluid flexCol_center alignCenter">
-                            <Loader size="big"/>
+                            <Loader size="big" i18n={{loadingLabel: t('jcontent:label.loading')}}/>
                         </div>
                     )}
                     {tableRows.map(row => {

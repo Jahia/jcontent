@@ -57,6 +57,7 @@ export const ResizePanel = ({originalWidth, originalHeight, resizeParams, onResi
                             variant="ghost"
                             data-cm-role="keep-ratio-button"
                             aria-label={t('jcontent:label.contentManager.editImage.keepRatio')}
+                            aria-pressed={Boolean(resizeParams.keepRatio)}
                             onClick={switchRatio}/>
                 </div>
                 <div className={styles.firstCol}>

@@ -59,6 +59,7 @@ export const CropPanel = ({originalWidth, originalHeight, cropParams, onCrop}) =
                             variant="ghost"
                             data-cm-role="keep-ratio-button"
                             aria-label={t('jcontent:label.contentManager.editImage.keepRatio')}
+                            aria-pressed={Boolean(cropParams.aspect)}
                             onClick={switchRatio}
                     />
                 </div>

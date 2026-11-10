@@ -155,7 +155,7 @@ const switchSite = (jcontent: JContentPageBuilder, site: string): JContentPageBu
 
 // The UUID of the source is kept, so that the paste can tell a move from a duplicate.
 const putInClipboard = (jcontent: JContentPageBuilder, path: string, role: Role) => {
-    getNodeByPath(path).its('data.jcr.nodeByPath.uuid').as('sourceUuid');
+    GraphqlUtils.getNodeId(path, 'sourceUuid');
     // Not forced, or the right-click may open the context menu of the page
     jcontent.getModule(path, false).contextMenu(true, false).selectByRole(role);
     cy.get('#message-id').should('contain', 'in the clipboard');

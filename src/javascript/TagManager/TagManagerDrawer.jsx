@@ -240,7 +240,7 @@ export const TagManagerDrawer = ({
 
     return (
         <>
-            <Drawer className={styles.drawerPaper} data-cm-role="tag-manager-drawer" isOpen={isOpen}>
+            <Drawer className={styles.drawerPaper} data-cm-role="tag-manager-drawer" isOpen={isOpen} onOpenChange={onClose}>
                 <div className={styles.drawerRoot}>
                     <div className={styles.drawerHeader}>
                         <div className={styles.drawerHeaderInfo}>

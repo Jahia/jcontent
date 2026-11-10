@@ -46,12 +46,12 @@ export class CheckboxChoiceList extends ToggleChoiceList {
 
     assertSelected(label: string) {
         return this.get().find(`${this.inputSel}[value="${label}"]`)
-            .should('have.attr', 'aria-checked', 'true');
+            .should('be.checked');
     }
 
     assertNotSelected(label: string) {
         return this.get().find(`${this.inputSel}[value="${label}"]`)
-            .should('have.attr', 'aria-checked', 'false');
+            .should('not.be.checked');
     }
 
     contextMenu() {

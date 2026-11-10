@@ -39,7 +39,8 @@ describe('Checkbox component', () => {
     it('should change', () => {
         const checkboxCmp = buildComp(props);
         const innerCmp = checkboxCmp.dive().dive().find('input');
-        innerCmp.simulate('change', null, true);
+        // The Moonstone Checkbox reads the event target of a change
+        innerCmp.simulate('change', {target: {}});
         expect(props.onChange).toHaveBeenCalledWith(true);
     });
 
@@ -47,7 +48,8 @@ describe('Checkbox component', () => {
         props.initialValue = false;
         const checkboxCmp = buildComp(props);
         const innerCmp = checkboxCmp.dive().dive().find('input');
-        innerCmp.simulate('change', null, true);
+        // The Moonstone Checkbox reads the event target of a change
+        innerCmp.simulate('change', {target: {}});
         expect(props.onChange).toHaveBeenCalledWith(true);
     });
 

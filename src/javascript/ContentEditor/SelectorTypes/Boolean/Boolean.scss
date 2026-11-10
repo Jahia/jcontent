@@ -15,8 +15,8 @@
 
             pointer-events: none;
 
-            &[aria-checked="true"]:hover,
-            &[aria-checked="mixed"]:hover {
+            &:checked:hover,
+            &:indeterminate:hover {
                 --shadow-color: var(--color-accent);
                 --shadow-size: 12px;
 

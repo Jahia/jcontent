@@ -104,7 +104,7 @@ describe.skip('Create content tests', {retries: 10}, () => {
         contentEditor.addAnotherContent();
         contentEditor.create();
 
-        cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
+        cy.get('#createAnother').should('be.checked');
         contentEditor.openSection('options').get().find('input[type="text"]').clear().type('create-another-2');
         contentEditor.openSection('content').get().find('input[type="text"]').type('Create another - test 2');
         contentEditor.removeAnotherContent();

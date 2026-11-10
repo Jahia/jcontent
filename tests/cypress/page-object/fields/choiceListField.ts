@@ -8,7 +8,7 @@ export class ChoiceListField extends Field {
      */
     addNewValue(value: string): void {
         this.get().should('exist').click();
-        getComponentBySelector(Menu, '[role="list"]').selectByValue(value);
+        getComponentBySelector(Menu, 'menu').selectByValue(value);
     }
 
     /**

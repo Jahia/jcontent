@@ -79,7 +79,7 @@ export class TagManager extends JContent {
 
     setRowsPerPage(rowsPerPage: number): TagManager {
         this.getPagination().get().find('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
-        cy.get('menu.moonstone-menu[role="list"]').should('be.visible');
+        cy.get('menu').should('be.visible');
         cy.contains('menu.moonstone-menu [role="option"]', new RegExp(`^${rowsPerPage}$`)).click();
         return this;
     }

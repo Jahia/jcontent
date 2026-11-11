@@ -221,6 +221,85 @@ describe('Language switcher tests', () => {
         });
     });
 
+    it('Edit content - keeps unsaved rich text after switching language and back', () => {
+        const folder = 'lang-switcher-richtext-test';
+        const deleteFolder = gql`
+            mutation deleteRichTextFolder {
+                jcr {
+                    deleteNode(pathOrId: "/sites/digitall/contents/${folder}")
+                }
+            }
+        `;
+        // A previous failed run may have left the folder behind; cy.apollo tolerates the error
+        cy.apollo({mutation: deleteFolder});
+        cy.apollo({
+            mutation: gql`
+                mutation createNewsWithoutDescription {
+                    jcr {
+                        mutateNode(pathOrId: "/sites/digitall/contents") {
+                            addChild(name: "${folder}", primaryNodeType: "jnt:contentFolder") {
+                                addChild(
+                                    name: "news-without-desc"
+                                    primaryNodeType: "jnt:news"
+                                    properties: [{name: "jcr:title", language: "en", value: "news without description"}]
+                                ) {
+                                    uuid
+                                }
+                            }
+                        }
+                    }
+                }
+            `
+        });
+
+        cy.intercept('POST', '**/modules/graphql', req => {
+            if (JSON.stringify(req.body).includes('editForm')) {
+                req.alias = 'editForm';
+            }
+        });
+
+        const ce = JContent.visit(siteKey, 'en', `content-folders/contents/${folder}`)
+            .editComponentByText('news without description');
+        const description = ce.getRichTextField('jnt:news_desc');
+
+        cy.log('Type a description in English without saving');
+        description.type('unsaved english desc');
+
+        cy.log('Switch to French, then back to English');
+        ce.getLanguageSwitcher().select('French');
+        cy.wait('@editForm');
+        ce.getLanguageSwitcher().select('English');
+        cy.wait('@editForm');
+
+        // The bug showed the restored value while CKEditor loaded, then replaced it with its initial
+        // data once ready. getData() returns a value before the editing frame shows it, so the
+        // assertion reads the frame itself.
+        cy.log('The editor shows the unsaved English description');
+        description.get().find('.cke_wysiwyg_frame')
+            .its('0.contentDocument.body.innerText')
+            .should('contain', 'unsaved english desc');
+
+        cy.log('Saving stores the unsaved English description');
+        ce.save();
+
+        cy.apollo({
+            fetchPolicy: 'no-cache',
+            query: gql`
+                query newsDescription {
+                    jcr {
+                        nodeByPath(path: "/sites/digitall/contents/${folder}/news-without-desc") {
+                            property(name: "desc", language: "en") {
+                                value
+                            }
+                        }
+                    }
+                }
+            `
+        }).its('data.jcr.nodeByPath.property.value').should('contain', 'unsaved english desc');
+
+        cy.apollo({mutation: deleteFolder});
+    });
+
     it('Create content - saves multiple languages', () => {
         const contentName = 'langSwitcherMultipleLang';
         const ce: ContentEditor = jcontent.createContent('jnt:text');

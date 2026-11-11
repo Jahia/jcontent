@@ -82,6 +82,40 @@ describe('RichText component', () => {
         expect(props.onChange.mock.calls).toEqual([[dummyEditor.editor.getData()]]);
     });
 
+    const readyEditor = () => ({editor: {getData: jest.fn(() => ''), setData: jest.fn()}});
+
+    it('should apply the latest value when the editor is ready, if it changed after the mount', () => {
+        props.value = '';
+        const cmp = shallow(<RichText {...props}/>);
+        cmp.setProps({value: '<p>unsaved</p>'});
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+
+        expect(evt.editor.setData).toHaveBeenCalledWith('<p>unsaved</p>');
+    });
+
+    it('should not touch the editor when it is ready, if the value did not change after the mount', () => {
+        props.value = '<p>saved</p>';
+        const cmp = shallow(<RichText {...props}/>);
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+
+        expect(evt.editor.setData).not.toHaveBeenCalled();
+    });
+
+    it('should apply an empty string when the value was cleared after the mount', () => {
+        props.value = '<p>saved</p>';
+        const cmp = shallow(<RichText {...props}/>);
+        cmp.setProps({value: undefined});
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+
+        expect(evt.editor.setData).toHaveBeenCalledWith('');
+    });
+
     it('should be readOnly when formDefinition say so', () => {
         testReadOnly(true);
         testReadOnly(false);

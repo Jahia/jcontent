@@ -324,12 +324,18 @@ export class ContentEditor extends BasePage {
         cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Publication completed');
     }
 
-    /** Unpublishes the edited language from the header menu, and waits for the job to complete. */
+    /**
+     * Unpublishes the edited language from the header menu, and waits for the "Unpublication completed"
+     * notification. The publication status of the node can lag behind it.
+     */
     unpublish() {
         this.unpublishFromHeaderMenu('unpublish', 'Unpublish');
     }
 
-    /** Unpublishes every language from the header menu, and waits for the job to complete. */
+    /**
+     * Unpublishes every language from the header menu, and waits for the "Unpublication completed"
+     * notification. The publication status of the node can lag behind it.
+     */
     unpublishInAllLanguages() {
         this.unpublishFromHeaderMenu('unpublishInAllLanguages', 'Unpublish all');
     }
@@ -343,7 +349,6 @@ export class ContentEditor extends BasePage {
             .click();
         // The confirmation is a GWT dialog; the exact match keeps "Unpublish" from matching "Unpublish all"
         cy.get('button.x-btn-text').contains(new RegExp(`^${confirmLabel}$`)).click();
-        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Unpublication completed');
     }
 

@@ -91,6 +91,15 @@ describe('Test the save publish buttons flow', () => {
         deleteUser('thor');
     });
 
+    const waitForPublicationStatus = (path: string, language: string, status: string) => {
+        cy.waitUntil(() => cy.apollo({
+            fetchPolicy: 'no-cache',
+            variables: {path, language},
+            queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
+        }).then(result => result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus === status),
+        {timeout: 10000, interval: 2000, errorMsg: `${path} in ${language} did not reach ${status}`});
+    };
+
     const checkContentEditorHeaderButtons = (contentEditor: ContentEditor, saveDisabled: boolean, publishDisabled: boolean) => {
         contentEditor.checkButtonStatus('submitSave', saveDisabled);
         contentEditor.checkButtonStatus('publishAction', publishDisabled);
@@ -128,17 +137,7 @@ describe('Test the save publish buttons flow', () => {
     const unPublish = (contentEditor: ContentEditor) => {
         cy.log('Unpublish in all languages');
         contentEditor.unpublishInAllLanguages();
-
-        cy.waitUntil(() => {
-            return cy.apollo({
-                fetchPolicy: 'no-cache',
-                variables: {path: contentPath},
-                queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
-            }).then(result => {
-                const publicationStatus = result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus;
-                return publicationStatus === 'UNPUBLISHED';
-            });
-        }, {timeout: 10000, interval: 2000, errorMsg: `Unable to unpublish content ${contentPath}`});
+        waitForPublicationStatus(contentPath, langEN, 'UNPUBLISHED');
 
         // Flaky with refresh, reload instead to check unpublish state
         const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
@@ -202,11 +201,6 @@ describe('Test the save publish buttons flow', () => {
 
     it('should unpublish the edited language only', () => {
         const path = `/sites/${siteKey}/contents/simpleTextUnpublish`;
-        const publicationStatus = (language: string) => cy.apollo({
-            fetchPolicy: 'no-cache',
-            variables: {path, language},
-            queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
-        }).then(result => result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus);
 
         cy.login();
         const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents');
@@ -214,9 +208,8 @@ describe('Test the save publish buttons flow', () => {
         contentEditor.switchToAdvancedMode();
         contentEditor.unpublish();
 
-        cy.waitUntil(() => publicationStatus(langEN).then(status => status === 'UNPUBLISHED'),
-            {timeout: 10000, interval: 1000, errorMsg: `Unable to unpublish ${path} in ${langEN}`});
-        publicationStatus('de').should('eq', 'PUBLISHED');
+        waitForPublicationStatus(path, langEN, 'UNPUBLISHED');
+        waitForPublicationStatus(path, 'de', 'PUBLISHED');
     });
 
     it('should not be able to publish with invalid form', () => {

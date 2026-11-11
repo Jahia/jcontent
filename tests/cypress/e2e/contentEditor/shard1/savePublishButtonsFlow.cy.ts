@@ -117,15 +117,7 @@ describe('Test the save publish buttons flow', () => {
 
     const unPublish = (contentEditor: ContentEditor) => {
         cy.log('Unpublish in all languages');
-        contentEditor.openContentEditorHeaderMenu();
-        getComponentByRole(Menu, 'jcontent-publishMenu')
-            .should('be.visible')
-            .find('.moonstone-menuItem[data-sel-role="unpublishInAllLanguages"]')
-            .should('have.attr', 'aria-disabled', 'false')
-            .click();
-        cy.get('button.x-btn-text').contains('Unpublish all').click();
-        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
-        cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Unpublication completed');
+        contentEditor.unpublishInAllLanguages();
 
         cy.waitUntil(() => {
             return cy.apollo({

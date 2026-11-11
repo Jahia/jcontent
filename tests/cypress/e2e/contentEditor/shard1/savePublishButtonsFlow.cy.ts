@@ -214,7 +214,8 @@ describe('Test the save publish buttons flow', () => {
         contentEditor.switchToAdvancedMode();
         contentEditor.unpublish();
 
-        publicationStatus(langEN).should('eq', 'UNPUBLISHED');
+        cy.waitUntil(() => publicationStatus(langEN).then(status => status === 'UNPUBLISHED'),
+            {timeout: 10000, interval: 1000, errorMsg: `Unable to unpublish ${path} in ${langEN}`});
         publicationStatus('de').should('eq', 'PUBLISHED');
     });
 

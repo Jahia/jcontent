@@ -61,6 +61,15 @@ describe('Test the save publish buttons flow', () => {
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'simpleTextUnpublish',
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', value: 'EN', language: 'en'},
+                {name: 'text', value: 'DE', language: 'de'}
+            ]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'constraints',
             primaryNodeType: 'qant:constraints',
             properties: [
@@ -72,6 +81,7 @@ describe('Test the save publish buttons flow', () => {
         });
         publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextA`, ['en', 'de', 'fr']);
         publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextB`, ['en', 'de', 'fr']);
+        publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextUnpublish`, ['en', 'de']);
     });
 
     after(function () {
@@ -188,6 +198,24 @@ describe('Test the save publish buttons flow', () => {
         checkContentEditorHeaderButtons(contentEditor, false, true);
         contentEditor.getLanguageSwitcherAdvancedMode().select('German');
         checkContentEditorHeaderButtons(contentEditor, false, false);
+    });
+
+    it('should unpublish the edited language only', () => {
+        const path = `/sites/${siteKey}/contents/simpleTextUnpublish`;
+        const publicationStatus = (language: string) => cy.apollo({
+            fetchPolicy: 'no-cache',
+            variables: {path, language},
+            queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
+        }).then(result => result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus);
+
+        cy.login();
+        const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('simpleTextUnpublish');
+        contentEditor.switchToAdvancedMode();
+        contentEditor.unpublish();
+
+        publicationStatus(langEN).should('eq', 'UNPUBLISHED');
+        publicationStatus('de').should('eq', 'PUBLISHED');
     });
 
     it('should not be able to publish with invalid form', () => {

@@ -16,6 +16,15 @@ jest.mock('@apollo/client', () => {
     };
 });
 
+let mockI18nContext;
+jest.mock('~/ContentEditor/contexts', () => {
+    const actual = jest.requireActual('~/ContentEditor/contexts');
+    return {
+        ...actual,
+        useContentEditorContext: () => ({...actual.useContentEditorContext(), i18nContext: mockI18nContext})
+    };
+});
+
 jest.mock('react', () => {
     return {
         ...jest.requireActual('react'),
@@ -29,6 +38,7 @@ describe('RichText component', () => {
     let props;
 
     beforeEach(() => {
+        mockI18nContext = undefined;
         props = {
             id: 'richID',
             value: 'initial value',
@@ -82,7 +92,8 @@ describe('RichText component', () => {
         expect(props.onChange.mock.calls).toEqual([[dummyEditor.editor.getData()]]);
     });
 
-    const readyEditor = () => ({editor: {getData: jest.fn(() => ''), setData: jest.fn()}});
+    const readyEditor = () => ({editor: {getData: jest.fn(() => ''), setData: jest.fn(), resetUndo: jest.fn()}});
+    const restoredWith = value => [value, expect.objectContaining({noSnapshot: true})];
 
     it('should apply the latest value when the editor is ready, if it changed after the mount', () => {
         props.value = '';
@@ -92,7 +103,47 @@ describe('RichText component', () => {
         const evt = readyEditor();
         cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
 
-        expect(evt.editor.setData).toHaveBeenCalledWith('<p>unsaved</p>');
+        expect(evt.editor.setData).toHaveBeenCalledWith(...restoredWith('<p>unsaved</p>'));
+    });
+
+    it('should start the undo history at the restored value', () => {
+        props.value = '';
+        const cmp = shallow(<RichText {...props}/>);
+        cmp.setProps({value: '<p>unsaved</p>'});
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+        evt.editor.setData.mock.calls[0][1].callback();
+
+        expect(evt.editor.resetUndo).toHaveBeenCalled();
+    });
+
+    it('should not touch a remounted editor that was created with the current value', () => {
+        mockI18nContext = {memo: {count: 1}};
+        props.value = '';
+        const cmp = shallow(<RichText {...props}/>);
+        mockI18nContext = {memo: {count: 2}};
+        cmp.setProps({value: '<p>other language</p>'});
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+
+        expect(cmp.find(RICH_TEXT_COMPONENT_TAG).key()).toBe('v2');
+        expect(evt.editor.setData).not.toHaveBeenCalled();
+    });
+
+    it('should apply the latest value to a remounted editor, if it changed after the remount', () => {
+        mockI18nContext = {memo: {count: 1}};
+        props.value = '';
+        const cmp = shallow(<RichText {...props}/>);
+        mockI18nContext = {memo: {count: 2}};
+        cmp.setProps({value: '<p>outgoing</p>'});
+        cmp.setProps({value: '<p>restored</p>'});
+
+        const evt = readyEditor();
+        cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
+
+        expect(evt.editor.setData).toHaveBeenCalledWith(...restoredWith('<p>restored</p>'));
     });
 
     it('should not touch the editor when it is ready, if the value did not change after the mount', () => {
@@ -113,7 +164,7 @@ describe('RichText component', () => {
         const evt = readyEditor();
         cmp.find(RICH_TEXT_COMPONENT_TAG).simulate('instanceReady', evt);
 
-        expect(evt.editor.setData).toHaveBeenCalledWith('');
+        expect(evt.editor.setData).toHaveBeenCalledWith(...restoredWith(''));
     });
 
     it('should be readOnly when formDefinition say so', () => {

@@ -260,6 +260,9 @@ describe('Language switcher tests', () => {
 
         const ce = JContent.visit(siteKey, 'en', `content-folders/contents/${folder}`)
             .editComponentByText('news without description');
+        // Each wait on an alias takes the next request, counted from the intercept: the opening
+        // request is taken here, so the waits below match the language switches.
+        cy.wait('@editForm');
         const description = ce.getRichTextField('jnt:news_desc');
 
         cy.log('Type a description in English without saving');

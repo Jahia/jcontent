@@ -128,8 +128,12 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
                 readOnly={field.readOnly}
                 onInstanceReady={evt => {
                     // CKEditor drops a setData received before instanceReady and shows the data it was mounted with
+                    // The undo history starts at the restored value: an undo must not bring the mounted data back
                     if (valueRef.current !== mountRef.current.value) {
-                        evt.editor.setData(valueRef.current ?? '');
+                        evt.editor.setData(valueRef.current ?? '', {
+                            noSnapshot: true,
+                            callback: () => evt.editor.resetUndo?.()
+                        });
                     }
                 }}
                 onMode={evt => {

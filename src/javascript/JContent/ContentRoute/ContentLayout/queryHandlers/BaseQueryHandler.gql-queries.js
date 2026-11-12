@@ -9,6 +9,7 @@ export const NodePreviewFieldsFragment = gql`
         isFile: isNodeType(type: {types: ["jnt:file"]})
         isPage: isNodeType(type: {types: ["jnt:page"]})
         isContent: isNodeType(type: {types: ["jnt:content"]})
+        hasCmView
         jView: property(name: "j:view") {
             value
         }

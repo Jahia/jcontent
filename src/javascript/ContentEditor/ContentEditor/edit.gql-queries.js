@@ -25,6 +25,7 @@ const NodeDataFragment = {
                 isFolder:isNodeType(type: {multi: ANY, types: ["jnt:contentFolder", "jnt:folder"]})
                 isFile: isNodeType(type: {types: ["jnt:file"]})
                 isContent: isNodeType(type: {types: ["jnt:content"]})
+                hasCmView
                 isSystemNameReadOnlyMixin: isNodeType(type: {multi: ANY, types: ["jmix:systemNameReadonly"]})
                 moveSystemNameToTop: isNodeType(type: {multi: ANY, types: [
                     "jnt:page",

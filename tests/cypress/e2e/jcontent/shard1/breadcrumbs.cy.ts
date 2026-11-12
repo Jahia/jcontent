@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object';
+import {JContent, JContentPageBuilder} from '../../../page-object';
 import {Breadcrumb} from '../../../page-object/breadcrumb';
 import {addNode} from '@jahia/cypress';
 
@@ -57,7 +57,7 @@ describe('Breadcrumb navigation test', () => {
 
     it('Display popup when navigating to list and render list view when selected', () => {
         const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
-        cy.frameLoaded('#page-builder-frame-1');
+        new JContentPageBuilder(jcontent).shouldDisplayPage('/sites/digitall/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-sel-role="view-list"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('List of content items').should('be.visible');
@@ -66,18 +66,20 @@ describe('Breadcrumb navigation test', () => {
     });
 
     it('Display popup when navigating to list and render parent page when selected', () => {
-        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry/article/all-organic-foods-network-gains');
         Breadcrumb.findByContent('article').click();
         cy.get('button[data-sel-role="view-parent"]').should('be.visible').click();
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
         cy.get('h1').contains('News Entry');
+        new JContentPageBuilder(jcontent).shouldDisplayPage('/sites/digitall/home/newsroom/news-entry');
     });
 
     it('Do not display popup when navigating to page', () => {
-        JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry');
+        const jcontent = JContent.visit('digitall', 'en', 'pages/home/newsroom/news-entry');
         Breadcrumb.findByContent('Newsroom').click();
         cy.get('.moonstone-chip').find('span').contains('Page').should('be.visible');
         cy.get('h1').contains('Newsroom');
+        new JContentPageBuilder(jcontent).shouldDisplayPage('/sites/digitall/home/newsroom');
     });
 
     it('Do not display popup when navigating to list in list view', () => {

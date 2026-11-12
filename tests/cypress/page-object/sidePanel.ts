@@ -53,12 +53,16 @@ export class SidePanel extends BasePage {
         return this.getByRole('side-panel');
     }
 
-    getDetailsSection(content: 'technical' | 'additional') {
+    getDetailsSection(content: 'technical' | 'additional' | 'preview-link') {
         return cy.get(this.scoped(`[data-sel-role="details-section"][data-sel-content="${content}"]`));
     }
 
     getDetailRow(label: string) {
         return cy.get(this.scoped(`[data-sel-role="detail-row"][data-sel-label="${label}"]`));
+    }
+
+    getPreviewLink() {
+        return cy.get(this.scoped('[data-sel-role="preview-link"]'));
     }
 
     getHistoryFilter() {

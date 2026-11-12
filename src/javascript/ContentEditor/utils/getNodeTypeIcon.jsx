@@ -1,8 +1,3 @@
-import React from 'react';
-import {getIcon} from '@jahia/icons';
-import {Layers} from '@jahia/moonstone';
-
-export function getNodeTypeIcon(typeName) {
-    const Icon = getIcon(typeName) || Layers;
-    return <Icon/>;
-}
+// The type-name-to-icon question is answered in one place, shared with the node based lookup the
+// trees and tables use, so a chip and the tree beside it cannot disagree.
+export {getNodeTypeIcon} from '~/utils/nodeTypeIcons';

@@ -268,4 +268,36 @@ describe('JContent preview tests', () => {
             .should('be.visible')
             .and('contain.text', 'preview me edited');
     });
+
+    describe('Preview link in the details tab', () => {
+        const openDetails = (name: string) => {
+            const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+            jcontent.openPreview(name);
+            sidePanel.getByRole('side-panel').should('be.visible');
+            sidePanel.switchToDetailsTab();
+        };
+
+        it('should offer the preview URL of a main resource, opening it in a new tab', () => {
+            // Jnt:news carries jmix:mainResource, so the node renders on its own and has a URL a
+            // reviewer can open outside jContent. See Jahia/jcontent#2934.
+            openDetails('previewMainResource');
+
+            sidePanel.getDetailsSection('preview-link').should('be.visible');
+            sidePanel.getPreviewLink().should('have.attr', 'target', '_blank');
+            sidePanel.getPreviewLink().should('have.attr', 'rel', 'noopener noreferrer');
+            // The last segment is the node name until the news module's rules create a vanity URL
+            // from the title, and 'preview-main-resource' after that. Assert only that the address
+            // is absolute and goes through the render servlet, which is what makes the link open
+            // the standard preview.
+            sidePanel.getPreviewLink().invoke('attr', 'href').should('match', /^https?:\/\/.+\/cms\/render\/default\//);
+        });
+
+        it('should offer no preview URL for content that does not render on its own', () => {
+            // Jnt:text has no content template, so there is no address to hand a reviewer.
+            openDetails('previewText');
+
+            sidePanel.getDetailsSection('technical').should('exist');
+            cy.get('[data-sel-role="details-section"][data-sel-content="preview-link"]').should('not.exist');
+        });
+    });
 });

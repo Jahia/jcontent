@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
 import {getPreviewPath} from '~/ContentEditor/editorTabs/EditPanelContent/Preview/Preview.utils';
+import {resolveUrlForLiveOrPreview} from '~/JContent/JContent.utils';
 import styles from './ContentDetails.scss';
 
 const GET_CONTENT_LINKS = gql`
@@ -33,6 +34,24 @@ const GET_CONTENT_LINKS = gql`
                     default
                     language
                     workspace
+                }
+            }
+        }
+    }
+`;
+
+const GET_CONTENT_PREVIEW_URL = gql`
+    query getContentPreviewUrl($path: String!, $language: String!) {
+        jcr {
+            nodeByPath(path: $path) {
+                uuid
+                workspace
+                previewAvailable: isNodeType(type: {multi: ANY, types: ["jnt:page", "jmix:mainResource"]})
+                renderUrl(workspace: EDIT, language: $language)
+                site {
+                    uuid
+                    workspace
+                    serverName
                 }
             }
         }
@@ -87,7 +106,7 @@ DetailRow.propTypes = {
     children: PropTypes.node
 };
 
-const LinkRow = ({label, displayValue, copyValue}) => {
+const LinkRow = ({label, displayValue, copyValue, href}) => {
     const {t} = useTranslation('jcontent');
     const notificationContext = useNotifications();
 
@@ -111,7 +130,15 @@ const LinkRow = ({label, displayValue, copyValue}) => {
             </Typography>
             <div className={styles.value}>
                 <Typography variant="body" component="span" className={styles.linkValue}>
-                    {displayValue}
+                    {href ? (
+                        <a href={href}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className={styles.link}
+                           data-sel-role="preview-link"
+                        >{displayValue}
+                        </a>
+                    ) : displayValue}
                 </Typography>
                 <Button
                     icon={<Copy/>}
@@ -127,7 +154,8 @@ const LinkRow = ({label, displayValue, copyValue}) => {
 LinkRow.propTypes = {
     label: PropTypes.string.isRequired,
     displayValue: PropTypes.string,
-    copyValue: PropTypes.string
+    copyValue: PropTypes.string,
+    href: PropTypes.string
 };
 
 // URL-encode each segment of a JCR path while keeping the slashes intact
@@ -238,6 +266,41 @@ const ContentLinks = () => {
     );
 };
 
+// Preview link for content that renders on its own: a page, or a node carrying jmix:mainResource
+// (a "main content" item living in a content folder). renderUrl is resolved server-side, so the
+// path, template and servlet mapping all come from the same place the preview action uses.
+const ContentPreviewLink = () => {
+    const {t} = useTranslation('jcontent');
+    const {nodeData, lang} = useSidePanelContext();
+
+    const path = nodeData?.path;
+    const {data} = useQuery(GET_CONTENT_PREVIEW_URL, {
+        variables: {path, language: lang},
+        skip: !path || !lang
+    });
+
+    const node = data?.jcr?.nodeByPath;
+    if (!node?.previewAvailable || !node.renderUrl) {
+        return null;
+    }
+
+    const url = resolveUrlForLiveOrPreview(node.renderUrl, false, node.site?.serverName);
+
+    return (
+        <div className={styles.section} data-sel-role="details-section" data-sel-content="preview-link">
+            <Typography variant="subheading" className={styles.sectionTitle}>
+                {t('jcontent:label.contentEditor.sidePanel.links')}
+            </Typography>
+            <LinkRow
+                label={t('jcontent:label.contentEditor.sidePanel.linksPreview')}
+                displayValue={url}
+                copyValue={url}
+                href={url}
+            />
+        </div>
+    );
+};
+
 // Links section for files: shows the functional staging and live URLs. Built with the same logic
 // as the download dialog's "copy URL" (see DownloadFileDialog).
 const FileLinks = () => {
@@ -308,6 +371,8 @@ export const ContentDetails = () => {
             )}
 
             <FileLinks/>
+
+            <ContentPreviewLink/>
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">

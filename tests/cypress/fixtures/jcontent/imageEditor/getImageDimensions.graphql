@@ -1,0 +1,12 @@
+query getImageDimensions($path: String!) {
+    jcr {
+        nodeByPath(path: $path) {
+            width: property(name: "j:width") {
+                value
+            }
+            height: property(name: "j:height") {
+                value
+            }
+        }
+    }
+}

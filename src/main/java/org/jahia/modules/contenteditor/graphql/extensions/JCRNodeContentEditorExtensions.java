@@ -138,7 +138,8 @@ public class JCRNodeContentEditorExtensions {
             }
             return false;
         } catch (RepositoryException e) {
-            throw new DataFetchingException(e);
+            // As RenderService.hasView(JCRNodeWrapper, ...) does: an unreadable type has no view.
+            return false;
         }
     }
 

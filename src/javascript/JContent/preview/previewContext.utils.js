@@ -46,14 +46,14 @@ const getOutOfContextCssSource = (node, isDisplayablePage) => {
  *      configuration (templateNodeFilter applies on wrappedcontent,page,gwt), so any other
  *      configuration renders the bare view instead of the content template. The template
  *      output is a full document, so it carries its own CSS.
- *      Exception: a node with a 'cm' view (hasCmView) gets the module render below instead,
- *      as documented for the jContent preview; its content template render gives the CSS.
+ *      Exception: a node with a 'cm' view (hasCmView) and no j:view gets the module render below
+ *      instead, as documented for the jContent preview; its content template render gives the CSS.
  *    - !isDisplayableNode: module render of the view. CSS injected via cssSourcePath, taken
  *      from the displayable ancestor when it is a non-folder page, else, for jnt:content, from the
  *      node itself rendered through the content-template wrapper (cssSourceView), the page every
  *      standalone content is previewed in.
  *
- * @param {object} node                 - JCR node with { path, uuid, isPage, isContent, hasCmView, displayableNode }
+ * @param {object} node                 - JCR node with { path, uuid, isPage, isContent, hasCmView, jView, displayableNode }
  * @param {string} language
  * @param {object} options
  * @param {object} [options.closestPage]        - { path, view? } — the hosting page context.
@@ -109,11 +109,12 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     // The node has a template of its own — page template, or content template for content
     // holding jmix:mainResource. Render it as a full page so that template is applied; its
     // output already includes the CSS, so no cssSourcePath is needed.
-    // Render through the node's own template, unless the node has a 'cm' view, which goes first.
-    // The template render bypasses views, so the server cannot pick 'cm' there: the client
-    // decides with hasCmView.
+    // Render through the node's own template, unless the node has a 'cm' view and no j:view: the
+    // server would pick that 'cm' view first. The template render bypasses views, so the server
+    // cannot pick 'cm' there: the client decides with hasCmView. A j:view keeps the template.
     const hasOwnTemplate = isDisplayableNode && isDisplayablePage;
-    const rendersThroughTemplate = node.isPage || (hasOwnTemplate && !node.hasCmView);
+    const showsCmView = node.hasCmView && !node.jView?.value;
+    const rendersThroughTemplate = node.isPage || (hasOwnTemplate && !showsCmView);
     if (rendersThroughTemplate) {
         return {
             primary: {
@@ -135,13 +136,15 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
     // Module render with view null. The server picks the node's j:view, else 'cm', else 'default'.
     // A node without a template of its own checks for 'cm' here, on the server. CSS is injected by
     // fetching a page render; for a node with its own template, that render is the node itself.
+    // That self render is shared by no other item, so a cssSourceView keeps it from blocking the preview.
+    const cssSource = hasOwnTemplate ? {cssSourcePath: node.path, cssSourceView: 'default'} : getOutOfContextCssSource(node, isDisplayablePage);
     return {
         primary: {
             ...base,
             path: node.path,
             view: null,
             contextConfiguration: 'module',
-            ...getOutOfContextCssSource(node, isDisplayablePage),
+            ...cssSource,
             ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
             ...extraParams
         },

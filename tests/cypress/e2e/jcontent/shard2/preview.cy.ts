@@ -157,6 +157,10 @@ describe('JContent preview tests', () => {
             .should('be.visible')
             .and('contain.html', 'class="main-resource-cm-view"')
             .and('not.contain.html', 'class="main-resource-default-view"');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should($iframe => {
+            const links = $iframe[0].contentDocument.head.querySelectorAll('link[rel="stylesheet"]');
+            expect(links.length, 'the content template render gives the CSS').to.be.greaterThan(0);
+        });
     });
 
     it('should render the cm view of a content that has a content template in pages mode (jcontent#2883)', () => {

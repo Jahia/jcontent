@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-The preview renders the `cm` view of a content that has a content template again, in Content Folders and in pages mode.
+Fixed the preview so it renders the `cm` view of a content that has a content template again, in Content Folders, in pages mode and in Content Editor.

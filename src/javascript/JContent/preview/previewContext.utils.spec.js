@@ -69,11 +69,18 @@ describe('buildPreviewContexts', () => {
             expect(primary.contextConfiguration).toBe('module');
             expect(primary.view).toBeNull();
             expect(primary.cssSourcePath).toBe('/sites/site/contents/news');
-            expect(primary.cssSourceView).toBeUndefined();
+            // Set, so PreviewFetcher does not hold the preview until the template render arrives.
+            expect(primary.cssSourceView).toBe('default');
         });
 
         it('keeps the content template render when there is no cm view', () => {
             const {primary} = buildPreviewContexts(mainResource({hasCmView: false}), language);
+            expect(primary.contextConfiguration).toBe('page');
+            expect(primary.view).toBe('default');
+        });
+
+        it('keeps the content template render when the node has a j:view, as the server picks j:view before cm', () => {
+            const {primary} = buildPreviewContexts(mainResource({hasCmView: true, jView: {value: 'event'}}), language);
             expect(primary.contextConfiguration).toBe('page');
             expect(primary.view).toBe('default');
         });

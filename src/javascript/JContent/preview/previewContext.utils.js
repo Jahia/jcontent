@@ -108,10 +108,13 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
 
     // The node has a template of its own — page template, or content template for content
     // holding jmix:mainResource. Render it as a full page so that template is applied; its
-    // output already includes the CSS, so no cssSourcePath is needed. A 'cm' view takes
-    // precedence over the content template.
+    // output already includes the CSS, so no cssSourcePath is needed.
+    // Render through the node's own template, unless the node has a 'cm' view, which goes first.
+    // The template render bypasses views, so the server cannot pick 'cm' there: the client
+    // decides with hasCmView.
     const hasOwnTemplate = isDisplayableNode && isDisplayablePage;
-    if (node.isPage || (hasOwnTemplate && !node.hasCmView)) {
+    const rendersThroughTemplate = node.isPage || (hasOwnTemplate && !node.hasCmView);
+    if (rendersThroughTemplate) {
         return {
             primary: {
                 ...base,
@@ -129,8 +132,9 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
-    // No template of its own, or a 'cm' view: render the view standalone and inject CSS by
-    // fetching a page render. For a node with its own template, that render is the node itself.
+    // Module render with view null. The server picks the node's j:view, else 'cm', else 'default'.
+    // A node without a template of its own checks for 'cm' here, on the server. CSS is injected by
+    // fetching a page render; for a node with its own template, that render is the node itself.
     return {
         primary: {
             ...base,

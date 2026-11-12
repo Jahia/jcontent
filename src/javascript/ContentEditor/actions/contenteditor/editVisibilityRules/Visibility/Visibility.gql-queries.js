@@ -44,62 +44,62 @@ export const VisibilityQuery = gql`query($path:String!, $language: String!) {
                     isMatchingAllConditions: property(language: $language, name: "j:forceMatchAllConditions") {
                         booleanValue
                     }
-                }
-            }
-            rules: descendants(typesFilter:{types: ["jnt:condition"], multi: ALL}) {
-                pageInfo {
-                    totalCount
-                }
-                nodes {
-                    ...NodeCacheRequiredFields
-                    primaryNodeType {
-                        name
-                    }
-                    properties {
-                        name
-                        values
-                        value
-                    }
-                    isConditionMatching
-                    mixinTypes {
-                        name
-                    }
-                    markedForDeletion: isNodeType(type: {types: ["jmix:markedForDeletion"]})
-                    lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
-                        value
-                    }
-                    lastModified: property(name: "jcr:lastModified", language: $language) {
-                        value
-                    }
-                    lastPublished: property(name: "j:lastPublished", language: $language) {
-                        value
-                    }
-                    lastPublishedBy: property(name: "j:lastPublishedBy", language: $language) {
-                        value
-                    }
-                    deletedBy: property(name: "j:deletionUser", language: $language) {
-                        value
-                    }
-                    deleted: property(name: "j:deletionDate", language: $language) {
-                        value
-                    }
-                    live: nodeInWorkspace(workspace: LIVE) {
-                        ...NodeCacheRequiredFields
-                        properties {
-                            name
-                            value
-                            values
+                    rules: children(typesFilter:{types: ["jnt:condition"], multi: ALL}) {
+                        pageInfo {
+                            totalCount
                         }
-                        isConditionMatching
-                    }
-                    aggregatedPublicationInfo(language: $language) {
-                        existsInLive
-                        publicationStatus
-                    }
-                    operationsSupport {
-                        lock
-                        markForDeletion
-                        publication
+                        nodes {
+                            ...NodeCacheRequiredFields
+                            primaryNodeType {
+                                name
+                            }
+                            properties {
+                                name
+                                values
+                                value
+                            }
+                            isConditionMatching
+                            mixinTypes {
+                                name
+                            }
+                            markedForDeletion: isNodeType(type: {types: ["jmix:markedForDeletion"]})
+                            lastModifiedBy: property(name: "jcr:lastModifiedBy", language: $language) {
+                                value
+                            }
+                            lastModified: property(name: "jcr:lastModified", language: $language) {
+                                value
+                            }
+                            lastPublished: property(name: "j:lastPublished", language: $language) {
+                                value
+                            }
+                            lastPublishedBy: property(name: "j:lastPublishedBy", language: $language) {
+                                value
+                            }
+                            deletedBy: property(name: "j:deletionUser", language: $language) {
+                                value
+                            }
+                            deleted: property(name: "j:deletionDate", language: $language) {
+                                value
+                            }
+                            live: nodeInWorkspace(workspace: LIVE) {
+                                ...NodeCacheRequiredFields
+                                properties {
+                                    name
+                                    value
+                                    values
+                                }
+                                isConditionMatching
+                            }
+                            aggregatedPublicationInfo(language: $language) {
+                                existsInLive
+                                publicationStatus
+                            }
+                            operationsSupport {
+                                lock
+                                markForDeletion
+                                publication
+                            }
+                        }
                     }
                 }
             }

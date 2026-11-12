@@ -15,7 +15,7 @@ describe('Multi-selection tests', {testIsolation: false}, () => {
 
     const checkToolbar = () => {
         getComponentBySelector(Button,
-            '[role="toolbar"] [data-sel-role="publishAll"]',
+            '[role="group"][aria-label="Page actions"] [data-sel-role="publishAll"]',
             null,
             e => expect(e).to.be.visible);
     };

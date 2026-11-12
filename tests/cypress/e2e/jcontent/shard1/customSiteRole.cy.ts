@@ -54,6 +54,20 @@ describe('Custom site role', () => {
     // late requests can set a guest session cookie over the one of the next login.
     const leaveJContent = () => cy.visit('/cms/logout', {failOnStatusCode: false});
 
+    // The Category Manager entry renders only after its own permission query on /sites/systemsite, so a UI absence
+    // alone cannot tell "denied" from "not answered yet". The permission, read with the user's credentials, can.
+    const verifyUserLacksPermission = (path: string, permission: string) => {
+        cy.apolloClient({username: userName, password}).apollo({
+            fetchPolicy: 'no-cache',
+            query: gql`
+                query userPermission($path: String!, $permission: String!) {
+                    jcr { nodeByPath(path: $path) { hasPermission(permissionName: $permission) } }
+                }
+            `,
+            variables: {path, permission}
+        }).its('data.jcr.nodeByPath.hasPermission').should('eq', false);
+    };
+
     const verifyNavigationOf = (login: () => void, navItem: string, shouldExist: boolean) => {
         login();
         JContent.visit(siteKey, 'en', 'pages/home');
@@ -79,6 +93,8 @@ describe('Custom site role', () => {
 
     it('has no Category Manager entry in the primary navigation', () => {
         context.tag('admin', 'roles', 'custom-role-no-category-manager', 'testrail-case-2213943');
+        verifyUserLacksPermission('/sites/systemsite/categories', 'categoryManager');
+        verifyUserLacksPermission('/sites/systemsite', 'categoryManager');
         verifyNavigationOf(() => cy.login(userName, password), 'category-manager', false);
         // Control: root sees the entry on the same screen
         verifyNavigationOf(() => cy.login(), 'category-manager', true);

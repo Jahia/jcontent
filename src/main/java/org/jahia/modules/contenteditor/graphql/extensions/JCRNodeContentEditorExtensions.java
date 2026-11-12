@@ -39,6 +39,8 @@ import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
 import org.jahia.services.render.RenderService;
 import org.jahia.utils.LanguageCodeConverters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
@@ -48,6 +50,8 @@ import javax.jcr.RepositoryException;
  */
 @GraphQLTypeExtension(GqlJcrNode.class)
 public class JCRNodeContentEditorExtensions {
+
+    private static final Logger logger = LoggerFactory.getLogger(JCRNodeContentEditorExtensions.class);
 
     private GqlJcrNode node;
 
@@ -139,6 +143,8 @@ public class JCRNodeContentEditorExtensions {
             return false;
         } catch (RepositoryException e) {
             // As RenderService.hasView(JCRNodeWrapper, ...) does: an unreadable type has no view.
+            logger.warn("Unable to read the types of node {} to look for its cm view: {}", node.getPath(), e.getMessage());
+            logger.debug("Unable to read the types of node {}", node.getPath(), e);
             return false;
         }
     }

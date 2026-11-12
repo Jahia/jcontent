@@ -104,7 +104,8 @@ jobs:
     with:
       module_id: jcontent
       module_branch: ${{ github.ref }}
-      jahia_image: ghcr.io/jahia/jahia-ee-dev:8-SNAPSHOT
+      # A released Jahia: 8-SNAPSHOT ships the jcontent of main, a higher version that Jahia keeps over the build of this line
+      jahia_image: ghcr.io/jahia/jahia-ee-dev:8
       tests_profile: ${{ matrix.config_file }}
       provisioning_manifest: provisioning-manifest-build.yml
       artifact_prefix: jcontent-${{ github.event.pull_request.number }}-${{ matrix.config_file }}

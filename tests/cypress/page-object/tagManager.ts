@@ -97,7 +97,10 @@ export class TagManager extends JContent {
     }
 
     openUsages(tagName: string): TagManager {
-        return this.clickRowAction(tagName, 'tag-manager-view');
+        this.clickRowAction(tagName, 'tag-manager-view');
+        // Moves the focus into the drawer, as moonstone#1571 will, so the tooltip of the eye button closes (jcontent#2923)
+        this.getCloseDrawerButton().get().focus();
+        return this;
     }
 
     openRename(tagName: string): TagManager {
@@ -116,8 +119,12 @@ export class TagManager extends JContent {
         return cy.get(`[data-cm-role="tag-manager-drawer-item"][data-node-path="${nodePath}"]`);
     }
 
+    getCloseDrawerButton(): Button {
+        return getComponentBySelector(Button, 'button[data-cm-role="tag-manager-close-drawer"]');
+    }
+
     closeDrawer(): TagManager {
-        cy.get('button[data-cm-role="tag-manager-close-drawer"]').click();
+        this.getCloseDrawerButton().click();
         return this;
     }
 

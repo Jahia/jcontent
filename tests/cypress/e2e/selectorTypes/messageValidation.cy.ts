@@ -17,15 +17,15 @@ describe('Content Editor - validation messages across fields', () => {
     const invalidEmail = 'Adapted@text';
     const validEmail = 'Adapted@text.org';
 
-    const invalidDate = '99/99/9999 99:99';
+    const invalidDate = '99/99/9999';
     const validDate = new Date(2019, 10, 25, 10, 5);
+    const validDateDisplay = '11/25/2019 10:05';
 
     const forced = true;
 
-    const typeInvalidDate = () => {
-        cy.get(`[data-sel-content-editor-field="${dateFieldName}"]`).find('input[type="text"]').as('dateInput');
-        cy.get('@dateInput').clear({force: forced});
-        cy.get('@dateInput').type(invalidDate, {force: forced});
+    // Moonstone never commits an unparseable typed date, so garbage cannot reach validation any more
+    const typeInvalidDate = ce => {
+        ce.getDateField(dateFieldName).getDateInput().clear({force: forced}).type(invalidDate, {force: forced});
     };
 
     before(() => {
@@ -68,9 +68,10 @@ describe('Content Editor - validation messages across fields', () => {
         ce.getDateField(dateFieldName).getErrorMessage().should('not.exist');
 
         ce.getSmallTextField(emailFieldName).addNewValue(validEmail);
-        typeInvalidDate();
+        typeInvalidDate(ce);
         ce.getDateField(dateFieldName).blurTextField();
-        ce.getDateField(dateFieldName).getErrorMessage('invalidDate').should('be.visible');
+        ce.getDateField(dateFieldName).checkValue(validDateDisplay);
+        ce.getDateField(dateFieldName).getErrorMessage().should('not.exist');
         ce.getSmallTextField(emailFieldName).getErrorMessage().should('not.exist');
     });
 });

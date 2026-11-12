@@ -55,7 +55,7 @@ describe('DateTimePicker component', () => {
         const localDate = new Date(2019, 6, 14, 21, 7, 12);
         cmp.simulate('change', localDate);
 
-        expect(props.onChange).toHaveBeenCalledWith(localDate.toISOString());
+        expect(props.onChange).toHaveBeenCalledWith(localDate.toISOString(), true);
     });
 
     it('should call onChange with just the picked calendar day, for DatePicker', () => {
@@ -65,26 +65,23 @@ describe('DateTimePicker component', () => {
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
         cmp.simulate('change', new Date(2019, 6, 14));
 
-        expect(props.onChange).toHaveBeenCalledWith('2019-07-14T00:00:00.000Z');
+        expect(props.onChange).toHaveBeenCalledWith('2019-07-14T00:00:00.000Z', true);
+    });
+
+    it('should call onChange with a UTC instant for the zoned DateTimePicker too', () => {
+        props.field.selectorType = 'DateTimePicker';
+        props.field.declaringNodeType = 'jnt:startEndDateCondition';
+        const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
+        cmp.simulate('change', new Date('2027-06-19T21:30:00.000Z'));
+
+        expect(props.onChange).toHaveBeenCalledWith('2027-06-19T21:30:00.000Z', true);
     });
 
     it('should call onChange with null when cleared', () => {
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
         cmp.simulate('change', null);
 
-        expect(props.onChange).toHaveBeenCalledWith(null);
-    });
-
-    it('should render a hint showing the browser\'s timezone, for DateTimePicker', () => {
-        props.field.selectorType = 'DateTimePicker';
-        const cmp = shallow(<DateTimePicker {...props}/>);
-        expect(cmp.find('[data-sel-role="date-field-timezone-hint"]').exists()).toBe(true);
-    });
-
-    it('should NOT render a timezone hint for DatePicker, since its value has no timezone dependency', () => {
-        props.field.selectorType = 'DatePicker';
-        const cmp = shallow(<DateTimePicker {...props}/>);
-        expect(cmp.find('[data-sel-role="date-field-timezone-hint"]').exists()).toBe(false);
+        expect(props.onChange).toHaveBeenCalledWith(null, true);
     });
 
     it('should give readOnly', () => {
@@ -119,6 +116,19 @@ describe('DateTimePicker component', () => {
         expect(cmp.props().variant).toBe('datetime');
     });
 
+    it('should display the zonedDatetime variant only for a visibility condition DateTimePicker', () => {
+        props.field.selectorType = 'DateTimePicker';
+        props.field.declaringNodeType = 'jnt:startEndDateCondition';
+        expect(shallow(<DateTimePicker {...props}/>).find('DatePickerInput').props().variant).toBe('zonedDatetime');
+
+        props.field.declaringNodeType = 'qant:allFields';
+        expect(shallow(<DateTimePicker {...props}/>).find('DatePickerInput').props().variant).toBe('datetime');
+
+        props.field.selectorType = 'DatePicker';
+        props.field.declaringNodeType = 'jnt:startEndDateCondition';
+        expect(shallow(<DateTimePicker {...props}/>).find('DatePickerInput').props().variant).toBe('date');
+    });
+
     it('should set constraints on DatePicker', () => {
         props.field.selectorType = 'DatePicker';
         props.field.valueConstraints = [{
@@ -127,18 +137,21 @@ describe('DateTimePicker component', () => {
         }];
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
 
-        expect(cmp.props().dayPickerProps.disabledDays).toEqual([{before: new Date('2019-06-05T00:00:00.000')}]);
+        expect(cmp.props().minDate).toBe('2019-06-05');
+        expect(cmp.props().maxDate).toBeUndefined();
     });
 
-    it('should set constraints on DateTimePicker', () => {
+    it('should set day constraints on DateTimePicker, nudging exclusive bounds by a minute', () => {
         props.field.selectorType = 'DateTimePicker';
         props.field.valueConstraints = [{
-            value: {string: '(2019-06-04T10:00:00.000,2019-06-05T10:00:00.000)'},
+            value: {string: '(2019-06-04T10:00:00.000,2019-06-05T00:00:00.000)'},
             displayValue: 'yolo'
         }];
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
 
-        expect(cmp.props().dayPickerProps.disabledDays).toEqual([{before: new Date('2019-06-04T10:01:00.000')}, {after: new Date('2019-06-05T09:59:00.000')}]);
+        // 10:01 on the 4th keeps its day; 23:59 on the 4th excludes the 5th
+        expect(cmp.props().minDate).toBe('2019-06-04');
+        expect(cmp.props().maxDate).toBe('2019-06-04');
     });
 
     it('should set constraints on DateTimePicker with limit inclusion', () => {
@@ -149,7 +162,8 @@ describe('DateTimePicker component', () => {
         }];
         const cmp = shallow(<DateTimePicker {...props}/>).find('DatePickerInput');
 
-        expect(cmp.props().dayPickerProps.disabledDays).toEqual([{before: new Date('2019-06-04T00:00:00.000')}]);
+        expect(cmp.props().minDate).toBe('2019-06-04');
+        expect(cmp.props().maxDate).toBeUndefined();
     });
 
     it('should use the override date format when provided', () => {

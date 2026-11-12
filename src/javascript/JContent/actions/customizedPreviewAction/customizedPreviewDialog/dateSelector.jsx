@@ -10,12 +10,11 @@ export const DateSelector = () => {
     const lang = useSelector(state => state.language);
 
     return (
-        <div className={styles.selector}>
+        <div className={styles.selector} data-sel-role="date-selector-input">
             <SelectorLabel name="date"/>
             <DatePickerInput
-                data-sel-role="date-selector-input"
                 variant="datetime"
-                initialValue={date}
+                initialValue={date ? date.toDate() : null}
                 lang={lang}
                 onChange={setDate}
             />

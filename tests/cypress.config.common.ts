@@ -67,6 +67,17 @@ export const baseConfig = {
                 }
             });
 
+            // The date specs type and assert dates in the en-US display format, which Content Editor
+            // derives from the browser locale: pin Chromium to en-US so a run on a non-English machine
+            // (e.g. a fr-FR desktop) behaves like CI.
+            on('before:browser:launch', (browser, launchOptions) => {
+                if (browser.family === 'chromium' && browser.name !== 'electron') {
+                    launchOptions.args.push('--lang=en-US');
+                }
+
+                return launchOptions;
+            });
+
             // Load external plugins
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             return require('./cypress/plugins/index.js')(on, config);

@@ -143,9 +143,7 @@ public class JCRNodeContentEditorExtensions {
             return false;
         } catch (RepositoryException e) {
             // As RenderService.hasView(JCRNodeWrapper, ...) does: an unreadable type has no view.
-            logger.warn("Unable to read the types of node {} to look for its cm view: {}", node.getPath(), e.getMessage());
-            logger.debug("Unable to read the types of node {}", node.getPath(), e);
-            return false;
+            logger.warn("Unable to read the types of node {} to look for its cm view: {}", node.getPath(), e.getMessage());            return false;
         }
     }
 

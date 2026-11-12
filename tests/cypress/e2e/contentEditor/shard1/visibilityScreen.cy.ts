@@ -1,4 +1,4 @@
-import {JContent} from '../../../page-object';
+import {ContentEditor, JContent} from '../../../page-object';
 import {
     addNode,
     BaseComponent,
@@ -1742,4 +1742,58 @@ describe('Visibility Screen', () => {
             cy.get('body').should('not.contain', richTextHiddenText);
         });
     }); // End describe('Visibility Conditions on Copied Content')
+
+    // ---------------------------------------------------------------------------
+    // The dialog lists the conditions of the edited node, not those of its descendants
+    // ---------------------------------------------------------------------------
+    describe('Visibility Conditions of Descendants', () => {
+        const pageName = 'testPageOwnConditions';
+        const pagePath = `/sites/${sitekeyNonI18n}/home/${pageName}`;
+        const contentPath = `${pagePath}/area-main/own-conditions-content`;
+
+        before(() => {
+            const {today} = getDayNames();
+
+            addNode({
+                parentPathOrId: `/sites/${sitekeyNonI18n}/home`,
+                name: pageName,
+                primaryNodeType: 'jnt:page',
+                properties: [
+                    {name: 'jcr:title', value: pageName, language: 'en'},
+                    {name: 'j:templateName', type: 'STRING', value: 'simple'}
+                ],
+                children: [{
+                    name: 'area-main',
+                    primaryNodeType: 'jnt:contentList',
+                    children: [{
+                        name: 'own-conditions-content',
+                        primaryNodeType: 'jnt:bigText',
+                        properties: [{name: 'text', value: 'Content with its own condition', language: 'en'}]
+                    }]
+                }]
+            });
+            [pagePath, contentPath].forEach(path => {
+                cy.apollo({
+                    mutationFile: 'contentEditor/visibility/createRules.graphql',
+                    variables: {contentPath: path, dayOfWeek: [today.toLowerCase()]}
+                });
+            });
+        });
+
+        after(() => {
+            deleteNode(pagePath);
+            cy.logout();
+        });
+
+        beforeEach(() => {
+            cy.loginAndStoreSession();
+        });
+
+        it('Lists only the conditions of the edited page', () => {
+            ContentEditor.visit(pagePath, sitekeyNonI18n, 'en', `pages/home/${pageName}`);
+            openVisibilityDialog();
+
+            cy.get('[data-sel-role="visibility-rule-table"] tbody tr').should('have.length', 1);
+        });
+    }); // End describe('Visibility Conditions of Descendants')
 }); // End outer describe('Visibility Screen')

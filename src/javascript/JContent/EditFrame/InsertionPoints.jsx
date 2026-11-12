@@ -24,7 +24,12 @@ const hasVisibleContent = e => {
         return true;
     }
 
+    // A document that its frame has left has no window: nothing in it renders any more.
     const view = e.ownerDocument.defaultView;
+    if (!view) {
+        return false;
+    }
+
     return [...e.children].some(child => view.getComputedStyle(child).display !== 'none');
 };
 

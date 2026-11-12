@@ -217,11 +217,13 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
             insertionStyle.left = currentOffset.left - (btnWidth / 2);
             insertionStyle.flexDirection = 'column';
         } else {
-            const marginTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element).marginTop) || 0;
+            // A document that its frame has left has no window, so it has no computed style either.
+            const view = element.ownerDocument.defaultView;
+            const marginTop = (view && Number.parseFloat(view.getComputedStyle(element).marginTop)) || 0;
             let parentPaddingTop = 0;
 
-            if (element.parentElement.firstElementChild === element) {
-                parentPaddingTop = Number.parseFloat(element.ownerDocument.defaultView.getComputedStyle(element.parentElement).paddingTop) || 0;
+            if (view && element.parentElement?.firstElementChild === element) {
+                parentPaddingTop = Number.parseFloat(view.getComputedStyle(element.parentElement).paddingTop) || 0;
             }
 
             insertionStyle.top = currentOffset.top - 16 - marginTop - parentPaddingTop;

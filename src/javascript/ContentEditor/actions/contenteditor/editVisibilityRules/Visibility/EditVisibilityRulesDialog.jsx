@@ -90,7 +90,9 @@ export const EditVisibilityRulesDialog = ({
     };
     languagesInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
 
-    const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
+    const conditionalVisibility = nodeByPath.conditionalVisibility.nodes[0];
+    const isMatchingAllConditions = conditionalVisibility ? conditionalVisibility.isMatchingAllConditions.booleanValue : false;
+    const rules = conditionalVisibility ? conditionalVisibility.rules : {pageInfo: {totalCount: 0}, nodes: []};
     const isVisible = nodeByPath.isVisible;
     const isVisibleInLive = nodeByPath.liveVisibility !== null && nodeByPath.liveVisibility.isVisible;
     return (
@@ -130,7 +132,7 @@ export const EditVisibilityRulesDialog = ({
                             <Languages sections={sections}
                                        initialValues={languagesInitialValues}
                                        onSubmit={handleSaveLanguages}/>
-                            <DateTime rules={nodeByPath.rules}
+                            <DateTime rules={rules}
                                       refresh={refetch}
                                       node={nodeData}
                                       lang={lang}

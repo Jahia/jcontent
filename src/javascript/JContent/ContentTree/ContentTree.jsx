@@ -111,7 +111,8 @@ ItemComponent.propTypes = {
     virtualRow: PropTypes.object
 };
 
-const TREE_ITEM_SIZE = 32;
+// Initial estimate only: actual row heights are measured by the virtualizer (see ItemComponent)
+const TREE_ITEM_SIZE = 28;
 
 // eslint-disable-next-line complexity
 export const ContentTree = ({setPathAction, openPathAction, closePathAction, item, selector, refetcherType, isReversed, contextualMenuAction, pageTitlePrefix}) => { // NOSONAR

@@ -6,8 +6,13 @@
     color: var(--color-gray_light60);
 }
 
+/* Same box as the small menu button shown on hover, so the row height does not change */
 .ContentTree_Item .ContentTree_ItemStatusIcon {
-    padding: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
 }
 
 .ContentTree_Item:hover .ContentTree_ItemStatusIconWithMenu {

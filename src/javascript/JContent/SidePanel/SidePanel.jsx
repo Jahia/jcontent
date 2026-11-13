@@ -51,6 +51,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                                 setActiveTab={setActiveTab}
                                 render={({onClick}) => (
                                     <TabItem
+                                        size="big"
                                         label={t(tab.buttonLabel)}
                                         isSelected={activeTab === tab.key}
                                         data-sel-role={tab.dataSelRole || tab.key}

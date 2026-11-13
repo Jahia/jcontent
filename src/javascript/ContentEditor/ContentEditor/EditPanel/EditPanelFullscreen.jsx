@@ -56,7 +56,6 @@ export const EditPanelFullscreen = ({title}) => {
 
     return (
         <LayoutContent
-            className={styles.main}
             hasPadding={false}
             header={(
                 <EditPanelHeader

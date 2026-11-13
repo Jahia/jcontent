@@ -84,7 +84,7 @@ function convertPathsToTree({treeEntries, selected, isReversed, contentMenu, ite
                 virtualizer,
                 style: {
                     '--treeItem-depth': treeEntry.depth,
-                    height: '32px',
+                    height: '28px',
                     top: 0,
                     left: 0,
                     position: 'absolute',

@@ -66,6 +66,7 @@ const LanguageSwitcher = ({setLanguageAction, selector, isFullDropdown}) => {
         <Dropdown
             className={clsx(styles.languageSwitcher, {[styles.fullWidth]: isFullDropdown})}
             data-cm-role="language-switcher"
+            size="small"
             icon={isFullDropdown ? undefined : LabelPill}
             placeholder={isFullDropdown ? undefined : ' '}
             value={lang}

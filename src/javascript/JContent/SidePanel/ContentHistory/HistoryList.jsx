@@ -80,7 +80,7 @@ const HistoryList = React.memo(({entries, uiLanguage, t}) => {
                 </div>
                 <div className={styles.itemContent}>
                     <div className={styles.itemNames}>
-                        <Typography isNowrap variant="body" weight="bold" className={`${styles.targetName} moon-flexFluid`} title={fullDisplayName}>
+                        <Typography isNowrap variant="body" weight="bold" className={`${styles.targetName} flexFluid`} title={fullDisplayName}>
                             {displayName}
                         </Typography>
                         {technicalName !== displayName && (
@@ -94,9 +94,9 @@ const HistoryList = React.memo(({entries, uiLanguage, t}) => {
                     </Typography>
                 </div>
                 {entry.language ? (
-                    <Pill className={styles.itemLanguage} label={entry.language?.toUpperCase()} color="default"/>
+                    <Pill className={styles.itemLanguage}>{entry.language.toUpperCase()}</Pill>
                 ) : (
-                    <Pill className={styles.itemLanguage} label={<Language size="small"/>} color="default"/>
+                    <Pill className={styles.itemLanguage}><Language size="small"/></Pill>
                 )}
             </div>
         );

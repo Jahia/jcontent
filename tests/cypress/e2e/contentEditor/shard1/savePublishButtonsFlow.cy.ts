@@ -61,6 +61,15 @@ describe('Test the save publish buttons flow', () => {
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'simpleTextUnpublish',
+            primaryNodeType: 'jnt:text',
+            properties: [
+                {name: 'text', value: 'EN', language: 'en'},
+                {name: 'text', value: 'DE', language: 'de'}
+            ]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'constraints',
             primaryNodeType: 'qant:constraints',
             properties: [
@@ -72,6 +81,7 @@ describe('Test the save publish buttons flow', () => {
         });
         publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextA`, ['en', 'de', 'fr']);
         publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextB`, ['en', 'de', 'fr']);
+        publishAndWaitJobEnding(`/sites/${siteKey}/contents/simpleTextUnpublish`, ['en', 'de']);
     });
 
     after(function () {
@@ -80,6 +90,15 @@ describe('Test the save publish buttons flow', () => {
         deleteUser(userName);
         deleteUser('thor');
     });
+
+    const waitForPublicationStatus = (path: string, language: string, status: string) => {
+        cy.waitUntil(() => cy.apollo({
+            fetchPolicy: 'no-cache',
+            variables: {path, language},
+            queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
+        }).then(result => result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus === status),
+        {timeout: 10000, interval: 2000, errorMsg: `${path} in ${language} did not reach ${status}`});
+    };
 
     const checkContentEditorHeaderButtons = (contentEditor: ContentEditor, saveDisabled: boolean, publishDisabled: boolean) => {
         contentEditor.checkButtonStatus('submitSave', saveDisabled);
@@ -117,26 +136,8 @@ describe('Test the save publish buttons flow', () => {
 
     const unPublish = (contentEditor: ContentEditor) => {
         cy.log('Unpublish in all languages');
-        contentEditor.openContentEditorHeaderMenu();
-        getComponentByRole(Menu, 'jcontent-publishMenu')
-            .should('be.visible')
-            .find('.moonstone-menuItem[data-sel-role="unpublishInAllLanguages"]')
-            .should('have.attr', 'aria-disabled', 'false')
-            .click();
-        cy.get('button.x-btn-text').contains('Unpublish all').click();
-        cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
-        cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Unpublication completed');
-
-        cy.waitUntil(() => {
-            return cy.apollo({
-                fetchPolicy: 'no-cache',
-                variables: {path: contentPath},
-                queryFile: 'contentEditor/graphql/jcrPublicationStatus.graphql'
-            }).then(result => {
-                const publicationStatus = result?.data?.jcr?.nodeByPath?.aggregatedPublicationInfo?.publicationStatus;
-                return publicationStatus === 'UNPUBLISHED';
-            });
-        }, {timeout: 10000, interval: 2000, errorMsg: `Unable to unpublish content ${contentPath}`});
+        contentEditor.unpublishInAllLanguages();
+        waitForPublicationStatus(contentPath, langEN, 'UNPUBLISHED');
 
         // Flaky with refresh, reload instead to check unpublish state
         const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents/contentEditorTestContents');
@@ -196,6 +197,19 @@ describe('Test the save publish buttons flow', () => {
         checkContentEditorHeaderButtons(contentEditor, false, true);
         contentEditor.getLanguageSwitcherAdvancedMode().select('German');
         checkContentEditorHeaderButtons(contentEditor, false, false);
+    });
+
+    it('should unpublish the edited language only', () => {
+        const path = `/sites/${siteKey}/contents/simpleTextUnpublish`;
+
+        cy.login();
+        const jcontent = JContent.visit(siteKey, langEN, 'content-folders/contents');
+        const contentEditor = jcontent.editComponentByRowName('simpleTextUnpublish');
+        contentEditor.switchToAdvancedMode();
+        contentEditor.unpublish();
+
+        waitForPublicationStatus(path, langEN, 'UNPUBLISHED');
+        waitForPublicationStatus(path, 'de', 'PUBLISHED');
     });
 
     it('should not be able to publish with invalid form', () => {

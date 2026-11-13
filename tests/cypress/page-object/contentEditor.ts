@@ -4,7 +4,8 @@ import {
     getComponent,
     getComponentByAttr,
     getComponentByRole,
-    getComponentBySelector
+    getComponentBySelector,
+    Menu
 } from '@jahia/cypress';
 import {ComponentType} from '@jahia/cypress/src/page-object/baseComponent';
 import {ChoiceListField, ChoiceTreeField, DateField, Field, PickerField, RichTextField, SmallTextField} from './fields';
@@ -321,6 +322,34 @@ export class ContentEditor extends BasePage {
         cy.get('#dialog-errorBeforeSave', {timeout: 1000}).should('not.exist');
         cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Publication is queued');
         cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Publication completed');
+    }
+
+    /**
+     * Unpublishes the edited language from the header menu, and waits for the "Unpublication completed"
+     * notification. The publication status of the node can lag behind it.
+     */
+    unpublish() {
+        this.unpublishFromHeaderMenu('unpublish', 'Unpublish');
+    }
+
+    /**
+     * Unpublishes every language from the header menu, and waits for the "Unpublication completed"
+     * notification. The publication status of the node can lag behind it.
+     */
+    unpublishInAllLanguages() {
+        this.unpublishFromHeaderMenu('unpublishInAllLanguages', 'Unpublish all');
+    }
+
+    private unpublishFromHeaderMenu(itemRole: string, confirmLabel: string) {
+        this.openContentEditorHeaderMenu();
+        getComponentByRole(Menu, 'jcontent-publishMenu')
+            .should('be.visible')
+            .find(`.moonstone-menuItem[data-sel-role="${itemRole}"]`)
+            .should('have.attr', 'aria-disabled', 'false')
+            .click();
+        // The confirmation is a GWT dialog; the exact match keeps "Unpublish" from matching "Unpublish all"
+        cy.get('button.x-btn-text').contains(new RegExp(`^${confirmLabel}$`)).click();
+        cy.get('div[id="notistack-snackbar"]').should('be.visible').should('contain', 'Unpublication completed');
     }
 
     getBreadcrumb(content: string): Breadcrumb {

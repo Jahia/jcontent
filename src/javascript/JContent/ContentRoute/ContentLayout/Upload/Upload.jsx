@@ -8,10 +8,12 @@ import UploadItem from './UploadItem';
 import UploadHeader from './UploadHeader';
 import styles from './Upload.scss';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 
 const SNACKBAR_CLOSE_TIMEOUT = 8000;
 
 export const Upload = ({uploadUpdateCallback}) => {
+    const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
     const {uploads} = useSelector(state => ({
         uploads: state.jcontent.fileUpload.uploads
@@ -85,6 +87,7 @@ export const Upload = ({uploadUpdateCallback}) => {
                         size="small"
                         data-cm-role="upload-close-button"
                         icon={<Close/>}
+                        aria-label={t('jcontent:label.contentEditor.close')}
                         className={styles.closeButton}
                         onClick={() => dispatch(fileuploadSetUploads([]))}
                 />

@@ -14,7 +14,7 @@ export class PickerTable extends Table {
     }
 
     getSelectedRows() {
-        return this.get().find('tbody [data-cm-role="table-content-list-cell-selection"] input[aria-checked="true"]');
+        return this.get().find('tbody [data-cm-role="table-content-list-cell-selection"] input:checked');
     }
 
     getRowByLabel(label: string) {
@@ -34,7 +34,7 @@ export class PickerTable extends Table {
                         .click();
                     cy.wrap(elem)
                         .find('[data-cm-role="table-content-list-cell-selection"] input')
-                        .should('have.attr', 'aria-checked', 'true');
+                        .should('be.checked');
                 };
 
                 for (let i = 0; i < count; i++) {

@@ -30,7 +30,7 @@ export class ContentTable extends Table {
             .get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
-            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+            .should(isSelected ? 'be.checked' : 'not.be.checked');
     }
 
     selectRowByName(name: string, isSelected = true): Chainable {
@@ -38,7 +38,7 @@ export class ContentTable extends Table {
             .get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click()
-            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+            .should(isSelected ? 'be.checked' : 'not.be.checked');
     }
 
     shiftSelectRowByName(name: string, isSelected = true): Chainable {
@@ -46,7 +46,7 @@ export class ContentTable extends Table {
             .get()
             .find('[data-cm-role="table-content-list-cell-selection"] input')
             .click({shiftKey: true})
-            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+            .should(isSelected ? 'be.checked' : 'not.be.checked');
     }
 
     getHeaderByRole(role: string): ColumnHeader {
@@ -68,7 +68,7 @@ export class ContentTableRow extends TableRow {
     isSelected(isSelected = true) {
         this.element
             .find('td[data-cm-role="table-content-list-cell-selection"] input')
-            .should('have.attr', 'aria-checked', Boolean(isSelected).toString());
+            .should(isSelected ? 'be.checked' : 'not.be.checked');
         return this;
     }
 

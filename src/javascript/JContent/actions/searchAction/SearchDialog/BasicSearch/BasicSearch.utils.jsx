@@ -6,7 +6,8 @@ export const extractAndFormatContentTypeData = data => {
         return {
             label: item.displayName,
             value: item.name,
-            iconStart: <ImgWrapper src={item.icon + '.png'}/>
+            // The icon only decorates the content type name beside it
+            iconStart: <ImgWrapper alt="" src={item.icon + '.png'}/>
         };
     });
 

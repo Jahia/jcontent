@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 import {Tooltip} from '@material-ui/core';
 import {
     Button,
@@ -22,6 +23,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `${window.contextJsParameters?.contextPath
 const scaleSizes = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
 export const PDFViewer = ({file, isFullScreen}) => {
+    const {t} = useTranslation('jcontent');
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(null);
     const [scaleSize, setScaleSize] = useState(6);
@@ -111,12 +113,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
                         isDisabled={page === 1}
                         variant="ghost"
                         icon={<ChevronFirstPage/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.firstPage')}
                         onClick={e => handleNavigation(e, 'first')}
                     />
                     <Button
                         isDisabled={page === 1}
                         variant="ghost"
                         icon={<ChevronLeft/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.previousPage')}
                         onClick={e => handleNavigation(e, 'previous')}
                     />
 
@@ -128,12 +132,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
                         isDisabled={!pages || page === pages}
                         variant="ghost"
                         icon={<ChevronRight/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.nextPage')}
                         onClick={e => handleNavigation(e, 'next')}
                     />
                     <Button
                         isDisabled={!pages || page === pages}
                         variant="ghost"
                         icon={<ChevronLastPage/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.lastPage')}
                         onClick={e => handleNavigation(e, 'last')}
                     />
                 </div>
@@ -144,12 +150,14 @@ export const PDFViewer = ({file, isFullScreen}) => {
                         isDisabled={scaleSize === 0}
                         variant="ghost"
                         icon={<ZoomOut/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.zoomOut')}
                         onClick={e => handleZoom(e, 'out')}
                     />
                     <Button
                         isDisabled={scaleSize === scaleSizes.length - 1}
                         variant="ghost"
                         icon={<ZoomIn/>}
+                        aria-label={t('jcontent:label.contentManager.pdfViewer.zoomIn')}
                         onClick={e => handleZoom(e, 'in')}
                     />
                 </div>

@@ -66,6 +66,7 @@ const ActionsCell = ({row, cell, column}) => {
                         variant="ghost"
                         size="big"
                         data-cm-role="tag-manager-view"
+                        aria-label={t('jcontent:label.contentManager.tagManager.table.actions.view')}
                         icon={<Visibility/>}
                         onClick={() => column.onView(row.original)}
                     />
@@ -75,6 +76,7 @@ const ActionsCell = ({row, cell, column}) => {
                         variant="ghost"
                         size="big"
                         data-cm-role="tag-manager-rename"
+                        aria-label={t('jcontent:label.contentManager.tagManager.table.actions.edit')}
                         icon={<Edit/>}
                         onClick={() => column.setRenameTarget(row.original)}
                     />
@@ -85,6 +87,7 @@ const ActionsCell = ({row, cell, column}) => {
                         size="big"
                         color="danger"
                         data-cm-role="tag-manager-delete"
+                        aria-label={t('jcontent:label.contentManager.tagManager.table.actions.remove')}
                         icon={<DeletePermanently/>}
                         onClick={() => column.setDeleteTarget(row.original)}
                     />
@@ -260,7 +263,7 @@ export const TagManagerTable = ({
     if (isLoading) {
         tableContent = (
             <div className={styles.loaderContainer} data-cm-role="tag-manager-loader">
-                <Loader size="big"/>
+                <Loader size="big" i18n={{loadingLabel: t('jcontent:label.loading')}}/>
             </div>
         );
     } else if (error) {

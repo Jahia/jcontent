@@ -58,7 +58,7 @@ const Status = ({upload}) => {
     } else if (status === uploadStatuses.UPLOADING) {
         content = (
             <React.Fragment>
-                <Loader isReversed size="small" className={styles.statusIcon}/>
+                <Loader isReversed size="small" className={styles.statusIcon} i18n={{loadingLabel: t('jcontent:label.loading')}}/>
                 <Typography className={styles.progressText} weight="bold">
                     {type === 'import' ? t('jcontent:label.contentManager.fileUpload.importing') : t('jcontent:label.contentManager.fileUpload.uploading')}
                 </Typography>

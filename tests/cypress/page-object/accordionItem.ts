@@ -8,7 +8,7 @@ export class AccordionItem {
 
     /**
      * @param accordion
-     * @param itemName - match accordion header aria-controls attribute value
+     * @param itemName - match the aria-controls attribute value of the accordion header button
      */
     constructor(accordion: Accordion, itemName: string) {
         this.accordion = accordion;
@@ -17,7 +17,7 @@ export class AccordionItem {
     }
 
     getHeader(options?) {
-        return this.accordion.get().find(`section.moonstone-accordionItem header[aria-controls="${this.itemName}"]`, options);
+        return this.accordion.get().find(`button[aria-controls="${this.itemName}"]`, options);
     }
 
     shouldNotExist() {
@@ -25,12 +25,13 @@ export class AccordionItem {
     }
 
     click() {
-        this.accordion.click(this.itemName);
+        // Clicks the header button itself: the Accordion of @jahia/cypress still looks for the header element of Moonstone 2.21
+        this.getHeader().click();
         return this;
     }
 
     getSection() {
-        return this.getHeader().parent('section');
+        return this.getHeader().closest('section');
     }
 
     getTree() {

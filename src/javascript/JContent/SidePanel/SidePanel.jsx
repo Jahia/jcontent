@@ -35,7 +35,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
     }, []);
 
     return (
-        <Drawer isOpen className={styles.root} data-sel-role="side-panel">
+        <Drawer isOpen className={styles.root} data-sel-role="side-panel" onOpenChange={onClose}>
             <div className={styles.tabs} data-sel-role="side-panel-tabs">
                 <Tab>
                     {visibleTabs.map(tab => {
@@ -67,6 +67,7 @@ export const SidePanel = ({registryTarget = 'sidePanelTabsActions'}) => {
                         className={styles.closeButton}
                         variant="ghost"
                         icon={<Close/>}
+                        aria-label={t('jcontent:label.contentEditor.close')}
                         data-sel-role="side-panel-close"
                         data-cm-role="preview-drawer-close"
                         onClick={onClose}

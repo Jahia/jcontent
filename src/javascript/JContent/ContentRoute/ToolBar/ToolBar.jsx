@@ -47,7 +47,7 @@ export const ToolBar = () => {
                         {t('jcontent:label.contentManager.selection.itemsSelected', {count: paths.length})}
                     </Typography>
                     <div className={styles.spacer}/>
-                    <Button icon={<Cancel/>} variant="ghost" size="default" onClick={clear}/>
+                    <Button icon={<Cancel/>} variant="ghost" size="default" aria-label={t('jcontent:label.contentManager.selection.clearMultipleSelection')} onClick={clear}/>
                 </div>
                 <div className="flexRow">
                     <Separator variant="vertical" invisible="onlyChild"/>

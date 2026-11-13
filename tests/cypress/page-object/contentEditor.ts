@@ -134,13 +134,13 @@ export class ContentEditor extends BasePage {
 
     addAnotherContent() {
         cy.get('#createAnother').check();
-        cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
+        cy.get('#createAnother').should('be.checked');
         this.createAnother = true;
     }
 
     removeAnotherContent() {
         cy.get('#createAnother').uncheck();
-        cy.get('#createAnother').should('have.attr', 'aria-checked', 'false');
+        cy.get('#createAnother').should('not.be.checked');
         this.createAnother = false;
     }
 

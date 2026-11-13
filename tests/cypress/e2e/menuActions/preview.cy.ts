@@ -112,7 +112,7 @@ describe('Menu actions preview tests', () => {
 
             // Open pagination ans select 10 items per page
             cy.get('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
-            cy.get('menu.moonstone-menu[role="list"]').should('be.visible');
+            cy.get('menu').should('be.visible');
             cy.contains('[role="option"]', '10').click();
 
             // Open preview

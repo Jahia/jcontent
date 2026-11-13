@@ -17,6 +17,7 @@
 
 import './commands';
 import addContext from 'mochawesome/addContext';
+import {getStartedModuleVersion} from '@jahia/cypress';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('cypress-terminal-report/src/installLogsCollector')({
@@ -30,6 +31,15 @@ require('cypress-terminal-report/src/installLogsCollector')({
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('@jahia/cypress/dist/support/registerSupport').registerSupport();
+
+// The tests are only meaningful on the jcontent this branch builds: Jahia keeps an installed higher version over it
+before(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const expectedVersion = require('../../package.json').version;
+    getStartedModuleVersion('jcontent').then(startedVersion => {
+        expect(startedVersion, 'version of the started jcontent module').to.equal(expectedVersion);
+    });
+});
 
 Cypress.on('uncaught:exception', () => {
     // Returning false here prevents Cypress from

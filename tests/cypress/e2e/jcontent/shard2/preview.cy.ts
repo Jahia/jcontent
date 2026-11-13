@@ -59,6 +59,30 @@ describe('JContent preview tests', () => {
         });
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
+            name: 'previewCmView',
+            primaryNodeType: 'cent:mainResourceWithCmView',
+            properties: [{name: 'jcr:title', value: 'Preview Cm View', language: 'en'}]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/home`,
+            name: 'cm-view-test-page',
+            primaryNodeType: 'jnt:page',
+            properties: [
+                {name: 'jcr:title', value: 'Cm View Test Page', language: 'en'},
+                {name: 'j:templateName', type: 'STRING', value: 'home'}
+            ],
+            children: [{
+                name: 'pagecontent',
+                primaryNodeType: 'jnt:contentList',
+                children: [{
+                    name: 'cm-view-in-page',
+                    primaryNodeType: 'cent:mainResourceWithCmView',
+                    properties: [{name: 'jcr:title', value: 'Cm View In Page', language: 'en'}]
+                }]
+            }]
+        });
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
             name: 'previewInlineScript',
             primaryNodeType: 'cent:previewInlineScript'
         });
@@ -119,6 +143,37 @@ describe('JContent preview tests', () => {
             .should('be.visible')
             .should('contain.html',
                 '<div>No default view</div>');
+    });
+
+    it('should render the cm view of a content that has a content template (jcontent#2883)', () => {
+        // A view named cm replaces the default view in the preview, as documented in "Customizing jContent".
+        // Its content template render still gives the CSS.
+        const jcontent = JContent.visit(siteKey, 'en', 'content-folders/contents');
+        jcontent.openPreview('previewCmView');
+
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should('be.visible');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.html', 'class="main-resource-cm-view"')
+            .and('not.contain.html', 'class="main-resource-default-view"');
+        cy.get('iframe[data-sel-role="edit-preview-frame"]').should($iframe => {
+            const links = $iframe[0].contentDocument.head.querySelectorAll('link[rel="stylesheet"]');
+            expect(links.length, 'the content template render gives the CSS').to.be.greaterThan(0);
+        });
+    });
+
+    it('should render the cm view of a content that has a content template in pages mode (jcontent#2883)', () => {
+        const jcontent = JContent.visit(siteKey, 'en', 'pages/home/cm-view-test-page');
+        jcontent.switchToListMode();
+        jcontent.getTable().getRowByName('cm-view-in-page').click();
+        sidePanel.switchToTab('tab-preview');
+
+        cy.get('iframe[data-sel-role="edit-preview-frame"]')
+            .its('0.contentDocument.body')
+            .should('be.visible')
+            .and('contain.html', 'class="main-resource-cm-view"')
+            .and('not.contain.html', 'class="main-resource-default-view"');
     });
 
     it('should zoom to the specific sub-component and remove siblings when previewing in pages mode', () => {

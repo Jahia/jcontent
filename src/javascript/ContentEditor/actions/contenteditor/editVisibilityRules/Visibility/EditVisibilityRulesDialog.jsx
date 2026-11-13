@@ -20,6 +20,9 @@ import {useNotifications} from '@jahia/react-material';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {truncate} from '~/utils';
 
+// The rules of a node that has no j:conditionalVisibility child
+const NO_RULES = {pageInfo: {totalCount: 0}, nodes: []};
+
 export const EditVisibilityRulesDialog = ({
     sections,
     isOpen,
@@ -90,7 +93,9 @@ export const EditVisibilityRulesDialog = ({
     };
     languagesInitialValues[`${Constants.wip.fieldName}`] = formik.initialValues[Constants.wip.fieldName];
 
-    const isMatchingAllConditions = nodeByPath.conditionalVisibility.nodes.length > 0 ? nodeByPath.conditionalVisibility.nodes[0].isMatchingAllConditions.booleanValue : false;
+    const conditionalVisibility = nodeByPath.conditionalVisibility.nodes[0];
+    const isMatchingAllConditions = Boolean(conditionalVisibility?.isMatchingAllConditions?.booleanValue);
+    const rules = conditionalVisibility?.rules ?? NO_RULES;
     const isVisible = nodeByPath.isVisible;
     const isVisibleInLive = nodeByPath.liveVisibility !== null && nodeByPath.liveVisibility.isVisible;
     return (
@@ -130,7 +135,7 @@ export const EditVisibilityRulesDialog = ({
                             <Languages sections={sections}
                                        initialValues={languagesInitialValues}
                                        onSubmit={handleSaveLanguages}/>
-                            <DateTime rules={nodeByPath.rules}
+                            <DateTime rules={rules}
                                       refresh={refetch}
                                       node={nodeData}
                                       lang={lang}

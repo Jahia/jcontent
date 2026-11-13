@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import CKEditor from 'ckeditor4-react';
 import * as PropTypes from 'prop-types';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
@@ -22,6 +22,13 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
     const api = useContentEditorApiContext();
     const {i18nContext} = useContentEditorContext();
     const {lang} = useContentEditorConfigContext();
+    const editorKey = 'v' + (i18nContext?.memo?.count || 0);
+    const valueRef = useRef(value);
+    valueRef.current = value;
+    const mountRef = useRef({});
+    if (mountRef.current.key !== editorKey) {
+        mountRef.current = {key: editorKey, value};
+    }
 
     useEffect(() => {
         CKEditor.editorUrl = window.CKEDITOR_BASEPATH + 'ckeditor.js';
@@ -113,12 +120,22 @@ export const RichText = ({field, id, value, onChange, onBlur}) => {
 
     return (
         <CKEditor
-                key={'v' + (i18nContext?.memo?.count || 0)}
+                key={editorKey}
                 id={id}
                 data={value}
                 aria-labelledby={`${field.name}-label`}
                 config={config}
                 readOnly={field.readOnly}
+                onInstanceReady={evt => {
+                    // CKEditor drops a setData received before instanceReady and shows the data it was mounted with
+                    // The undo history starts at the restored value: an undo must not bring the mounted data back
+                    if (valueRef.current !== mountRef.current.value) {
+                        evt.editor.setData(valueRef.current ?? '', {
+                            noSnapshot: true,
+                            callback: () => evt.editor.resetUndo?.()
+                        });
+                    }
+                }}
                 onMode={evt => {
                     if (evt.editor.mode === 'source') {
                         let editable = evt.editor.editable();

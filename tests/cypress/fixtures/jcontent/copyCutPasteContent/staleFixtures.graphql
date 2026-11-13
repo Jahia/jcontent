@@ -1,0 +1,14 @@
+query staleCopyCutPasteContentFixtures($sitesQuery: String!, $usersQuery: String!) {
+    jcr {
+        sites: nodesByQuery(query: $sitesQuery) {
+            nodes {
+                name
+            }
+        }
+        users: nodesByQuery(query: $usersQuery) {
+            nodes {
+                name
+            }
+        }
+    }
+}

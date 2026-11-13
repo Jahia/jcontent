@@ -4,10 +4,11 @@ import JContentConstants from '~/JContent/JContent.constants';
  * Shared helper for in-context module render with page CSS injection.
  * Used for both the main-resource in-context strategy and as the sub-component fallback.
  */
-const buildInContextModuleContext = (node, closestPage, jView, base) => ({
+const buildInContextModuleContext = (node, closestPage, base) => ({
     ...base,
     path: node.path,
-    view: jView?.value || 'default',
+    // Null lets the server pick the view: the node's j:view, else the 'cm' view, else 'default'.
+    view: null,
     contextConfiguration: 'module',
     mainResourcePath: closestPage.path,
     cssSourcePath: closestPage.path
@@ -34,6 +35,7 @@ const getOutOfContextCssSource = (node, isDisplayablePage) => {
  *
  * A. In-context (closestPage provided):
  *    - isDisplayableNode: module render of node + page CSS. No zoom (avoids pagination problem).
+ *      view=null: the server renders the node's j:view, else its 'cm' view, else 'default'.
  *    - !isDisplayableNode: full page render at closestPage + zoom requestAttributes.
  *      fallback = module+CSS strategy (used if zoom fails).
  *
@@ -44,12 +46,14 @@ const getOutOfContextCssSource = (node, isDisplayablePage) => {
  *      configuration (templateNodeFilter applies on wrappedcontent,page,gwt), so any other
  *      configuration renders the bare view instead of the content template. The template
  *      output is a full document, so it carries its own CSS.
+ *      Exception: a node with a 'cm' view (hasCmView) and no j:view gets the module render below
+ *      instead, as documented for the jContent preview; its content template render gives the CSS.
  *    - !isDisplayableNode: module render of the view. CSS injected via cssSourcePath, taken
  *      from the displayable ancestor when it is a non-folder page, else, for jnt:content, from the
  *      node itself rendered through the content-template wrapper (cssSourceView), the page every
  *      standalone content is previewed in.
  *
- * @param {object} node                 - JCR node with { path, uuid, isPage, isContent, displayableNode, jView }
+ * @param {object} node                 - JCR node with { path, uuid, isPage, isContent, hasCmView, jView, displayableNode }
  * @param {string} language
  * @param {object} options
  * @param {object} [options.closestPage]        - { path, view? } — the hosting page context.
@@ -60,7 +64,7 @@ const getOutOfContextCssSource = (node, isDisplayablePage) => {
  * @param {Array}   [options.requestParameters] - CE page composer query string params.
  */
 export const buildPreviewContexts = (node, language, {closestPage = null, isCEPreview = false, requestParameters = []} = {}) => {
-    const {displayableNode, jView} = node;
+    const {displayableNode} = node;
     const isDisplayableNode = displayableNode?.path === node.path;
     // A folder resolves no template and renders nothing, so it is neither a template holder
     // nor usable as a CSS donor. Both uses below build on this.
@@ -76,7 +80,7 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
             // Main-resource in page context: module render with page CSS.
             return {
                 primary: {
-                    ...buildInContextModuleContext(node, closestPage, jView, base),
+                    ...buildInContextModuleContext(node, closestPage, base),
                     ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
                     ...extraParams
                 },
@@ -98,15 +102,20 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
                 ],
                 ...extraParams
             },
-            fallback: buildInContextModuleContext(node, closestPage, jView, base)
+            fallback: buildInContextModuleContext(node, closestPage, base)
         };
     }
 
     // The node has a template of its own — page template, or content template for content
     // holding jmix:mainResource. Render it as a full page so that template is applied; its
     // output already includes the CSS, so no cssSourcePath is needed.
+    // Render through the node's own template, unless the node has a 'cm' view and no j:view: the
+    // server would pick that 'cm' view first. The template render bypasses views, so the server
+    // cannot pick 'cm' there: the client decides with hasCmView. A j:view keeps the template.
     const hasOwnTemplate = isDisplayableNode && isDisplayablePage;
-    if (node.isPage || hasOwnTemplate) {
+    const showsCmView = node.hasCmView && !node.jView?.value;
+    const rendersThroughTemplate = node.isPage || (hasOwnTemplate && !showsCmView);
+    if (rendersThroughTemplate) {
         return {
             primary: {
                 ...base,
@@ -124,14 +133,18 @@ export const buildPreviewContexts = (node, language, {closestPage = null, isCEPr
         };
     }
 
-    // No template of its own: render the view standalone and inject CSS by fetching a page render.
+    // Module render with view null. The server picks the node's j:view, else 'cm', else 'default'.
+    // A node without a template of its own checks for 'cm' here, on the server. CSS is injected by
+    // fetching a page render; for a node with its own template, that render is the node itself.
+    // That self render is shared by no other item, so a cssSourceView keeps it from blocking the preview.
+    const cssSource = hasOwnTemplate ? {cssSourcePath: node.path, cssSourceView: 'default'} : getOutOfContextCssSource(node, isDisplayablePage);
     return {
         primary: {
             ...base,
             path: node.path,
             view: null,
             contextConfiguration: 'module',
-            ...getOutOfContextCssSource(node, isDisplayablePage),
+            ...cssSource,
             ...(cePreviewAttr && {requestAttributes: cePreviewAttr}),
             ...extraParams
         },

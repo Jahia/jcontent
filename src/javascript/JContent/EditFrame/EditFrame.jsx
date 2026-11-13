@@ -265,6 +265,9 @@ export const EditFrame = () => {
                 link.href = scopedStyles;
                 currentDocument.querySelector('head').appendChild(link);
             } else if (!iframe.current.contentWindow.location.href.endsWith(url)) {
+                // The clicked element belongs to the document this navigation unloads: once that
+                // document is gone its defaultView is null, and the insertion points crash on it.
+                setClickedElement(undefined);
                 iframe.current.contentWindow.location.href = url;
                 setPreviousUrlParams(currentUrlParams);
             }

@@ -71,8 +71,17 @@ export const Row = ({
                   data-node-name={node.name}
                   className={clsx(css.tableRow, (isCanDrop || isCanDropFile) && 'moonstone-drop_row', dragging && 'moonstone-drag')}
                   isHighlighted={isPreviewSelected}
-                  onClick={() => {
-                      if (isPreviewOpened && !node.notSelectableForPreview) {
+                  onClick={event => {
+                      if (!isPreviewOpened || node.notSelectableForPreview) {
+                          return;
+                      }
+
+                      if (isPreviewSelected) {
+                          // Clicking again on the selected row closes the side panel (ignore the clicks of a double-click)
+                          if (event.detail === 1) {
+                              onPreviewSelect(null);
+                          }
+                      } else {
                           setSelectedItemIndex(index);
                           onPreviewSelect(node.path);
                       }

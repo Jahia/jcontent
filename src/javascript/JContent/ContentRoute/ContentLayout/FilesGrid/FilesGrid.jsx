@@ -73,6 +73,11 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const onClick = (node, index, event) => {
         if (event.metaKey || event.ctrlKey || event.shiftKey || selection.length > 0) {
             onSelect(node, event, index);
+        } else if (node.path === sidePanelSelection) {
+            // Clicking again on the selected card closes the side panel (ignore the clicks of a double-click)
+            if (event.detail === 1) {
+                dispatch(cmSetSidePanelSelection(null));
+            }
         } else if (!node.notSelectableForPreview) {
             setSelectedItemIndex(index);
             onSidePanelSelect(node);

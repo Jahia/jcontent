@@ -1,4 +1,4 @@
-import {buildPreviewContextsFromNode} from './previewContext.utils';
+import {buildPreviewContexts, buildPreviewContextsFromNode} from './previewContext.utils';
 
 const PAGE = {path: '/sites/x/home'};
 
@@ -9,6 +9,49 @@ const node = (overrides = {}) => ({
     pageAncestors: [PAGE],
     displayableNode: {path: '/sites/x/home'},
     ...overrides
+});
+
+describe('buildPreviewContexts', () => {
+    const language = 'en';
+
+    describe('the cm view (jcontent#2883)', () => {
+        const mainResource = (overrides = {}) => ({path: '/sites/site/contents/news', uuid: 'n', isPage: false, displayableNode: {path: '/sites/site/contents/news', isFolder: false}, ...overrides});
+
+        it('renders a content with a content template and a cm view through the server-picked view, with the template render as CSS', () => {
+            const {primary} = buildPreviewContexts(mainResource({hasCmView: true}), language);
+            expect(primary.contextConfiguration).toBe('module');
+            expect(primary.view).toBeNull();
+            expect(primary.cssSourcePath).toBe('/sites/site/contents/news');
+            // Set, so PreviewFetcher does not hold the preview until the template render arrives.
+            expect(primary.cssSourceView).toBe('default');
+        });
+
+        it('keeps the content template render when there is no cm view', () => {
+            const {primary} = buildPreviewContexts(mainResource({hasCmView: false}), language);
+            expect(primary.contextConfiguration).toBe('page');
+            expect(primary.view).toBe('default');
+        });
+
+        it('keeps the content template render when the node has a j:view, as the server picks j:view before cm', () => {
+            const {primary} = buildPreviewContexts(mainResource({hasCmView: true, jView: {value: 'event'}}), language);
+            expect(primary.contextConfiguration).toBe('page');
+            expect(primary.view).toBe('default');
+        });
+
+        it('never renders a page through its cm view', () => {
+            const page = {path: '/sites/site/home', uuid: 'p', isPage: true, hasCmView: true, displayableNode: {path: '/sites/site/home'}};
+            const {primary} = buildPreviewContexts(page, language);
+            expect(primary.contextConfiguration).toBe('page');
+        });
+
+        it('lets the server pick the view of a main resource rendered in its page', () => {
+            const content = mainResource({path: '/sites/site/home/news', displayableNode: {path: '/sites/site/home/news', isFolder: false}, jView: {value: 'event'}});
+            const {primary} = buildPreviewContexts(content, language, {closestPage: {path: '/sites/site/home'}});
+            expect(primary.contextConfiguration).toBe('module');
+            expect(primary.view).toBeNull();
+            expect(primary.cssSourcePath).toBe('/sites/site/home');
+        });
+    });
 });
 
 describe('buildPreviewContextsFromNode', () => {

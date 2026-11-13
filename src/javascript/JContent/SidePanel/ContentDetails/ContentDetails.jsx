@@ -68,14 +68,13 @@ const DetailRow = ({label, value, copyValue = value, isCopyable = true}) => {
 
     const handleCopy = useCallback(() => {
         if (textToCopy) {
-            try {
-                const copyPromise = navigator.clipboard?.writeText(textToCopy);
-                copyPromise?.then(() => {
+            navigator.clipboard?.writeText(textToCopy)
+                .then(() => {
                     notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
+                })
+                .catch(error => {
+                    console.error('Unable to copy to clipboard', error);
                 });
-            } catch (error) {
-                console.error('Unable to copy to clipboard', error);
-            }
         }
     }, [textToCopy, notificationContext, t]);
 

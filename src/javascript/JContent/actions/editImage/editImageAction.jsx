@@ -4,7 +4,16 @@ import {ComponentRendererContext} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ACTION_PERMISSIONS} from '../actions.constants';
 import {isDefinitelyHidden} from '../utils/nodeVisibilityUtils';
-import ImageEditorDialog from '~/JContent/actions/editImage/ImageEditorDialog';
+import FilerobotEditor from '~/JContent/actions/editImage/FilerobotEditor';
+
+// The editor works by re-encoding a canvas, which only reliably supports these
+// raster formats (they match EXPORT_FORMATS in useSaveEditedImage). Restricting to
+// an allowlist keeps the action hidden for types the canvas cannot round-trip
+// (svg would rasterize, gif would flatten, bmp/tiff/... would be re-encoded under a
+// mismatched extension), rather than silently corrupting them on save.
+const EDITABLE_MIMETYPES = ['image/png', 'image/jpeg', 'image/webp'];
+
+const RENDERER_KEY = 'imageEditorDialog';
 
 export const EditImageActionComponent = ({path, node: prefetchedNode, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
@@ -16,7 +25,8 @@ export const EditImageActionComponent = ({path, node: prefetchedNode, render: Re
             skip,
             showOnNodeTypes,
             requiredPermission: ['jcr:write'],
-            requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction]
+            requiredSitePermission: [ACTION_PERMISSIONS.openImageEditorAction],
+            getMimeType: true
         }
     );
 
@@ -28,16 +38,21 @@ export const EditImageActionComponent = ({path, node: prefetchedNode, render: Re
         return false;
     }
 
+    const mimeType = res.node?.mimeType;
+    const isVisible = Boolean(res.checksResult) &&
+        EDITABLE_MIMETYPES.includes(mimeType);
+
     const onExit = () => {
-        componentRenderer.destroy('createFolderDialog');
+        componentRenderer.destroy(RENDERER_KEY);
     };
 
     return (
         <Render
             {...others}
-            isVisible={res.checksResult}
+            isVisible={isVisible}
+            enabled={isVisible}
             onClick={() => {
-                componentRenderer.render('createFolderDialog', ImageEditorDialog, {path, onExit});
+                componentRenderer.render(RENDERER_KEY, FilerobotEditor, {path, mimeType, onExit});
             }}
         />
     );

@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
-import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {Chip, Language, Pill, Typography} from '@jahia/moonstone';
 import styles from './ContentHistory.scss';
 import {ACTION_CONFIG} from './ContentHistory';
@@ -44,7 +43,7 @@ const getUserDisplayName = entry => {
     return userKey || '-';
 };
 
-const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLanguage, t}) => {
+const HistoryList = React.memo(({entries, uiLanguage, t}) => {
     const formatDate = useCallback(dateString => {
         if (!dateString) {
             return '-';
@@ -52,10 +51,6 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
 
         return formatDatetime(dateString, {locale: uiLanguage});
     }, [uiLanguage]);
-
-    if (isLoading && !data) {
-        return <LoaderOverlay/>;
-    }
 
     const getActionChip = (action, t) => {
         const config = ACTION_CONFIG[action];
@@ -73,58 +68,36 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
         );
     };
 
-    if (error) {
-        return (
-            <div className={styles.error}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.history.errorLoading')}
-                </Typography>
-            </div>
-        );
-    }
-
-    if (entries.length === 0) {
-        return (
-            <div className={styles.emptyState}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.history.noEntries')}
-                </Typography>
-            </div>
-        );
-    }
-
     return entries.map(entry => {
         const {typeLabelKey, displayName, fullDisplayName, technicalName} = getTargetInfo(entry);
         return (
             <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
                 <div className={styles.itemAction}>
                     {getActionChip(entry.action, t)}
+                    <Typography variant="caption" isNowrap className={styles.typeLabel}>
+                        {t(typeLabelKey)}
+                    </Typography>
                 </div>
                 <div className={styles.itemContent}>
                     <div className={styles.itemNames}>
-                        <Typography variant="body" weight="bold" className={styles.targetName} title={fullDisplayName}>
+                        <Typography variant="body" weight="bold" isNowrap className={`${styles.targetName} moon-flexFluid`} title={fullDisplayName}>
                             {displayName}
                         </Typography>
                         {technicalName !== displayName && (
-                            <Typography variant="body" className={styles.technicalName}>
+                            <Typography variant="body" isNowrap className={styles.technicalName}>
                                 ({technicalName})
                             </Typography>
                         )}
-                        <Typography variant="caption" weight="bold" className={styles.typeLabel}>
-                            {t(typeLabelKey)}
-                        </Typography>
                     </div>
-                    <Typography variant="caption" className={styles.metadata}>
+                    <Typography variant="caption" isNowrap className={styles.metadata}>
                         {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
                     </Typography>
                 </div>
-                <div className={styles.itemLanguage}>
-                    {entry.language ? (
-                        <Pill label={entry.language?.toUpperCase()} color="default"/>
-                    ) : (
-                        <Pill label={<Language/>} color="default"/>
-                    )}
-                </div>
+                {entry.language ? (
+                    <Pill className={styles.itemLanguage} label={entry.language?.toUpperCase()} color="default"/>
+                ) : (
+                    <Pill className={styles.itemLanguage} label={<Language size="small"/>} color="default"/>
+                )}
             </div>
         );
     });
@@ -133,10 +106,7 @@ const HistoryList = React.memo(({isLoading = false, error, entries, data, uiLang
 HistoryList.displayName = 'HistoryList';
 
 HistoryList.propTypes = {
-    isLoading: PropTypes.bool,
-    error: PropTypes.object,
     entries: PropTypes.arrayOf(PropTypes.object).isRequired,
-    data: PropTypes.object,
     uiLanguage: PropTypes.string,
     t: PropTypes.func.isRequired
 };

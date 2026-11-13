@@ -6,34 +6,35 @@
     align-items: center;
     min-height: 0;
 
-    background-color: #eff2f4;
+    // background-color: #eff2f4;
 }
 
-.noPreviewContainer {
-    display: flex;
-    flex: 1 1 0%;
+// .noPreviewContainer {
+//     display: flex;
+//     flex: 1 1 0%;
 
-    background-color: #eff2f4;
-}
+//     // background-color: #eff2f4;
+// }
 
-.center {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
+// .center {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     width: 100%;
 
-    color: #91a3ae;
-    text-align: center;
-}
+//     color: #91a3ae;
+//     text-align: center;
+// }
 
-.centerIcon {
-    margin: 8px auto;
-}
+// .centerIcon {
+//     margin: 8px auto;
+// }
 
 .mediaContainer {
-    background-color: #1f262a;
+    // background-color: #1f262a;
+    background-color: var(--moon-color-dark);
 }
 
 .contentContainer {
-    padding: 24px;
+    // padding: 24px;
 }

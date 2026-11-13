@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: var(--spacing-medium);
     overflow-y: auto;
 }
 
@@ -62,7 +61,7 @@ td.statusCellTd {
     max-width: 100%;
     overflow: hidden;
 
-    > * {
+    >* {
         overflow: hidden;
 
         white-space: nowrap;

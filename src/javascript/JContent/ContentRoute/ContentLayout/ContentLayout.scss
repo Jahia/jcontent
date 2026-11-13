@@ -4,20 +4,22 @@
     display: flex;
     flex: 1 1 0;
     flex-direction: row;
+    gap: var(--moon-spacing-small);
     width: 100%;
     min-height: 0;
 
-    background-color: var(--color-gray_light);
-    overflow: hidden;
+    // background-color: var(--color-gray_light);
+    // overflow: hidden;
 }
 
 .content {
     display: flex;
     flex: 1 1 0;
     min-width: 0;
-    overflow: hidden;
 
-    background-color: var(--color-gray_light);
+    // overflow: hidden;
+
+    // background-color: var(--color-gray_light);
 }
 
 .contentPaper.contentPaper {
@@ -26,6 +28,18 @@
     flex-direction: column;
     width: 100%;
     min-width: 0;
+}
+
+.sidePanel {
+    display: flex;
+    flex: 0 0 600px;
+    min-width: 0;
+
+    // overflow: hidden;
+}
+
+.sidePanelFullScreen {
+    flex: 1 1 100%;
 }
 
 .loader {

@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import {gql, useQuery} from '@apollo/client';
-import {Typography, Button, Copy} from '@jahia/moonstone';
+import {Typography, Button, Copy, Chip, DataTable, EmptyData} from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useNotifications} from '@jahia/react-material';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -58,14 +58,18 @@ const GET_CONTENT_PREVIEW_URL = gql`
     }
 `;
 
-const DetailRow = ({label, value, isCopyable = true, children}) => {
+const DetailRow = ({label, value, copyValue = value, isCopyable = true}) => {
     const {t} = useTranslation('jcontent');
     const notificationContext = useNotifications();
+    const isChips = Array.isArray(value);
+    const isLink = typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'));
+    const textToCopy = isChips ? value.join('; ') : copyValue;
+    const canCopy = isCopyable && Boolean(textToCopy) && value !== '-';
 
     const handleCopy = useCallback(() => {
-        if (value) {
+        if (textToCopy) {
             try {
-                const copyPromise = navigator.clipboard?.writeText(value);
+                const copyPromise = navigator.clipboard?.writeText(textToCopy);
                 copyPromise?.then(() => {
                     notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.copiedToClipboard'), ['closeButton']);
                 });
@@ -73,20 +77,51 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
                 console.error('Unable to copy to clipboard', error);
             }
         }
-    }, [value, notificationContext, t]);
+    }, [textToCopy, notificationContext, t]);
 
-    if (!value && !children) {
+    if (!value) {
         return null;
+    }
+
+    let valueContent;
+    if (isChips) {
+        valueContent = (
+            <div className={styles.chips}>
+                {value.map(name => (
+                    <Chip key={name} label={name} color="default"/>
+                ))}
+            </div>
+        );
+    } else if (isLink) {
+        valueContent = (
+            <Typography isNowrap
+                        component="a"
+                        variant="body"
+                        className={styles.link}
+                        href={value}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-sel-role="detail-link"
+            >
+                {value}
+            </Typography>
+        );
+    } else {
+        valueContent = (
+            <Typography isNowrap variant="body" className={styles.value}>
+                {value}
+            </Typography>
+        );
     }
 
     return (
         <div className={styles.detailRow} data-sel-role="detail-row" data-sel-label={label}>
-            <Typography variant="caption" className={styles.label}>
+            <Typography isNowrap variant="body" weight="semiBold" className={styles.label}>
                 {label}
             </Typography>
-            <div className={styles.value}>
-                {children || <Typography variant="body" component="span">{value}</Typography>}
-                {value && isCopyable && (
+            <div className={styles.valueWrapper}>
+                {valueContent}
+                {canCopy && (
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
@@ -101,61 +136,9 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
 
 DetailRow.propTypes = {
     label: PropTypes.string.isRequired,
-    value: PropTypes.string,
-    isCopyable: PropTypes.bool,
-    children: PropTypes.node
-};
-
-const LinkRow = ({label, displayValue, copyValue, href}) => {
-    const {t} = useTranslation('jcontent');
-    const notificationContext = useNotifications();
-
-    const handleCopy = useCallback(() => {
-        if (copyValue) {
-            const copyPromise = navigator.clipboard?.writeText(copyValue);
-            copyPromise?.then(() => {
-                notificationContext.notify(t('jcontent:label.contentEditor.sidePanel.linksCopied'), ['closeButton']);
-            });
-        }
-    }, [copyValue, notificationContext, t]);
-
-    if (!displayValue || !copyValue) {
-        return null;
-    }
-
-    return (
-        <div className={styles.detailRow} data-sel-role="detail-row" data-sel-label={label}>
-            <Typography variant="caption" className={styles.label}>
-                {label}
-            </Typography>
-            <div className={styles.value}>
-                <Typography variant="body" component="span" className={styles.linkValue}>
-                    {href ? (
-                        <a href={href}
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           className={styles.link}
-                           data-sel-role="preview-link"
-                        >{displayValue}
-                        </a>
-                    ) : displayValue}
-                </Typography>
-                <Button
-                    icon={<Copy/>}
-                    variant="ghost"
-                    className={styles.copyButton}
-                    onClick={handleCopy}
-                />
-            </div>
-        </div>
-    );
-};
-
-LinkRow.propTypes = {
-    label: PropTypes.string.isRequired,
-    displayValue: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     copyValue: PropTypes.string,
-    href: PropTypes.string
+    isCopyable: PropTypes.bool
 };
 
 // URL-encode each segment of a JCR path while keeping the slashes intact
@@ -241,7 +224,7 @@ const ContentLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
 
@@ -253,10 +236,10 @@ const ContentLinks = () => {
                         </Typography>
                     )}
                     {links.map(link => (
-                        <LinkRow
+                        <DetailRow
                             key={`${language}-${link.label}-${link.displayValue}`}
                             label={link.label}
-                            displayValue={link.displayValue}
+                            value={link.displayValue}
                             copyValue={link.copyValue}
                         />
                     ))}
@@ -288,14 +271,12 @@ const ContentPreviewLink = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="preview-link">
-            <Typography variant="subheading" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
-            <LinkRow
+            <DetailRow
                 label={t('jcontent:label.contentEditor.sidePanel.linksPreview')}
-                displayValue={url}
-                copyValue={url}
-                href={url}
+                value={url}
             />
         </div>
     );
@@ -318,18 +299,16 @@ const FileLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
-            <LinkRow
+            <DetailRow
                 label={t('jcontent:label.contentEditor.sidePanel.linksDefault')}
-                displayValue={stagingUrl}
-                copyValue={stagingUrl}
+                value={stagingUrl}
             />
-            <LinkRow
+            <DetailRow
                 label={t('jcontent:label.contentEditor.sidePanel.linksLive')}
-                displayValue={liveUrl}
-                copyValue={liveUrl}
+                value={liveUrl}
             />
         </div>
     );
@@ -339,13 +318,30 @@ export const ContentDetails = () => {
     const {t} = useTranslation('jcontent');
     const {nodeData, technicalInfo, details} = useSidePanelContext();
 
+    const publicationColumns = [
+        {
+            key: 'type',
+            label: t('jcontent:label.contentEditor.sidePanel.type'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-type-${id}`})
+        },
+        {
+            key: 'date',
+            label: t('jcontent:label.contentEditor.sidePanel.date'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-date-${id}`})
+        },
+        {
+            key: 'user',
+            label: t('jcontent:label.contentEditor.sidePanel.user'),
+            cellProps: ({id}) => ({'data-sel-role': `detail-user-${id}`})
+        }
+    ];
+
     if (!nodeData) {
         return (
-            <div className={styles.empty}>
-                <Typography variant="body">
-                    {t('jcontent:label.contentEditor.sidePanel.noDetailsAvailable')}
-                </Typography>
-            </div>
+            <EmptyData
+                data-sel-role="details-empty"
+                message={t('jcontent:label.contentEditor.sidePanel.noDetailsAvailable')}
+            />
         );
     }
 
@@ -353,20 +349,16 @@ export const ContentDetails = () => {
         <div className={styles.container}>
             {details && details.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
-                    <Typography variant="subheading" className={styles.sectionTitle}>
-                        {t('jcontent:label.contentEditor.sidePanel.additional')}
+                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+                        {t('jcontent:label.contentEditor.sidePanel.publicationDetails')}
                     </Typography>
 
-                    <div className={styles.detailsGrid}>
-                        {details.map(detail => (
-                            <DetailRow
-                                key={detail.label + detail.value}
-                                label={detail.label}
-                                value={detail.value}
-                                isCopyable={detail.copyable}
-                            />
-                        ))}
-                    </div>
+                    <DataTable
+                        data={details}
+                        columns={publicationColumns}
+                        primaryKey="id"
+                        enablePagination={false}
+                    />
                 </div>
             )}
 
@@ -376,13 +368,13 @@ export const ContentDetails = () => {
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
-                    <Typography variant="subheading" className={styles.sectionTitle}>
+                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
                         {t('jcontent:label.contentEditor.sidePanel.technical')}
                     </Typography>
 
                     {technicalInfo.map(info => (
                         <DetailRow
-                            key={info.label + info.value}
+                            key={info.label}
                             label={info.label}
                             value={info.value}
                         />

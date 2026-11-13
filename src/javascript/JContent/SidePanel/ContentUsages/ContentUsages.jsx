@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {Pill, DataTable, EmptyData, Typography, Warning, Language} from '@jahia/moonstone';
 import {DisplayAction} from '@jahia/ui-extender';
@@ -16,7 +17,7 @@ const LocaleChips = ({locales, t}) => {
     // A null locale means the content is shared across all languages
     if (locales.includes(null)) {
         return (
-            <Pill title={t('jcontent:label.contentEditor.edit.sharedLanguages')} label={<Language size="small" />}/>
+            <Pill title={t('jcontent:label.contentEditor.edit.sharedLanguages')} label={<Language size="small"/>}/>
         );
     }
 
@@ -30,6 +31,11 @@ const LocaleChips = ({locales, t}) => {
             {hiddenCount > 0 && <Pill label={'+' + hiddenCount} className={styles.chip}/>}
         </div>
     );
+};
+
+LocaleChips.propTypes = {
+    locales: PropTypes.arrayOf(PropTypes.string).isRequired,
+    t: PropTypes.func.isRequired
 };
 
 export const ContentUsages = () => {

@@ -12,21 +12,14 @@
     margin-bottom: var(--moon-spacing-huge);
 }
 
-.sectionTitle {}
-
 .copyButton {
     flex-shrink: 0;
     margin-left: var(--moon-spacing-small);
 
     vertical-align: middle;
 
-    visibility: hidden;
-
-    opacity: 0.6;
-
-    &:hover {
-        opacity: 1;
-    }
+    // Opacity rather than visibility, so the button stays in the keyboard focus order
+    opacity: 0;
 }
 
 .detailRow {
@@ -35,20 +28,14 @@
     flex-direction: row;
     min-width: 0;
 
-    &:hover {
-        .copyButton {
-            visibility: visible;
-        }
+    &:hover .copyButton,
+    &:focus-within .copyButton {
+        opacity: 0.6;
     }
-}
 
-.detailsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--moon-spacing-small) var(--moon-spacing-medium);
-
-    .detailRow {
-        margin-bottom: 0;
+    .copyButton:hover,
+    .copyButton:focus-visible {
+        opacity: 1;
     }
 }
 
@@ -62,8 +49,6 @@
     align-items: center;
     min-width: 0;
 }
-
-.value {}
 
 .chips {
     display: flex;

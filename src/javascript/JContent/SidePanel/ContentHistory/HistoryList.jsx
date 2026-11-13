@@ -74,22 +74,22 @@ const HistoryList = React.memo(({entries, uiLanguage, t}) => {
             <div key={entry.id} className={styles.historyItem} data-sel-role="history-item">
                 <div className={styles.itemAction}>
                     {getActionChip(entry.action, t)}
-                    <Typography variant="caption" isNowrap className={styles.typeLabel}>
+                    <Typography isNowrap variant="caption" className={styles.typeLabel}>
                         {t(typeLabelKey)}
                     </Typography>
                 </div>
                 <div className={styles.itemContent}>
                     <div className={styles.itemNames}>
-                        <Typography variant="body" weight="bold" isNowrap className={`${styles.targetName} moon-flexFluid`} title={fullDisplayName}>
+                        <Typography isNowrap variant="body" weight="bold" className={`${styles.targetName} moon-flexFluid`} title={fullDisplayName}>
                             {displayName}
                         </Typography>
                         {technicalName !== displayName && (
-                            <Typography variant="body" isNowrap className={styles.technicalName}>
+                            <Typography isNowrap variant="body" className={styles.technicalName}>
                                 ({technicalName})
                             </Typography>
                         )}
                     </div>
-                    <Typography variant="caption" isNowrap className={styles.metadata}>
+                    <Typography isNowrap variant="caption" className={styles.metadata}>
                         {t('jcontent:label.contentEditor.history.dateBy', {date: formatDate(entry.date), user: getUserDisplayName(entry)})}
                     </Typography>
                 </div>

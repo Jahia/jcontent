@@ -108,7 +108,7 @@ const DetailRow = ({label, value, copyValue = value, isCopyable = true}) => {
         );
     } else {
         valueContent = (
-            <Typography isNowrap variant="body" className={styles.value}>
+            <Typography isNowrap variant="body">
                 {value}
             </Typography>
         );
@@ -224,7 +224,7 @@ const ContentLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold">
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
 
@@ -271,7 +271,7 @@ const ContentPreviewLink = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="preview-link">
-            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold">
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
             <DetailRow
@@ -299,7 +299,7 @@ const FileLinks = () => {
 
     return (
         <div className={styles.section} data-sel-role="details-section" data-sel-content="links">
-            <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+            <Typography variant="subheading" weight="bold">
                 {t('jcontent:label.contentEditor.sidePanel.links')}
             </Typography>
             <DetailRow
@@ -349,7 +349,7 @@ export const ContentDetails = () => {
         <div className={styles.container}>
             {details && details.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="additional">
-                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+                    <Typography variant="subheading" weight="bold">
                         {t('jcontent:label.contentEditor.sidePanel.publicationDetails')}
                     </Typography>
 
@@ -368,7 +368,7 @@ export const ContentDetails = () => {
 
             {technicalInfo && technicalInfo.length > 0 && (
                 <div className={styles.section} data-sel-role="details-section" data-sel-content="technical">
-                    <Typography variant="subheading" weight="bold" className={styles.sectionTitle}>
+                    <Typography variant="subheading" weight="bold">
                         {t('jcontent:label.contentEditor.sidePanel.technical')}
                     </Typography>
 

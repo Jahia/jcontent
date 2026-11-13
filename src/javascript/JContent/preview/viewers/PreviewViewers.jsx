@@ -53,7 +53,7 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
     }
 
     return (
-        <div className={clsx(styles.previewContainer, styles.contentContainer)}
+        <div className={styles.previewContainer}
              data-sel-role="preview-container"
              data-preview-type="content"
         >

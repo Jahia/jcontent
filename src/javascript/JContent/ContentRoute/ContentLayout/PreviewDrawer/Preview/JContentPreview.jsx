@@ -55,7 +55,7 @@ export const JContentPreview = () => {
 
     return (
         <Preview
-            // footer={<PreviewCard node={previewSelection}/>}
+            // Footer disabled while the side panel design settles: footer={<PreviewCard node={previewSelection}/>}
             isFullScreen={isFullScreen}
             nodeData={previewSelection}
             previewContext={previewContext}

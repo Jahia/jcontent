@@ -1,7 +1,6 @@
 import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-// import {Paper} from '@material-ui/core';
-import {Paper} from "@jahia/moonstone";
+import {Paper} from '@jahia/moonstone';
 import {ContentTable} from './ContentTable';
 import {ContentSidePanel} from './ContentSidePanel';
 import classNames from 'clsx';

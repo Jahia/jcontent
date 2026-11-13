@@ -1,76 +1,62 @@
 .container {
+    display: flex;
     flex: 1;
-    padding: var(--spacing-medium);
+    flex-direction: column;
     overflow-y: auto;
 }
 
-.empty {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-
-    height: 100%;
-
-    color: var(--color-gray);
-}
-
 .section {
-    margin-bottom: var(--spacing-large);
-    padding-bottom: var(--spacing-medium);
-
-    border-bottom: 1px solid var(--color-border);
-
-    &:last-child {
-        border-bottom: none;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: var(--moon-spacing-medium);
+    margin-bottom: var(--moon-spacing-huge);
 }
 
-.sectionTitle {
-    margin-bottom: var(--spacing-medium);
+.copyButton {
+    flex-shrink: 0;
+    margin-left: var(--moon-spacing-small);
 
-    font-weight: 600;
+    vertical-align: middle;
+
+    // Opacity rather than visibility, so the button stays in the keyboard focus order
+    opacity: 0;
 }
 
 .detailRow {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-nano);
+    flex: 1;
+    flex-direction: row;
     min-width: 0;
-    margin-bottom: var(--spacing-small);
-}
 
-.detailsGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-small) var(--spacing-medium);
+    &:hover .copyButton,
+    &:focus-within .copyButton {
+        opacity: 0.6;
+    }
 
-    .detailRow {
-        margin-bottom: 0;
+    .copyButton:hover,
+    .copyButton:focus-visible {
+        opacity: 1;
     }
 }
 
 .label {
-    font-weight: 500;
-    color: var(--color-gray);
+    width: 25%;
 }
 
-.value {
-    display: inline-flex;
-    gap: var(--spacing-small);
+.valueWrapper {
+    display: flex;
+    flex: 1;
     align-items: center;
     min-width: 0;
-
-    word-break: break-word;
 }
 
-.linkValue {
+.chips {
+    display: flex;
     flex: 1;
+    flex-wrap: wrap;
+    gap: var(--moon-spacing-nano);
+    align-items: center;
     min-width: 0;
-    overflow: hidden;
-
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 
 .link {
@@ -85,20 +71,8 @@
 
 .languageLabel {
     display: block;
-    margin-top: var(--spacing-small);
-    margin-bottom: var(--spacing-nano);
+    margin-top: var(--moon-spacing-small);
+    margin-bottom: var(--moon-spacing-nano);
 
     color: var(--color-gray);
-}
-
-.copyButton {
-    flex-shrink: 0;
-
-    vertical-align: middle;
-
-    opacity: 0.7;
-
-    &:hover {
-        opacity: 1;
-    }
 }

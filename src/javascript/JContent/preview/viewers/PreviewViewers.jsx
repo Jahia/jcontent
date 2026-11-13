@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
+import {useTranslation} from 'react-i18next';
 import styles from './PreviewViewers.scss';
 
 import {DocumentViewer} from './DocumentViewer';
@@ -11,6 +12,7 @@ import {getFileExtension, isBrowserImage, isPDF} from '~/JContent/ContentRoute/C
 import {NoView} from './NoView';
 
 export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScreen = false, onContentNotFound, pageCssHtml = ''}) => {
+    const {t} = useTranslation('jcontent');
     const isFile = data?.nodeByPath?.lastModified && data?.nodeByPath?.isFile;
     if (isFile) {
         const file = window.contextJsParameters.contextPath + '/files/' + (previewContext.workspace === 'edit' ? 'default' : 'live') + data.nodeByPath.path.replaceAll(/[^/]/g, encodeURIComponent) + (data.nodeByPath.lastModified ? ('?lastModified=' + data.nodeByPath.lastModified.value) : '');
@@ -47,11 +49,11 @@ export const PreviewViewers = ({data, previewContext, nodeData = null, isFullScr
 
     const output = data?.nodeByPath?.renderedContent?.output;
     if (output === '') {
-        return <NoView/>;
+        return <NoView message={t('jcontent:label.contentManager.contentPreview.noViewEmptyMessage')}/>;
     }
 
     return (
-        <div className={clsx(styles.previewContainer, styles.contentContainer)}
+        <div className={styles.previewContainer}
              data-sel-role="preview-container"
              data-preview-type="content"
         >

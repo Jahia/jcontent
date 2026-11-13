@@ -62,7 +62,7 @@ export class SidePanel extends BasePage {
     }
 
     getPreviewLink() {
-        return cy.get(this.scoped('[data-sel-role="preview-link"]'));
+        return cy.get(this.scoped('[data-sel-content="preview-link"] [data-sel-role="detail-link"]'));
     }
 
     getHistoryFilter() {

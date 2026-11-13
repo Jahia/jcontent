@@ -6,18 +6,12 @@
     flex-direction: row;
     width: 100%;
     min-height: 0;
-
-    background-color: var(--color-gray_light);
-    overflow: hidden;
 }
 
 .content {
     display: flex;
     flex: 1 1 0;
     min-width: 0;
-    overflow: hidden;
-
-    background-color: var(--color-gray_light);
 }
 
 .contentPaper.contentPaper {

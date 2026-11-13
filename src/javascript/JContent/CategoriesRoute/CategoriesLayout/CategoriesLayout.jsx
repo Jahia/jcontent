@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import {ContentTable} from '~/JContent/ContentRoute/ContentLayout/ContentTable';
@@ -19,7 +19,6 @@ export const CategoriesLayout = ({
     isLoading,
     isStructured
 }) => {
-    const contextualMenu = useRef();
     const selector = state => ({
         mode: state.jcontent.mode,
         previewSelection: [],
@@ -34,10 +33,7 @@ export const CategoriesLayout = ({
     });
     return (
         <div className={styles.root}>
-            <div
-                    className={classNames(styles.content)}
-                    onContextMenu={event => contextualMenu.current(event)}
-            >
+            <div className={classNames(styles.content)}>
                 <Paper className={styles.contentPaper}>
                     <ErrorBoundary>
                         <ContentTable totalCount={totalCount}

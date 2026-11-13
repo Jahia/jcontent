@@ -90,7 +90,7 @@ const renderField = (
                     render={ButtonRenderer}
                 />
             </div>}
-            {field.description && (
+            {inputContext.displayDescription && field.description && (
             <Typography className={styles.inputDescription} variant="caption">
                 {/* eslint-disable-next-line react/no-danger */}
                 <span dangerouslySetInnerHTML={{__html: field.description}}/>

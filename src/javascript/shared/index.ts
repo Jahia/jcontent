@@ -42,6 +42,10 @@ export {ContentSidePanel} from '../JContent/ContentRoute/ContentLayout/ContentSi
 export {ContentSidePanelNodeFragment} from '../JContent/ContentRoute/ContentLayout/ContentSidePanel.gql-fragments';
 export {cmSetSidePanelSelection} from '../JContent/redux/preview.redux';
 
+// The preview shell and its context builder, for a module that previews a node on a surface of its
+// own. buildPreviewContextsFromNode reads isPage, jView, displayableNode and pageAncestors.
+export {Preview, buildPreviewContextsFromNode} from '../JContent/preview';
+
 // Content-editor shared/index.js
 export {ContentEditorContext, ContentEditorContextProvider, useContentEditorContext} from '~/ContentEditor/contexts/ContentEditor';
 export {ContentEditorConfigContext, ContentEditorConfigContextProvider, useContentEditorConfigContext} from '~/ContentEditor/contexts/ContentEditorConfig';

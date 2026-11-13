@@ -290,7 +290,7 @@ describe('Content editor form', () => {
         sidePanel.switchToDetailsTab();
 
         // Verify last contributor has changed
-        sidePanel.getDetailRow('Last contributor').should('contain', 'anne');
+        sidePanel.getByRole('detail-user-lastModification').should('contain', 'anne');
     });
 
     it('should be able to check and uncheck boolean', () => {

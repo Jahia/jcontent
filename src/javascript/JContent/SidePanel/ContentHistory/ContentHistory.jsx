@@ -90,28 +90,42 @@ export const ContentHistory = () => {
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
     const isEmpty = entries.length === 0;
 
-    // Initial load, before any data is available.
-    if (loading && !data) {
-        return <LoaderOverlay/>;
+    // Empty state: no history at all (no active filter).
+    if (data && !error && isEmpty && actionFilter === 'all') {
+        return (
+            <EmptyData
+                data-sel-role="history-empty"
+                title={t('jcontent:label.contentEditor.history.noEntries')}
+                message={t('jcontent:label.contentEditor.history.noEntriesDescription')}
+            />
+        );
     }
 
-    if (error) {
-        return (
+    // Apollo drops data while new variables load, so the filter and the pagination stay mounted
+    let list;
+    if (loading && !data) {
+        list = <LoaderOverlay/>;
+    } else if (error) {
+        list = (
             <div className={styles.error}>
                 <Typography variant="body">
                     {t('jcontent:label.contentEditor.history.errorLoading')}
                 </Typography>
             </div>
         );
-    }
-
-    // Empty state: no history at all (no active filter).
-    if (isEmpty && actionFilter === 'all') {
-        return (
+    } else if (isEmpty) {
+        list = (
             <EmptyData
-                data-sel-role="history-empty"
-                title={t('jcontent:label.contentEditor.history.noEntries')}
-                message={t('jcontent:label.contentEditor.history.noEntriesDescription')}
+                data-sel-role="history-filter-empty"
+                message={t('jcontent:label.contentEditor.history.noEntriesForFilter')}
+            />
+        );
+    } else {
+        list = (
+            <HistoryList
+                entries={entries}
+                uiLanguage={uiLanguage}
+                t={t}
             />
         );
     }
@@ -132,18 +146,7 @@ export const ContentHistory = () => {
                 />
             </div>
 
-            {isEmpty ? (
-                <EmptyData
-                    data-sel-role="history-filter-empty"
-                    message={t('jcontent:label.contentEditor.history.noEntriesForFilter')}
-                />
-            ) : (
-                <HistoryList
-                    entries={entries}
-                    uiLanguage={uiLanguage}
-                    t={t}
-                />
-            )}
+            {list}
 
             {totalCount > 0 && (
                 <div className={styles.paginationContainer}>

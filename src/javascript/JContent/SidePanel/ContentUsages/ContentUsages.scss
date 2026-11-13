@@ -28,13 +28,6 @@ td.statusCellTd {
     height: 100%;
 }
 
-.nameCell {
-    display: flex;
-    gap: var(--spacing-small);
-    align-items: center;
-    min-width: 0;
-}
-
 .icon {
     flex-shrink: 0;
 }

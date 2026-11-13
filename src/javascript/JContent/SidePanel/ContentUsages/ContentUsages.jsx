@@ -17,7 +17,7 @@ const LocaleChips = ({locales, t}) => {
     // A null locale means the content is shared across all languages
     if (locales.includes(null)) {
         return (
-            <Pill title={t('jcontent:label.contentEditor.edit.sharedLanguages')} label={<Language size="small"/>}/>
+            <Pill title={t('jcontent:label.contentEditor.edit.sharedLanguages')}><Language size="small"/></Pill>
         );
     }
 
@@ -27,8 +27,8 @@ const LocaleChips = ({locales, t}) => {
 
     return (
         <div className={styles.badges}>
-            {visibleLanguages.map(l => <Pill key={l} label={l} title={l} className={styles.chip}/>)}
-            {hiddenCount > 0 && <Pill label={'+' + hiddenCount} className={styles.chip}/>}
+            {visibleLanguages.map(l => <Pill key={l} title={l} className={styles.chip}>{l}</Pill>)}
+            {hiddenCount > 0 && <Pill className={styles.chip}>{'+' + hiddenCount}</Pill>}
         </div>
     );
 };

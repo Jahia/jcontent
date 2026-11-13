@@ -6,11 +6,12 @@
  * Assumes a parent laid out as a flex ROW - `flex: 0 0 600px` is a width only in that context.
  */
 .sidePanel {
+    // Anchors the absolutely positioned close button of the panel
+    position: relative;
+
     display: flex;
     flex: 0 0 600px;
     min-width: 0;
-
-    // overflow: hidden;
 }
 
 .sidePanelFullScreen {

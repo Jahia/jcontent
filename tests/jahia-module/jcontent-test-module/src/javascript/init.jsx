@@ -18,6 +18,14 @@ export default function () {
         component: TestBulkActionComponent
     });
 
+    registry.add('action', 'otherTestBulkAction', {
+        buttonLabel: 'Other test bulk action',
+        targets: ['bulkActions:20'],
+        showOnNodeTypes: ['jnt:bigText'],
+        requireModuleInstalledOnSite: ['jcontent-test-module'],
+        component: TestBulkActionComponent
+    });
+
     registry.add('callback', 'accordion-config', {
         targets: ['jahiaApp-init:60'],
         callback: function () {
@@ -51,6 +59,7 @@ export default function () {
                 tableConfig: {
                     ...contentFoldersAccordion.tableConfig,
                     contextualMenu,
+                    bulkActionKeys: ['testBulkAction'],
                     header: {showStatus: false},
                     columns: ['publicationStatus', 'selection', 'name', 'type', 'lastModified', 'visibleActions']
                 }

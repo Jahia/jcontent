@@ -197,6 +197,39 @@
         "usagesCount_plural": "{{count}} usages"
       },
       "export": {
+        "records": {
+          "count": "{{count}} item to export",
+          "count_plural": "{{count}} items to export",
+          "format": {
+            "jahia": "Jahia export (ZIP or XML)",
+            "jahiaHint": "The item and its sub-items, to import into a Jahia site",
+            "jahiaSingleOnly": "Available when one item is selected",
+            "csv": "CSV",
+            "csvHint": "One row per item, for a spreadsheet",
+            "json": "JSON",
+            "jsonHint": "One object per item, for another tool"
+          },
+          "languages": "Languages",
+          "languagesHint": "A translated field gets one column per language.",
+          "columns": "Columns",
+          "columnsHint": "Check the columns to export. The arrows change their order.",
+          "moveUp": "Move up",
+          "moveDown": "Move down",
+          "failed": "The export failed.",
+          "column": {
+            "name": "Name",
+            "path": "Path",
+            "uuid": "Identifier",
+            "type": "Content type",
+            "createdBy": "Created by",
+            "created": "Created on",
+            "lastModifiedBy": "Last modified by",
+            "lastModified": "Last modified on",
+            "publicationStatus": "Publication status",
+            "tags": "Tags",
+            "categories": "Categories"
+          }
+        },
         "actionLabel": "Export",
         "dialogTitle": "Export options",
         "selectWorkspace": "Select the content you want to export",

@@ -19,3 +19,33 @@
 .checkboxTypo {
     padding: 10px;
 }
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    margin-top: var(--spacing-medium);
+}
+
+.columns {
+    display: flex;
+    flex-direction: column;
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.columnRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.columnOrder {
+    display: flex;
+}
+
+.error {
+    margin-top: var(--spacing-small);
+
+    color: var(--color-danger);
+}

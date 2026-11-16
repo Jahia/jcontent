@@ -6,6 +6,8 @@ export {ContentTypeSelector} from '../JContent/ContentRoute/ContentLayout/Conten
 export {default as ViewModeSelector} from '../JContent/ContentRoute/ToolBar/ViewModeSelector';
 export {default as FileModeSelector} from '../JContent/ContentRoute/ToolBar/FileModeSelector';
 export {BulkActionsMenu, BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET} from '../JContent/ContentRoute/ToolBar/SelectionActionsBar/BulkActionsMenu';
+export {Export as ExportDialog, EXPORT_FORMATS} from '../JContent/actions/exportAction/Export/Export';
+export {STANDARD_COLUMNS as EXPORT_STANDARD_COLUMNS} from '../JContent/actions/exportAction/exportRecords/exportRecords';
 export {default as UploadTransformComponent} from '../JContent/ContentRoute/ContentLayout/UploadTransformComponent';
 export {ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
 export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';

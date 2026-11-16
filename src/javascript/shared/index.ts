@@ -5,6 +5,7 @@ export {default as SiteSwitcher} from '../JContent/ContentNavigation/NavigationH
 export {ContentTypeSelector} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentTypeSelector';
 export {default as ViewModeSelector} from '../JContent/ContentRoute/ToolBar/ViewModeSelector';
 export {default as FileModeSelector} from '../JContent/ContentRoute/ToolBar/FileModeSelector';
+export {BulkActionsMenu, BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET} from '../JContent/ContentRoute/ToolBar/SelectionActionsBar/BulkActionsMenu';
 export {default as UploadTransformComponent} from '../JContent/ContentRoute/ContentLayout/UploadTransformComponent';
 export {ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
 export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';

@@ -13,9 +13,10 @@ import {buildFilterFields, formFieldsOf} from './filterFields';
  * @param {string} [options.nodeType] the content type of the list, or nothing for a list of mixed types
  * @param {string} [options.siteKey] the site of the content types of the `std:type` field, the current site by default
  * @param {string} [options.path] the path the Content Editor form is read for, the site by default
- * @returns {{fields: Array, loading: boolean}}
+ * @param {boolean} [options.skip] reads nothing, and gives the standard fields
+ * @returns {{fields: Array, loading: boolean}} `loading` is true while the properties of the type are read
  */
-export const useFilterFields = ({nodeType, siteKey, path} = {}) => {
+export const useFilterFields = ({nodeType, siteKey, path, skip = false} = {}) => {
     const {t} = useTranslation('jcontent');
     const {site, uilang} = useSelector(state => ({site: state.site, uilang: state.uilang}), shallowEqual);
     const effectiveSite = siteKey || site;
@@ -23,16 +24,16 @@ export const useFilterFields = ({nodeType, siteKey, path} = {}) => {
 
     const definitions = useQuery(FilterFieldsQuery, {
         variables: {type: nodeType, language: uilang},
-        skip: !nodeType
+        skip: skip || !nodeType
     });
     const form = useQuery(FilterFormFieldsQuery, {
         variables: {type: nodeType, language: uilang, path: formPath},
-        skip: !nodeType || !effectiveSite,
+        skip: skip || !nodeType || !effectiveSite,
         errorPolicy: 'ignore'
     });
     const contentTypes = useQuery(FilterContentTypesQuery, {
         variables: {siteKey: effectiveSite, language: uilang},
-        skip: !effectiveSite
+        skip: skip || !effectiveSite
     });
 
     const properties = definitions.data?.jcr?.nodeTypeByName?.properties;
@@ -48,5 +49,5 @@ export const useFilterFields = ({nodeType, siteKey, path} = {}) => {
             .sort((a, b) => a.label.localeCompare(b.label))
     }), [t, nodeType, properties, formFields, typeNodes]);
 
-    return {fields, loading: definitions.loading || contentTypes.loading};
+    return {fields, loading: definitions.loading};
 };

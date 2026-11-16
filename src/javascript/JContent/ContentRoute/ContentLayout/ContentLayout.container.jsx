@@ -55,6 +55,7 @@ export const ContentLayoutContainer = React.memo(() => {
         searchTerms: state.jcontent.params.searchTerms,
         sql2SearchFrom: state.jcontent.params.sql2SearchFrom,
         sql2SearchWhere: state.jcontent.params.sql2SearchWhere,
+        filters: state.jcontent.params.filters,
         pagination: state.jcontent.pagination,
         sort: state.jcontent.sort,
         tableView: state.jcontent.tableView,

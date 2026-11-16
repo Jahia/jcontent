@@ -430,6 +430,7 @@
           "action": "Verschlagworten",
           "title": "Ausgewählte Elemente verschlagworten",
           "label": "Schlagwörter",
+          "hint": "Geben Sie ein Schlagwort ein und drücken Sie die Eingabetaste, um es hinzuzufügen.",
           "clears": "Die ausgewählten Elemente haben dann kein Schlagwort.",
           "mode": {
             "add": "Hinzufügen",
@@ -444,6 +445,7 @@
           "action": "Kategorisieren",
           "title": "Ausgewählte Elemente kategorisieren",
           "label": "Kategorien",
+          "hint": "Öffnen Sie die Liste und wählen Sie die Kategorien.",
           "clears": "Die ausgewählten Elemente haben dann keine Kategorie.",
           "mode": {
             "add": "Hinzufügen",

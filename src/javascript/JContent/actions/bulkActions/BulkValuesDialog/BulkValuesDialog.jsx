@@ -88,7 +88,10 @@ export const BulkValuesDialog = ({isOpen, fieldKey, paths, onClose}) => {
                             />
                         ))}
                     </RadioGroup>
-                    <div className={styles.section} data-sel-role="bulk-values-picker">
+                    {/* The list of the picker opens below it, inside the scrolling body of the
+                        dialog: the section keeps room for it so that it is not cut off. */}
+                    <div className={`${styles.section} ${styles.pickerSection}`} data-sel-role="bulk-values-picker">
+                        <Typography variant="caption" weight="bold">{t(`${prefix}.label`)}</Typography>
                         <ContentEditorContext.Provider value={{site, lang: language}}>
                             <Picker id={`bulk-${fieldKey}`}
                                     field={pickerField(field, t(`${prefix}.label`))}
@@ -98,6 +101,7 @@ export const BulkValuesDialog = ({isOpen, fieldKey, paths, onClose}) => {
                                     onBlur={() => {}}
                             />
                         </ContentEditorContext.Provider>
+                        <Typography variant="caption">{t(`${prefix}.hint`)}</Typography>
                     </div>
                     {mode === BULK_VALUE_MODES.REPLACE && chosen.length === 0 && (
                         <Typography variant="caption" className={styles.warning} data-sel-role="bulk-values-clears">

@@ -786,7 +786,18 @@
           "tags": "Étiquettes",
           "systemName": "Nom système",
           "type": "Type de contenu"
-        }
+        },
+        "toolbarLabel": "Filtres de la liste",
+        "collapsed": "Filtres",
+        "collapsedCount": "Filtres ({{count}})",
+        "addFilter": "Ajouter un filtre",
+        "filterName": "{{name}} :",
+        "clearFilter": "Effacer le filtre {{name}}",
+        "clearAll": "Tout effacer",
+        "close": "Fermer",
+        "operatorField": "Condition",
+        "valueField": "Valeur",
+        "emptyList": "Aucun élément ne correspond aux filtres."
       }
     },
     "categoryManager": {

@@ -20,6 +20,7 @@ import {registry} from '@jahia/ui-extender';
 import {cmAddSelection, cmSwitchSelection} from '../../../redux/selection.redux';
 import {useUnselect} from '~/JContent/ContentRoute/ContentLayout/useUnselect';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {FilterEmptyState, useHasFilters} from '~/JContent/filters/FilterEmptyState';
 
 export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const {t} = useTranslation('jcontent');
@@ -116,6 +117,7 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
     const [{isCanDrop, allowDrop}, drop] = useFileDrop({uploadType: JContentConstants.mode.UPLOAD, uploadPath: path});
+    const hasFilters = useHasFilters(mode);
 
     if ((!rows || rows.length === 0) && isLoading) {
         return null;
@@ -132,6 +134,10 @@ export const FilesGrid = ({isContentNotFound, totalCount, rows, isLoading}) => {
     }
 
     if ((!rows || rows.length === 0) && !isLoading) {
+        if (hasFilters) {
+            return <FilterEmptyState/>;
+        }
+
         return (
             <FilesGridEmptyDropZone
                 uploadType={JContentConstants.mode.UPLOAD}

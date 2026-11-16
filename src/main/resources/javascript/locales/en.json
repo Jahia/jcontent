@@ -792,7 +792,18 @@
           "tags": "Tags",
           "systemName": "System name",
           "type": "Content type"
-        }
+        },
+        "toolbarLabel": "Filters for the list",
+        "collapsed": "Filters",
+        "collapsedCount": "Filters ({{count}})",
+        "addFilter": "Add filter",
+        "filterName": "{{name}}:",
+        "clearFilter": "Clear the {{name}} filter",
+        "clearAll": "Clear all",
+        "close": "Close",
+        "operatorField": "Condition",
+        "valueField": "Value",
+        "emptyList": "No item matches the filters."
       }
     },
     "categoryManager": {

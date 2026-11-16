@@ -20,6 +20,7 @@ import {NarrowHeaderActions} from './NarrowHeaderActions';
 import {batchActions} from 'redux-batched-actions';
 import {contentStatusFragment} from '../ContentRoute/ContentStatuses/ContentStatuses.gql-queries';
 import {ContentStatusSelector} from '~/JContent/ContentRoute/ToolBar/ContentStatusSelector';
+import {ContentFilterBar} from './ContentFilterBar';
 
 const NARROW_HEADER_WIDTH = 750;
 
@@ -50,6 +51,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
             toolbarLeft={!previewSelection && selection.length > 0 ?
                 <NarrowHeaderActions previewSelection={previewSelection} selection={selection} clear={clear}/> :
                 <SearchControlBar/>}
+            toolbarRight={<ContentFilterBar isCollapsed/>}
         />
     ) : (
         <Header
@@ -63,6 +65,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
                     {selection.length === 0 && <SearchControlBar/>}
                 </>
             }
+            toolbarRight={<ContentFilterBar/>}
         />
     );
 }
@@ -122,7 +125,7 @@ const ContentHeader = () => {
             contentType={nodeType && <Chip color="accent" label={nodeType.displayName || nodeType.name} icon={getNodeTypeIcon(nodeType.name)}/>}
             status={showStatus && <ContentStatuses node={node}/>}
             toolbarLeft={<NarrowHeaderActions path={nodePath} previewSelection={previewSelection} selection={selection} clear={clear}/>}
-            toolbarRight={<><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
+            toolbarRight={<><ContentFilterBar isCollapsed/><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
         />
     ) : (
         <Header
@@ -139,7 +142,7 @@ const ContentHeader = () => {
                     <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }
-            toolbarRight={<><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
+            toolbarRight={<><ContentFilterBar/><ContentStatusSelector/>{sortSelector}{viewSelector}</>}
         />
     );
 };

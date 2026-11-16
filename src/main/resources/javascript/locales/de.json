@@ -785,7 +785,18 @@
           "tags": "Tags",
           "systemName": "Systemname",
           "type": "Inhaltstyp"
-        }
+        },
+        "toolbarLabel": "Filter der Liste",
+        "collapsed": "Filter",
+        "collapsedCount": "Filter ({{count}})",
+        "addFilter": "Filter hinzufügen",
+        "filterName": "{{name}}:",
+        "clearFilter": "Filter {{name}} zurücksetzen",
+        "clearAll": "Alle zurücksetzen",
+        "close": "Schließen",
+        "operatorField": "Bedingung",
+        "valueField": "Wert",
+        "emptyList": "Kein Element entspricht den Filtern."
       }
     },
     "categoryManager": {

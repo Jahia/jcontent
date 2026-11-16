@@ -17,6 +17,7 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {ContentEmptyDropZone} from './ContentEmptyDropZone';
 import {ContentNotFound} from './ContentNotFound';
 import {EmptyTable} from './EmptyTable';
+import {FilterEmptyState, useHasFilters} from '~/JContent/filters/FilterEmptyState';
 import {Table, TableBody, TablePagination} from '@jahia/moonstone';
 import {useTable} from 'react-table';
 import {useVirtualizer} from '@tanstack/react-virtual';
@@ -144,6 +145,7 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const tableConfig = registry.get('accordionItem', mode)?.tableConfig;
 
     const [{isCanDrop, allowDrop}, drop] = useFileDrop({uploadType: tableConfig?.uploadType, uploadPath: path});
+    const hasFilters = useHasFilters(mode);
 
     if (isContentNotFound) {
         return <ContentNotFound columnSpan={columnData.length} t={t}/>;
@@ -152,6 +154,10 @@ export const ContentTable = ({rows, isContentNotFound, totalCount, isLoading, is
     const tableHeader = tableConfig?.tableHeader;
 
     if (!rows?.length && !isLoading) {
+        if (hasFilters) {
+            return <FilterEmptyState/>;
+        }
+
         if ((mode === JContentConstants.mode.SEARCH || mode === JContentConstants.mode.SQL2SEARCH)) {
             return <EmptyTable text={searchTerms}/>;
         }

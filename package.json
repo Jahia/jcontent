@@ -118,6 +118,7 @@
   },
   "resolutions": {
     "@apollo/client": "^3",
+    "@jahia/moonstone": "file:./local-moonstone/jahia-moonstone-2.22.0.tgz",
     "react": "^18.3.1",
     "graphql": "^16.10.0",
     "ajv@npm:^5.0.0": "^6",

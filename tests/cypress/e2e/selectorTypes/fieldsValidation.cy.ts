@@ -56,17 +56,15 @@ describe('Content Editor - field validation and help text', () => {
         cy.get(`[data-sel-content-editor-field="${futureDateField}"]`).should('contain', futureDateMessage);
     };
 
-    // The legacy test typed the HTML in the source of the rich text. The CKEditor API (setData) does not
-    // always reach the form, so the spec types in the source mode too, once the editor is ready.
+    // The HTML goes through the CKEditor API, and the invalidLink error proves that it reached the form.
     const saveBrokenLink = (ce: ContentEditor) => {
         const field = `[data-sel-content-editor-field="${bigtextField}"]`;
         const href = `/files/{workspace}${missingFile.replace(' ', '%20')}`;
         const html = `<p></p><div><img src="${href}" alt="missing"><a href="${href}">link</a></div><p></p>`;
-        ce.getField(RichTextField, bigtextField).getEditor().its('status').should('eq', 'ready');
-        cy.get(`${field} a.cke_button__source`).should('not.have.class', 'cke_button_disabled').click();
-        cy.get(`${field} textarea.cke_source`).clear();
-        cy.get(`${field} textarea.cke_source`).type(html, {parseSpecialCharSequences: false, delay: 0});
-        cy.get(`${field} a.cke_button__source`).click();
+        const richText = ce.getField(RichTextField, bigtextField);
+        richText.getEditor().its('status').should('eq', 'ready');
+        richText.setData(html);
+        richText.getData().should('contain', 'missing%20image.png');
         ce.saveUnchecked();
         cy.get(field).find('[data-sel-error="invalidLink"]').should('contain', `The link ${missingFile} is broken`);
     };

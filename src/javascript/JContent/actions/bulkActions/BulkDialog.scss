@@ -1,0 +1,22 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-small);
+    margin-top: var(--spacing-medium);
+}
+
+.control {
+    width: 100%;
+}
+
+.warning {
+    margin-top: var(--spacing-small);
+
+    color: var(--color-warning);
+}
+
+.error {
+    margin-top: var(--spacing-small);
+
+    color: var(--color-danger);
+}

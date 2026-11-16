@@ -419,6 +419,60 @@
         }
       },
       "browseFolders": "Browse Folders",
+      "bulkActions": {
+        "count": "{{count}} item selected",
+        "count_plural": "{{count}} items selected",
+        "cancel": "Cancel",
+        "apply": "Apply",
+        "failed": "The change could not be saved.",
+        "result": {
+          "saved": "{{count}} item changed",
+          "saved_plural": "{{count}} items changed",
+          "partial": "{{saved}} changed, {{failed}} could not be changed"
+        },
+        "tag": {
+          "action": "Tag",
+          "title": "Tag the selected items",
+          "label": "Tags",
+          "clears": "The selected items will have no tag.",
+          "mode": {
+            "add": "Add",
+            "addHint": "Add these tags to the tags of each item",
+            "replace": "Replace",
+            "replaceHint": "Each item gets only these tags",
+            "remove": "Remove",
+            "removeHint": "Remove these tags from each item"
+          }
+        },
+        "categorize": {
+          "action": "Categorize",
+          "title": "Categorize the selected items",
+          "label": "Categories",
+          "clears": "The selected items will have no category.",
+          "mode": {
+            "add": "Add",
+            "addHint": "Add these categories to the categories of each item",
+            "replace": "Replace",
+            "replaceHint": "Each item gets only these categories",
+            "remove": "Remove",
+            "removeHint": "Remove these categories from each item"
+          }
+        },
+        "replaceValue": {
+          "action": "Replace a value",
+          "title": "Replace a value on the selected items",
+          "field": "Field",
+          "chooseField": "Choose a field",
+          "newValue": "New value",
+          "choose": "Choose a value",
+          "true": "True",
+          "false": "False",
+          "onePerLine": "One value per line",
+          "clear": "Remove the value",
+          "languageOnly": "This field is translated: only the {{language}} value changes.",
+          "noFields": "The selected items have no field in common that can be changed here."
+        }
+      },
       "selection": {
         "itemsSelected": "{{count}} item selected",
         "itemsSelected_plural": "{{count}} items selected",

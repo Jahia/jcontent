@@ -13,6 +13,7 @@ import {
     Cut,
     Delete,
     Download,
+    Edit,
     EditImage,
     FileZip,
     Lock,
@@ -29,9 +30,11 @@ import {
     Separator,
     Subdirectory,
     SwapHoriz,
+    Tag,
     Undelete,
     Unlock,
     Upload,
+    ViewTree,
     Visibility
 } from '@jahia/moonstone';
 import {
@@ -66,6 +69,7 @@ import {
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
 import {BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/BulkActionsMenu';
+import {BulkReplaceValueActionComponent, BulkValuesActionComponent} from '~/JContent/actions/bulkActions/bulkActionComponents';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
@@ -252,6 +256,29 @@ export const jContentActions = registry => {
         menuItemProps: {
             isShowIcons: true
         }
+    });
+    registry.add('action', 'bulkTag', {
+        buttonIcon: <Tag/>,
+        buttonLabel: 'jcontent:label.contentManager.bulkActions.tag.action',
+        bulkField: 'tag',
+        showOnNodeTypes: ['jnt:content', 'jnt:page'],
+        requiredPermission: ['jcr:modifyProperties'],
+        component: BulkValuesActionComponent
+    });
+    registry.add('action', 'bulkCategorize', {
+        buttonIcon: <ViewTree/>,
+        buttonLabel: 'jcontent:label.contentManager.bulkActions.categorize.action',
+        bulkField: 'categorize',
+        showOnNodeTypes: ['jnt:content', 'jnt:page'],
+        requiredPermission: ['jcr:modifyProperties'],
+        component: BulkValuesActionComponent
+    });
+    registry.add('action', 'bulkReplaceValue', {
+        buttonIcon: <Edit/>,
+        buttonLabel: 'jcontent:label.contentManager.bulkActions.replaceValue.action',
+        showOnNodeTypes: ['jnt:content', 'jnt:page'],
+        requiredPermission: ['jcr:modifyProperties'],
+        component: BulkReplaceValueActionComponent
     });
     registry.add('action', 'notSelectedContentMenu', menuActionWithRenderer, {
         buttonIcon: <MoreVert/>,

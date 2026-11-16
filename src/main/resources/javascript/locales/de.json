@@ -415,6 +415,60 @@
         }
       },
       "browseFolders": "Ordner durchsuchen",
+      "bulkActions": {
+        "count": "{{count}} Element ausgewählt",
+        "count_plural": "{{count}} Elemente ausgewählt",
+        "cancel": "Abbrechen",
+        "apply": "Anwenden",
+        "failed": "Die Änderung konnte nicht gespeichert werden.",
+        "result": {
+          "saved": "{{count}} Element geändert",
+          "saved_plural": "{{count}} Elemente geändert",
+          "partial": "{{saved}} geändert, {{failed}} konnten nicht geändert werden"
+        },
+        "tag": {
+          "action": "Verschlagworten",
+          "title": "Ausgewählte Elemente verschlagworten",
+          "label": "Schlagwörter",
+          "clears": "Die ausgewählten Elemente haben dann kein Schlagwort.",
+          "mode": {
+            "add": "Hinzufügen",
+            "addHint": "Diese Schlagwörter zu den Schlagwörtern jedes Elements hinzufügen",
+            "replace": "Ersetzen",
+            "replaceHint": "Jedes Element hat nur diese Schlagwörter",
+            "remove": "Entfernen",
+            "removeHint": "Diese Schlagwörter von jedem Element entfernen"
+          }
+        },
+        "categorize": {
+          "action": "Kategorisieren",
+          "title": "Ausgewählte Elemente kategorisieren",
+          "label": "Kategorien",
+          "clears": "Die ausgewählten Elemente haben dann keine Kategorie.",
+          "mode": {
+            "add": "Hinzufügen",
+            "addHint": "Diese Kategorien zu den Kategorien jedes Elements hinzufügen",
+            "replace": "Ersetzen",
+            "replaceHint": "Jedes Element hat nur diese Kategorien",
+            "remove": "Entfernen",
+            "removeHint": "Diese Kategorien von jedem Element entfernen"
+          }
+        },
+        "replaceValue": {
+          "action": "Wert ersetzen",
+          "title": "Wert in den ausgewählten Elementen ersetzen",
+          "field": "Feld",
+          "chooseField": "Feld wählen",
+          "newValue": "Neuer Wert",
+          "choose": "Wert wählen",
+          "true": "Wahr",
+          "false": "Falsch",
+          "onePerLine": "Ein Wert pro Zeile",
+          "clear": "Wert entfernen",
+          "languageOnly": "Dieses Feld ist übersetzt: nur der Wert in {{language}} ändert sich.",
+          "noFields": "Die ausgewählten Elemente haben kein gemeinsames Feld, das hier geändert werden kann."
+        }
+      },
       "selection": {
         "itemsSelected": "{{count}} Element ausgewählt",
         "itemsSelected_plural": "{{count}} Elemente ausgewählt",

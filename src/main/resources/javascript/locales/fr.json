@@ -415,6 +415,60 @@
         }
       },
       "browseFolders": "Parcourir les dossiers",
+      "bulkActions": {
+        "count": "{{count}} élément sélectionné",
+        "count_plural": "{{count}} éléments sélectionnés",
+        "cancel": "Annuler",
+        "apply": "Appliquer",
+        "failed": "La modification n'a pas pu être enregistrée.",
+        "result": {
+          "saved": "{{count}} élément modifié",
+          "saved_plural": "{{count}} éléments modifiés",
+          "partial": "{{saved}} modifiés, {{failed}} n'ont pas pu être modifiés"
+        },
+        "tag": {
+          "action": "Ajouter des tags",
+          "title": "Ajouter des tags aux éléments sélectionnés",
+          "label": "Tags",
+          "clears": "Les éléments sélectionnés n'auront plus de tag.",
+          "mode": {
+            "add": "Ajouter",
+            "addHint": "Ajouter ces tags aux tags de chaque élément",
+            "replace": "Remplacer",
+            "replaceHint": "Chaque élément a seulement ces tags",
+            "remove": "Retirer",
+            "removeHint": "Retirer ces tags de chaque élément"
+          }
+        },
+        "categorize": {
+          "action": "Catégoriser",
+          "title": "Catégoriser les éléments sélectionnés",
+          "label": "Catégories",
+          "clears": "Les éléments sélectionnés n'auront plus de catégorie.",
+          "mode": {
+            "add": "Ajouter",
+            "addHint": "Ajouter ces catégories aux catégories de chaque élément",
+            "replace": "Remplacer",
+            "replaceHint": "Chaque élément a seulement ces catégories",
+            "remove": "Retirer",
+            "removeHint": "Retirer ces catégories de chaque élément"
+          }
+        },
+        "replaceValue": {
+          "action": "Remplacer une valeur",
+          "title": "Remplacer une valeur sur les éléments sélectionnés",
+          "field": "Champ",
+          "chooseField": "Choisir un champ",
+          "newValue": "Nouvelle valeur",
+          "choose": "Choisir une valeur",
+          "true": "Vrai",
+          "false": "Faux",
+          "onePerLine": "Une valeur par ligne",
+          "clear": "Supprimer la valeur",
+          "languageOnly": "Ce champ est traduit : seule la valeur en {{language}} change.",
+          "noFields": "Les éléments sélectionnés n'ont aucun champ commun modifiable ici."
+        }
+      },
       "selection": {
         "itemsSelected": "{{count}} élément sélectionné",
         "itemsSelected_plural": "{{count}} éléments sélectionnés",

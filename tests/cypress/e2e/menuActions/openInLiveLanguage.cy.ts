@@ -37,28 +37,37 @@ const addPage = (name: string, titles: Record<string, string>) => addNode({
 
 const openInLive = '.moonstone-header button[data-sel-role="openInLive"]';
 
-/**
- * Aliases the query that decides whether the header shows `Open in live`, for one page in one language.
- * The button is also hidden while this query loads, so an absence is only meaningful once it has answered.
- */
+type GraphqlOperation = {operationName?: string; variables?: Record<string, unknown>};
+
+const graphqlOperations = (body: unknown): GraphqlOperation[] => (Array.isArray(body) ? body : [body]);
+
+// The LIVE workspace query decides `Open in live`, and the EDIT one decides `Open in preview`.
+// Both are `openInActionQuery`, so the alias keeps the LIVE one only.
+const isOpenInLiveQuery = (op: GraphqlOperation, pagePath: string, language: string) => op?.operationName === 'openInActionQuery' &&
+    op.variables?.workspace === 'LIVE' && op.variables?.path === `/sites/${siteKey}/${pagePath}` && op.variables?.language === language;
+
+/** Aliases the query that decides whether the header shows `Open in live`, for one page in one language. */
 const aliasOpenInLiveQuery = (pagePath: string, language: string) => {
     cy.intercept('POST', '**/modules/graphql', req => {
-        const operations = Array.isArray(req.body) ? req.body : [req.body];
-        if (operations.some(op => op?.operationName === 'openInActionQuery' && op.variables?.path === `/sites/${siteKey}/${pagePath}` && op.variables?.language === language)) {
+        if (graphqlOperations(req.body).some(op => isOpenInLiveQuery(op, pagePath, language))) {
             req.alias = 'openInLiveQuery';
         }
     });
 };
 
-/** Resolves after the browser has painted twice, so that React has rendered what the last answer changed. */
-const nextPaints = () => cy.window().then(win => new Cypress.Promise<void>(resolve => {
-    win.requestAnimationFrame(() => win.requestAnimationFrame(() => resolve()));
-}));
-
-/** Waits until the query of the button has answered for this page and language, then checks there is no button. */
-const expectNoOpenInLive = () => {
-    cy.wait('@openInLiveQuery');
-    nextPaints();
+/**
+ * Waits until the query of the button has answered for this page and language, and checks that the
+ * answer says the page is not published in that language. The node exists in live through its English
+ * version, so its status is what hides the button. The button is also hidden while its query loads, and Cypress
+ * sees the answer before the page renders it. So the answer proves the THEN, and the absence of the
+ * button follows from it. jContent batches its queries, so the answer is found by its position.
+ */
+const expectNoOpenInLive = (pagePath: string, language: string) => {
+    cy.wait('@openInLiveQuery').then(interception => {
+        const answers = graphqlOperations(interception.response?.body) as {data?: {jcr?: {result?: {publicationInfo?: unknown}}}}[];
+        const index = graphqlOperations(interception.request.body).findIndex(op => isOpenInLiveQuery(op, pagePath, language));
+        expect(answers[index]?.data?.jcr?.result?.publicationInfo, `the publication info of ${pagePath} in ${language}`).to.include({status: 'NOT_PUBLISHED'});
+    });
     cy.get(openInLive).should('not.exist');
 };
 
@@ -94,7 +103,7 @@ describe('Open in live for a page that is not published in the selected language
         aliasOpenInLiveQuery('home', 'fr');
         jcontent.getLanguageSwitcher().select('fr');
         jcontent.assertStatusType('notPublished');
-        expectNoOpenInLive();
+        expectNoOpenInLive('home', 'fr');
     });
 
     it('FT-006: Open in live is not offered for a sibling page that was not published', () => {
@@ -104,6 +113,6 @@ describe('Open in live for a page that is not published in the selected language
 
         aliasOpenInLiveQuery('home/second', 'fr');
         JContent.visit(siteKey, 'fr', 'pages/home/second').assertStatusType('notPublished');
-        expectNoOpenInLive();
+        expectNoOpenInLive('home/second', 'fr');
     });
 });

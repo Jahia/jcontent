@@ -781,7 +781,18 @@
             "empty": "has no media file"
           }
         },
-        "valueSeparator": " or "
+        "valueSeparator": " or ",
+        "fields": {
+          "created": "Created",
+          "createdBy": "Created by",
+          "lastModified": "Last modified",
+          "lastModifiedBy": "Modified by",
+          "lastPublished": "Last published",
+          "lastPublishedBy": "Published by",
+          "tags": "Tags",
+          "systemName": "System name",
+          "type": "Content type"
+        }
       }
     },
     "categoryManager": {

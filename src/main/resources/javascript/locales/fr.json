@@ -775,7 +775,18 @@
             "empty": "n'a pas de média"
           }
         },
-        "valueSeparator": " ou "
+        "valueSeparator": " ou ",
+        "fields": {
+          "created": "Créé le",
+          "createdBy": "Créé par",
+          "lastModified": "Modifié le",
+          "lastModifiedBy": "Modifié par",
+          "lastPublished": "Publié le",
+          "lastPublishedBy": "Publié par",
+          "tags": "Étiquettes",
+          "systemName": "Nom système",
+          "type": "Type de contenu"
+        }
       }
     },
     "categoryManager": {

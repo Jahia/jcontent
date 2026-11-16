@@ -193,6 +193,39 @@
         "usagesCount_plural": "{{count}} utilisations"
       },
       "export": {
+        "records": {
+          "count": "{{count}} élément à exporter",
+          "count_plural": "{{count}} éléments à exporter",
+          "format": {
+            "jahia": "Export Jahia (ZIP ou XML)",
+            "jahiaHint": "L'élément et ses sous-éléments, à importer dans un site Jahia",
+            "jahiaSingleOnly": "Disponible quand un seul élément est sélectionné",
+            "csv": "CSV",
+            "csvHint": "Une ligne par élément, pour un tableur",
+            "json": "JSON",
+            "jsonHint": "Un objet par élément, pour un autre outil"
+          },
+          "languages": "Langues",
+          "languagesHint": "Un champ traduit a une colonne par langue.",
+          "columns": "Colonnes",
+          "columnsHint": "Cochez les colonnes à exporter. Les flèches changent leur ordre.",
+          "moveUp": "Monter",
+          "moveDown": "Descendre",
+          "failed": "L'export a échoué.",
+          "column": {
+            "name": "Nom",
+            "path": "Chemin",
+            "uuid": "Identifiant",
+            "type": "Type de contenu",
+            "createdBy": "Créé par",
+            "created": "Créé le",
+            "lastModifiedBy": "Modifié par",
+            "lastModified": "Modifié le",
+            "publicationStatus": "Statut de publication",
+            "tags": "Tags",
+            "categories": "Catégories"
+          }
+        },
         "actionLabel": "Exporter",
         "dialogTitle": "Options d'export",
         "selectWorkspace": "Sélectionnez le contenu que vous souhaitez exporter",

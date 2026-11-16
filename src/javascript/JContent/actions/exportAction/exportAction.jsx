@@ -3,10 +3,11 @@ import Export from './Export';
 import {ComponentRendererContext} from '@jahia/ui-extender';
 import {useNodeChecks} from '@jahia/data-helper';
 import PropTypes from 'prop-types';
+import {checkOptions} from '~/JContent/actions/bulkActions/bulkActionComponents';
 
-export const ExportActionComponent = ({path, render: Render, loading: Loading, ...others}) => {
+export const ExportActionComponent = ({path, paths, contentType, exportColumns, exportFileName, defaultFormat, render: Render, loading: Loading, ...others}) => {
     const componentRenderer = useContext(ComponentRendererContext);
-    const res = useNodeChecks({path}, {...others});
+    const res = useNodeChecks({path, paths}, checkOptions(others));
 
     if (res.loading) {
         return (Loading && <Loading {...others}/>) || false;
@@ -19,7 +20,12 @@ export const ExportActionComponent = ({path, render: Render, loading: Loading, .
             onClick={() => {
                 componentRenderer.render('exportDialog', Export, {
                         isOpen: true,
-                        path: res.node?.path,
+                        path: paths ? undefined : res.node?.path,
+                        paths,
+                        contentType,
+                        exportColumns,
+                        exportFileName,
+                        defaultFormat,
                         onClose: () => {
                             componentRenderer.setProperties('exportDialog', {isOpen: false});
                         },
@@ -35,6 +41,11 @@ export const ExportActionComponent = ({path, render: Render, loading: Loading, .
 
 ExportActionComponent.propTypes = {
     path: PropTypes.string,
+    paths: PropTypes.arrayOf(PropTypes.string),
+    contentType: PropTypes.string,
+    exportColumns: PropTypes.arrayOf(PropTypes.string),
+    exportFileName: PropTypes.string,
+    defaultFormat: PropTypes.string,
     render: PropTypes.func.isRequired,
     loading: PropTypes.func
 };

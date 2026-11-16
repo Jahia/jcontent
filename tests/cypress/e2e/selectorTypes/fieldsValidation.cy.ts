@@ -79,7 +79,6 @@ describe('Content Editor - field validation and help text', () => {
         grantRoles(`/sites/${siteKey}`, ['editor'], editor, 'USER');
         addNode({parentPathOrId: contentsPath, name: 'futureDateRejected', primaryNodeType: 'qant:serverSideConstraint'});
         addNode({parentPathOrId: contentsPath, name: 'futureDateSaved', primaryNodeType: 'qant:serverSideConstraint'});
-        addNode({parentPathOrId: contentsPath, name: 'brokenLinkRejected', primaryNodeType: 'qant:allFields'});
         addNode({parentPathOrId: contentsPath, name: 'brokenLinkFixed', primaryNodeType: 'qant:allFields'});
         addNode({
             parentPathOrId: contentsPath,
@@ -115,13 +114,9 @@ describe('Content Editor - field validation and help text', () => {
         ce.save();
     });
 
-    it('reports a broken link of a rich text on the field', () => {
-        context.tag('testrail-case-2513124', 'rich-text', 'broken-link-rejected');
-        saveBrokenLink(visit('brokenLinkRejected'));
-    });
-
-    it('saves the rich text once the broken link is replaced', () => {
-        context.tag('testrail-case-2513124', 'rich-text', 'broken-link-fixed-saved');
+    // One test, so that the rich text never stays unsaved when its page closes.
+    it('reports a broken link of a rich text on the field, then saves once the link is replaced', () => {
+        context.tag('testrail-case-2513124', 'rich-text', 'broken-link-rejected', 'broken-link-fixed-saved');
         const ce = visit('brokenLinkFixed');
         saveBrokenLink(ce);
         cy.get(`[data-sel-content-editor-field="${bigtextField}"] iframe.cke_wysiwyg_frame`)

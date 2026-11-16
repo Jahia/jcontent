@@ -29,7 +29,7 @@ const extractNodeInfo = function (node, loading) {
     return {nodePath: node?.path, nodeType, title};
 };
 
-function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear}) {
+function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear, bulkActionsTarget, bulkActionKeys}) {
     const clearSearchFunc = () => {
         const accordion = preSearchModeMemo ? registry.get('accordionItem', preSearchModeMemo) : registry.find({type: 'accordionItem', target: 'jcontent'})[0];
         const path = localStorage.getItem(`jcontent-previous-location-${site}-${accordion.key}`) || accordion.getRootPath(site);
@@ -59,7 +59,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
             toolbarLeft={
                 <>
                     {!previewSelection && selection.length > 0 &&
-                        <SelectionActionsBar hasBulkActionsMenu paths={selection} clear={clear}/>}
+                        <SelectionActionsBar hasBulkActionsMenu paths={selection} clear={clear} bulkActionsTarget={bulkActionsTarget} bulkActionKeys={bulkActionKeys}/>}
                     {selection.length === 0 && <SearchControlBar/>}
                 </>
             }
@@ -91,6 +91,8 @@ const ContentHeader = () => {
     const viewSelector = tableConfig?.viewSelector;
     const sortSelector = tableConfig?.sortSelector;
     const showStatus = tableConfig?.header?.showStatus !== false;
+    const bulkActionsTarget = tableConfig?.bulkActionsTarget;
+    const bulkActionKeys = tableConfig?.bulkActionKeys;
     const isTableView = viewMode === JContentConstants.tableView.viewMode.FLAT || viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
 
     const {loading, node} = useNodeInfo({path, language, displayLanguage}, {
@@ -103,7 +105,7 @@ const ContentHeader = () => {
     const clear = () => dispatch(cmClearSelection());
 
     if (inSearchMode) {
-        return getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear});
+        return getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, previewSelection, selection, clear, bulkActionsTarget, bulkActionKeys});
     }
 
     const {nodePath, nodeType, title} = extractNodeInfo(node, loading);
@@ -133,7 +135,7 @@ const ContentHeader = () => {
             toolbarLeft={
                 <>
                     {!previewSelection && selection.length > 0 &&
-                        <SelectionActionsBar paths={selection} clear={clear} hasBulkActionsMenu={isTableView}/>}
+                        <SelectionActionsBar paths={selection} clear={clear} hasBulkActionsMenu={isTableView} bulkActionsTarget={bulkActionsTarget} bulkActionKeys={bulkActionKeys}/>}
                     <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }

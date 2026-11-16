@@ -7,7 +7,7 @@ import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~
 import {Selection} from './Selection';
 import {BulkActionsMenu} from './BulkActionsMenu';
 
-export const SelectionActionsBar = ({paths, clear, hasBulkActionsMenu = false}) => {
+export const SelectionActionsBar = ({paths, clear, hasBulkActionsMenu = false, bulkActionsTarget, bulkActionKeys}) => {
     const {nodes} = useNodeInfo({paths}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 
     let publishAction;
@@ -30,7 +30,7 @@ export const SelectionActionsBar = ({paths, clear, hasBulkActionsMenu = false}) 
                     buttonProps={{size: 'default', variant: 'ghost'}}
                     render={ButtonRenderer}
                 />
-                {hasBulkActionsMenu && <BulkActionsMenu paths={paths}/>}
+                {hasBulkActionsMenu && <BulkActionsMenu paths={paths} menuTarget={bulkActionsTarget} actionKeys={bulkActionKeys}/>}
             </div>
             <Separator variant="vertical" invisible="onlyChild"/>
             <ButtonGroup size="default" variant="outlined" color="accent">
@@ -54,5 +54,7 @@ export const SelectionActionsBar = ({paths, clear, hasBulkActionsMenu = false}) 
 SelectionActionsBar.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
     clear: PropTypes.func,
-    hasBulkActionsMenu: PropTypes.bool
+    hasBulkActionsMenu: PropTypes.bool,
+    bulkActionsTarget: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    bulkActionKeys: PropTypes.arrayOf(PropTypes.string)
 };

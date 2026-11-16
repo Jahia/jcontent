@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
-import {BULK_ACTIONS_MENU, BulkActionsMenu} from './BulkActionsMenu';
+import {BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET, BulkActionsMenu} from './BulkActionsMenu';
 
 jest.mock('@jahia/ui-extender', () => ({
     DisplayAction: () => false
@@ -30,14 +30,42 @@ describe('BulkActionsMenu', () => {
         expect(props.path).toBeUndefined();
     });
 
-    it('should hide itself when no entry of the menu is visible', () => {
+    it('should read the default target and hide itself when the menu is empty', () => {
         const props = shallow(<BulkActionsMenu paths={['/sites/test/a']}/>).find('DisplayAction').props();
+        expect(props.menuTarget).toEqual(BULK_ACTIONS_TARGET);
         expect(props.isMenuPreload).toBe(true);
     });
 
-    it('should merge the button props with the defaults', () => {
-        const props = shallow(<BulkActionsMenu paths={['/sites/test/a']} buttonProps={{'data-sel-role': 'my-bulk'}}/>)
-            .find('DisplayAction').props();
+    it('should keep only the listed action keys', () => {
+        const filter = shallow(<BulkActionsMenu paths={['/sites/test/a']} actionKeys={['bulkTag', 'bulkExport']}/>)
+            .find('DisplayAction').props().menuFilter;
+        expect(filter({key: 'bulkTag'})).toBe(true);
+        expect(filter({key: 'bulkExport'})).toBe(true);
+        expect(filter({key: 'bulkCategorize'})).toBe(false);
+    });
+
+    it('should combine the listed action keys with a filter', () => {
+        const filter = shallow(
+            <BulkActionsMenu paths={['/sites/test/a']} actionKeys={['bulkTag', 'bulkExport']} menuFilter={action => action.key !== 'bulkExport'}/>
+        ).find('DisplayAction').props().menuFilter;
+        expect(filter({key: 'bulkTag'})).toBe(true);
+        expect(filter({key: 'bulkExport'})).toBe(false);
+    });
+
+    it('should let the caller choose the entries and extend their context', () => {
+        const menuFilter = () => true;
+        const props = shallow(
+            <BulkActionsMenu
+                paths={['/sites/test/a']}
+                menuTarget={['bulkActions', 'myModuleBulkActions']}
+                menuFilter={menuFilter}
+                contentType="jnt:news"
+                buttonProps={{'data-sel-role': 'my-bulk'}}
+            />
+        ).find('DisplayAction').props();
+        expect(props.menuTarget).toEqual(['bulkActions', 'myModuleBulkActions']);
+        expect(props.menuFilter).toBe(menuFilter);
+        expect(props.contentType).toEqual('jnt:news');
         expect(props.buttonProps).toEqual({size: 'default', variant: 'ghost', 'data-sel-role': 'my-bulk'});
     });
 });

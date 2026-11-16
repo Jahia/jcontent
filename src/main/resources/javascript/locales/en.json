@@ -747,6 +747,41 @@
         "numAsc": "Low to high",
         "dateDesc": "New to old",
         "dateAsc": "Old to new"
+      },
+      "filters": {
+        "operator": {
+          "contains": "contains",
+          "notContains": "does not contain",
+          "startsWith": "starts with",
+          "text": {
+            "equals": "is exactly"
+          },
+          "number": {
+            "equals": "equal to"
+          },
+          "equals": "equal to",
+          "notEquals": "is not",
+          "gt": "greater than",
+          "lt": "less than",
+          "after": "after",
+          "before": "before",
+          "lastDays": "in the last (days)",
+          "empty": "is empty",
+          "notEmpty": "is not empty",
+          "isTrue": "is true",
+          "isFalse": "is false",
+          "is": "is",
+          "isNot": "is not",
+          "choiceMultiple": {
+            "is": "contains",
+            "isNot": "does not contain"
+          },
+          "media": {
+            "notEmpty": "has a media file",
+            "empty": "has no media file"
+          }
+        },
+        "valueSeparator": " or "
       }
     },
     "categoryManager": {

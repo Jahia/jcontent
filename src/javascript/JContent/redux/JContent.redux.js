@@ -124,6 +124,21 @@ export const {
 } =
     createActions('CM_OPEN_PATHS', 'CM_CLOSE_PATHS', 'CM_PRE_SEARCH_MODE_MEMO', 'CM_REPLACE_OPENED_PATHS', 'CM_OPEN_TABLE_PATHS', 'CM_CLOSE_TABLE_PATHS', 'SET_TABLE_VIEW_MODE', 'SET_TABLE_VIEW_TYPE');
 
+/**
+ * The params of the next location. The filters belong to one list: a change of mode, path or site removes them,
+ * unless the new params give them.
+ */
+export const nextParams = (data, {site, mode, path, params}) => {
+    const next = data.params || params;
+    const leavesList = (data.mode && data.mode !== mode) || (data.path && data.path !== path) || (data.site && data.site !== site);
+    if (leavesList && next?.filters && !data.params?.filters) {
+        const {filters, ...rest} = next;
+        return rest;
+    }
+
+    return next;
+};
+
 export const cmGoto = (data, {replace: replaceHistory = false} = {}) => (
     (dispatch, getStore) => {
         const {site, language, jcontent: {app, mode, path, template, params}} = getStore();
@@ -135,7 +150,7 @@ export const cmGoto = (data, {replace: replaceHistory = false} = {}) => (
             mode: data.mode || mode,
             path: data.path || path,
             template: data.template || '',
-            params: data.params || params
+            params: nextParams(data, {site, mode, path, params})
         })));
     }
 );

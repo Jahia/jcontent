@@ -10,10 +10,11 @@ let timeOut;
 
 const SearchInput = () => {
     const dispatch = useDispatch();
-    const {searchTerms, searchContentType, searchPath} = useSelector(state => ({
+    const {searchTerms, searchContentType, searchPath, filters} = useSelector(state => ({
         searchTerms: state.jcontent.params.searchTerms,
         searchPath: state.jcontent.params.searchPath,
-        searchContentType: state.jcontent.params.searchContentType
+        searchContentType: state.jcontent.params.searchContentType,
+        filters: state.jcontent.params.filters
     }), shallowEqual);
     const [t, setT] = useState(searchTerms);
 
@@ -33,7 +34,9 @@ const SearchInput = () => {
             searchParams = {
                 searchPath: searchPath,
                 searchTerms: searchForValue,
-                searchContentType: searchContentType
+                searchContentType: searchContentType,
+                // New search terms keep the filters of the results
+                ...(filters && {filters})
             };
 
             dispatch(cmGoto({mode, params: searchParams}));

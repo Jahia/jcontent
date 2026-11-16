@@ -137,6 +137,11 @@ const actionTargetAssignments = {
         // Hardcoded so 'Open in page composer' can be always added at the end of this list
         'contentActionsSeparator3:50'
     ],
+    bulkActions: [
+        'bulkTag',
+        'bulkCategorize',
+        'bulkReplaceValue'
+    ],
     selectedContentActions: [
         'selectionAction',
         'downloadAsZip',

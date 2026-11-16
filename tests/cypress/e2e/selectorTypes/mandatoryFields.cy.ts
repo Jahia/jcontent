@@ -144,6 +144,13 @@ describe('Content Editor - mandatory fields', () => {
         picker.select();
     };
 
+    // Adds a value to a generic field of qant:allFieldsMultipleRequired.
+    const addGenericValue = (field: string, value: string, tag: 'input' | 'textarea') => {
+        cy.get(fieldSelector(MULTIPLE, field)).find('[data-sel-action="addField"]').click();
+        cy.get(fieldSelector(MULTIPLE, field)).find(`[data-sel-content-editor-multiple-generic-field] ${tag}`).last()
+            .type(value, {force: true});
+    };
+
     // How the editor fills and clears each field of qant:allFieldsRequired that the legacy test exercised,
     // plus the picker and the rich text that it left out.
     const singleFields: Record<string, {fill: () => void; clear: () => void; isEmptyOnOpen: boolean}> = {
@@ -259,12 +266,6 @@ describe('Content Editor - mandatory fields', () => {
     it('leaves another empty multiple-value field in error when one is filled', () => {
         context.tag('testrail-case-1811954', 'mandatory-badge', 'multiple', 'control-field-stays-active');
         openCreateForm(MULTIPLE);
-        const addGenericValue = (field: string, value: string, tag: 'input' | 'textarea') => {
-            cy.get(fieldSelector(MULTIPLE, field)).find('[data-sel-action="addField"]').click();
-            cy.get(fieldSelector(MULTIPLE, field)).find(`[data-sel-content-editor-multiple-generic-field] ${tag}`).last()
-                .type(value, {force: true});
-        };
-
         const addChoice = () => {
             const choicelist = `${fieldSelector(MULTIPLE, 'choicelist')} .moonstone-dropdown`;
             cy.get(choicelist).click('right');
@@ -297,11 +298,7 @@ describe('Content Editor - mandatory fields', () => {
         context.tag('testrail-case-1811954', 'mandatory-badge', 'multiple', 'cleared-field-active');
         openCreateForm(MULTIPLE);
         const fills: Record<string, () => void> = {
-            date: () => {
-                cy.get(fieldSelector(MULTIPLE, 'date')).find('[data-sel-action="addField"]').click();
-                cy.get(fieldSelector(MULTIPLE, 'date')).find('[data-sel-content-editor-multiple-generic-field] input').last()
-                    .type('01/15/2027 10:00', {force: true});
-            },
+            date: () => addGenericValue('date', '01/15/2027 10:00', 'input'),
             weakreference: () => pickTarget(MULTIPLE, 'weakreference', true)
         };
         Object.entries(fills).forEach(([field, fill]) => {

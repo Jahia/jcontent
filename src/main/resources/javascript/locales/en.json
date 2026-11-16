@@ -467,6 +467,7 @@
           "action": "Tag",
           "title": "Tag the selected items",
           "label": "Tags",
+          "hint": "Type a tag, then press Enter to add it.",
           "clears": "The selected items will have no tag.",
           "mode": {
             "add": "Add",
@@ -481,6 +482,7 @@
           "action": "Categorize",
           "title": "Categorize the selected items",
           "label": "Categories",
+          "hint": "Open the list and check the categories.",
           "clears": "The selected items will have no category.",
           "mode": {
             "add": "Add",

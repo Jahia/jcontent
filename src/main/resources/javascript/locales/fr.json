@@ -463,6 +463,7 @@
           "action": "Ajouter des tags",
           "title": "Ajouter des tags aux éléments sélectionnés",
           "label": "Tags",
+          "hint": "Saisissez un tag, puis appuyez sur Entrée pour l'ajouter.",
           "clears": "Les éléments sélectionnés n'auront plus de tag.",
           "mode": {
             "add": "Ajouter",
@@ -477,6 +478,7 @@
           "action": "Catégoriser",
           "title": "Catégoriser les éléments sélectionnés",
           "label": "Catégories",
+          "hint": "Ouvrez la liste et cochez les catégories.",
           "clears": "Les éléments sélectionnés n'auront plus de catégorie.",
           "mode": {
             "add": "Ajouter",

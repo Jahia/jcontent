@@ -65,6 +65,7 @@ import {
     PublishManagerActionComponent
 } from '~/JContent/actions';
 import {SelectionActionComponent} from './actions/selectionAction';
+import {BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET} from '~/JContent/ContentRoute/ToolBar/SelectionActionsBar/BulkActionsMenu';
 import {MenuItemRenderer} from './MenuItemRenderer';
 import {MenuRenderer} from './MenuRenderer';
 import {triggerRefetchAll} from './JContent.refetches';
@@ -240,6 +241,14 @@ export const jContentActions = registry => {
         buttonLabel: 'jcontent:label.contentManager.contentPreview.moreOptions',
         menuTarget: 'selectedContentActions',
         menuEmptyMessage: 'label.contentManager.selection.emptyContextMenu',
+        menuItemProps: {
+            isShowIcons: true
+        }
+    });
+    registry.add('action', BULK_ACTIONS_MENU, menuActionWithRenderer, {
+        buttonLabel: 'jcontent:label.contentManager.selection.bulkActions',
+        menuTarget: BULK_ACTIONS_TARGET,
+        isMenuPreload: true,
         menuItemProps: {
             isShowIcons: true
         }

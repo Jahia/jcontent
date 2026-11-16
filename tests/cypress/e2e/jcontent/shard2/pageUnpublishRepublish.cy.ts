@@ -6,6 +6,7 @@
 
 import {addNode, context, createSite, deleteSite, jfaker, publishAndWaitJobEnding, waitAllJobsFinished} from '@jahia/cypress';
 import gql from 'graphql-tag';
+import type {Interception} from 'cypress/types/net-stubbing';
 import {JContent} from '../../../page-object';
 
 // Every site of this spec starts with this prefix, so a run can remove what an earlier run left behind.
@@ -43,10 +44,23 @@ const pageRowStatus = () => {
 
 const openInLive = '.moonstone-header button[data-sel-role="openInLive"]';
 
-/** Resolves after the browser has painted twice, so that React has rendered what the last answer changed. */
-const nextPaints = () => cy.window().then(win => new Cypress.Promise<void>(resolve => {
-    win.requestAnimationFrame(() => win.requestAnimationFrame(() => resolve()));
-}));
+type GraphqlOperation = {operationName?: string; variables?: Record<string, unknown>};
+
+// The LIVE workspace query decides `Open in live`, and the EDIT one decides `Open in preview`.
+// Both are `openInActionQuery`, so the alias keeps the LIVE one only.
+const isOpenInLiveQuery = (op: GraphqlOperation) => op?.operationName === 'openInActionQuery' &&
+    op.variables?.workspace === 'LIVE' && op.variables?.path === `/sites/${siteKey}/${pagePath}`;
+
+const graphqlOperations = (body: unknown): GraphqlOperation[] => (Array.isArray(body) ? body : [body]);
+
+/**
+ * Yields the publication info that `openInActionQuery` answered for the page, which decides whether the
+ * header shows `Open in live`. jContent batches its queries, so the answer is found by its position.
+ */
+const openInLiveAnswer = () => cy.get<Interception>('@openInLiveQuery').then(interception => {
+    const answers = graphqlOperations(interception.response?.body) as {data?: {jcr?: {result?: {publicationInfo?: unknown}}}}[];
+    return answers[graphqlOperations(interception.request.body).findIndex(isOpenInLiveQuery)]?.data?.jcr?.result?.publicationInfo;
+});
 
 describe('Status of a published page after a change, an unpublication and a new publication', () => {
     before(() => {
@@ -110,17 +124,17 @@ describe('Status of a published page after a change, an unpublication and a new 
 
     it('FT-004: Open in live is not offered for an unpublished page', () => {
         context.tag('open-in-live', 'unpublished-page', 'testrail-case-781868');
-        // The button is also hidden while the query that decides it loads, so the absence is checked
-        // only once that query has answered for this page and the browser has painted its answer.
         cy.intercept('POST', '**/modules/graphql', req => {
-            const operations = Array.isArray(req.body) ? req.body : [req.body];
-            if (operations.some(op => op?.operationName === 'openInActionQuery' && op.variables?.path === `/sites/${siteKey}/${pagePath}`)) {
+            if (graphqlOperations(req.body).some(isOpenInLiveQuery)) {
                 req.alias = 'openInLiveQuery';
             }
         });
         JContent.visit(siteKey, 'en', `pages/${pagePath}`).assertStatusType('notPublished');
         cy.wait('@openInLiveQuery');
-        nextPaints();
+        // The button is also hidden while its query loads, and Cypress sees the answer before the page
+        // renders it. So the answer proves the THEN, and the absence of the button follows from it. An
+        // unpublished page still exists in live, and its status is what hides the button.
+        openInLiveAnswer().should('include', {status: 'UNPUBLISHED'});
         cy.get(openInLive).should('not.exist');
     });
 

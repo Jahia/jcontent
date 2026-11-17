@@ -46,8 +46,13 @@ describe('Page builder - boxes and header tests', () => {
         landing.getCreateButtons().getButton('New content');
         // As an item of a flex container, the empty placeholder has no width of its own
         landing.get().invoke('css', 'display', 'flex').invoke('css', 'justify-content', 'center');
-        landing.get().find('[jahiatype="module"][type="placeholder"]').should('have.css', 'min-width', '150px');
-        landing.getCreateButtons().getButton('New content').get().should('be.visible');
+        landing.get().find('[jahiatype="module"][type="placeholder"]').then($placeholder => {
+            // The box of the buttons follows the placeholder on a timer, so wait until it has the width of the placeholder
+            landing.getCreateButtons().get().should($box => {
+                expect($box.outerWidth()).to.be.closeTo($placeholder.outerWidth(), 1);
+            });
+            landing.getCreateButtons().getButton('New content').get().should('be.visible');
+        });
     });
 
     it('should show box with name, status and edit buttons', () => {

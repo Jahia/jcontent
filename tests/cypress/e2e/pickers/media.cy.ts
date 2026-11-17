@@ -1,8 +1,8 @@
-import {JContent} from '../../page-object';
+import {ContentEditor, JContent, JContentMenu} from '../../page-object';
 import {Picker} from '../../page-object/picker';
 import {createSite, deleteSite, enableModule, uploadFile} from '@jahia/cypress';
 
-describe('Picker - Media - upload from inside the picker', () => {
+describe('Picker - Media - actions from inside the picker', () => {
     const siteKey = 'pickerUploadSite';
 
     before(() => {
@@ -68,5 +68,20 @@ describe('Picker - Media - upload from inside the picker', () => {
 
         picker.getSelectionCaption().should('contain', 'myfile2.png');
         cy.get('button[data-sel-picker-dialog-action="done"]').should('not.be.disabled');
+    });
+
+    it('Opens the content editor in front of the picker', () => {
+        const picker = openImagePicker();
+
+        picker.getTable().getRowByLabel('seed.png').rightclick();
+        new JContentMenu(cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')).select('Edit');
+
+        // Two editors are open: the one under the picker, and the one that the menu opened.
+        // Cypress refuses to click an element that another element covers, so the click on
+        // the close button fails if the picker hides the new editor.
+        cy.get(ContentEditor.defaultSelector).should('have.length', 2);
+        cy.get(ContentEditor.defaultSelector).last().find('[data-sel-role="backButton"]').click();
+        cy.get(ContentEditor.defaultSelector).should('have.length', 1);
+        picker.get().should('be.visible');
     });
 });

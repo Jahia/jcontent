@@ -2,7 +2,9 @@
     height: calc(100% - 96px);
 }
 
-.dialogRoot.dialogRoot {
+// A dialog that the picker opens comes after the picker in the DOM. The picker then keeps
+// the default z-index, so the DOM order puts that dialog and its popovers in front.
+.dialogRoot.dialogRoot:not(:has(~ [role='dialog'])) {
     z-index: var(--ce-dialog-z-index);
 }
 

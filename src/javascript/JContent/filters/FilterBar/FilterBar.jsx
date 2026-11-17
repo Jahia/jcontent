@@ -2,7 +2,11 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {useTranslation} from 'react-i18next';
-import {Button, CollectionBar, Filter as FilterIcon} from '@jahia/moonstone';
+import {Button, Filter as FilterIcon} from '@jahia/moonstone';
+// LOCAL TEST ONLY: CollectionBar from a bundled Moonstone 2.22.0, and its CSS. See webpack.config.js
+// eslint-disable-next-line import/no-unresolved
+import {CollectionBar} from 'local-moonstone-2.22';
+import './collectionBarLocalStyles';
 import {defaultOperator, filterToConstraint} from '../filterConstraint';
 import {setFilterIn} from '../filterParams';
 import {collectionBarLabels, filterValueLabel} from './filterLabels';

@@ -3,7 +3,8 @@ import JContentConstants from '~/JContent/JContent.constants';
 import {BaseCriteriaChildrenQuery, BaseDescendantsQuery} from './BaseQueryHandler.gql-queries';
 import {BaseTreeQueryHandler} from '~/JContent/ContentRoute/ContentLayout/queryHandlers/BaseTreeQueryHandler';
 
-const isFlatList = ({tableView}) => tableView?.viewMode !== JContentConstants.tableView.viewMode.STRUCTURED;
+// No view mode yet means the default view, the flat list. Page Builder shows no list to filter.
+const isFlatList = ({tableView}) => !tableView?.viewMode || tableView.viewMode === JContentConstants.tableView.viewMode.FLAT;
 
 export const ContentFoldersQueryHandler = {
     ...BaseQueryHandler,

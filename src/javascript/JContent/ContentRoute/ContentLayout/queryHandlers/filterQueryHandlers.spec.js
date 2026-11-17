@@ -48,6 +48,8 @@ describe('ContentFoldersQueryHandler', () => {
     it('takes filters in the flat list only', () => {
         expect(ContentFoldersQueryHandler.supportsFilters(base)).toBe(true);
         expect(ContentFoldersQueryHandler.supportsFilters({...base, tableView: {viewMode: 'structuredView'}})).toBe(false);
+        expect(ContentFoldersQueryHandler.supportsFilters({...base, tableView: {viewMode: 'pageBuilder'}})).toBe(false);
+        expect(ContentFoldersQueryHandler.supportsFilters({...base, tableView: {}})).toBe(true);
     });
 });
 

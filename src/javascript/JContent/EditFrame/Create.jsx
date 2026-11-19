@@ -32,6 +32,15 @@ function getBoundingBox(element) {
     };
 }
 
+// An element in `display: none`, or under an ancestor in `display: none`, has no layout box.
+const isRendered = element => element.getClientRects().length > 0;
+
+// A rendered placeholder with no content can have no width, as an item of a flex container for example.
+const hasNoWidth = (element, box) => isRendered(element) && box.width === 0;
+
+// The width from which the box shows the label of a single button, see the sizers below.
+const EMPTY_MIN_WIDTH = '150px';
+
 function reposition(element, currentOffset, setCurrentOffset) {
     const box = getBoundingBox(element);
     if (box.top !== currentOffset.top || box.left !== currentOffset.left || box.width !== currentOffset.width || box.height !== currentOffset.height) {
@@ -158,18 +167,26 @@ export const Create = React.memo(({element, node, nodes, addIntervalCallback, cl
     const isEmpty = (element.getAttribute('type') === 'placeholder' && !nodePath) ?
         node?.subNodes.pageInfo.totalCount === 0 : Boolean(nodes) && !nodes[element.dataset.jahiaPath];
 
-    // Set a minimum height to be able to drop content if node is empty
+    const isWidthMissing = hasNoWidth(element, currentOffset);
+
+    // Set a minimum height to be able to drop content if node is empty, and a minimum width to give room to the buttons
     useEffect(() => {
         if (!Object.keys(actionVisibility).some(key => actionVisibility[key])) {
             element.style['min-height'] = '0px';
+            element.style['min-width'] = '';
         } else if (isEmpty) {
             element.style['min-height'] = '96px';
+            if (isWidthMissing) {
+                element.style['min-width'] = EMPTY_MIN_WIDTH;
+            }
+
             [...parent.childNodes].find(node => node.nodeType === Node.TEXT_NODE)?.remove();
             setCurrentOffset(getBoundingBox(element));
         } else {
             element.style['min-height'] = '28px';
+            element.style['min-width'] = '';
         }
-    }, [node, parent, element, isEmpty, actionVisibility]);
+    }, [node, parent, element, isEmpty, actionVisibility, isWidthMissing]);
 
     const [{isCanDrop}, drop] = useNodeDrop({dropTarget: parent && node, onSaved, nodeDropData, isUseDropData: true});
     const {anyDragging} = useDragLayer(monitor => ({

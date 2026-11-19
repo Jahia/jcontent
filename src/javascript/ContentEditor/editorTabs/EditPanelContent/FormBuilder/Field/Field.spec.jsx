@@ -94,7 +94,8 @@ describe('Field component', () => {
                 displayBadges: true,
                 displayActions: true,
                 displayLabels: true,
-                displayErrors: true
+                displayErrors: true,
+                displayDescription: true
             },
             idInput: 'FieldID'
         };

@@ -16,6 +16,7 @@ export const FieldContainer = React.memo(({field, inputContext}) => {
         displayBadges: true,
         displayActions: true,
         displayErrors: true,
+        displayDescription: true,
         selectorType,
         ...inputContext
     }), [inputContext, selectorType]);

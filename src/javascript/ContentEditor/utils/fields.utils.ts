@@ -93,8 +93,8 @@ export function hasUnreadableStoredValue(field: EditorField, nodeData: any): boo
         property.value !== undefined && property.value !== null && property.decryptedValue === null;
 }
 
-function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
-    if (nodeData && _isEmptyValue(field, value) && hasUnreadableStoredValue(field, nodeData)) {
+function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate, storedValueUnreadable}) {
+    if (storedValueUnreadable && _isEmptyValue(field, value)) {
         // The form never held the stored value, so an empty field keeps it
         return;
     }
@@ -165,7 +165,8 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
         const field = fields.find(field => field.name === key);
         if (field) {
             const value = formValues[key];
-            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete});
+            const storedValueUnreadable = hasUnreadableStoredValue(field, nodeData);
+            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, storedValueUnreadable});
 
             if (field.i18n) {
                 Object.keys(i18nContext).filter(i18nLang => i18nLang !== lang && i18nLang !== 'shared' && i18nLang !== 'memo').forEach(i18nLang => {
@@ -183,7 +184,9 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
                             mixinsToMutate,
                             propsToSave,
                             propsToDelete,
-                            forceUpdate
+                            forceUpdate,
+                            // The node data holds the current language only, so the language left records its own
+                            storedValueUnreadable: Boolean(i18nContext[i18nLang].unreadable?.includes(key))
                         });
                     }
                 });

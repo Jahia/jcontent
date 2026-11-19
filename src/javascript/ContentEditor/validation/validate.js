@@ -1,4 +1,4 @@
-import {extractRangeConstraints, getDynamicFieldSetNameOfField} from '~/ContentEditor/utils';
+import {extractRangeConstraints, getDynamicFieldSetNameOfField, hasUnreadableStoredValue} from '~/ContentEditor/utils';
 import {dayjs} from 'date-formatter';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 
@@ -191,10 +191,11 @@ const maxLengthFieldValidation = (values, field) => {
     }
 };
 
-const requiredFieldValidation = (values, field) => {
+const requiredFieldValidation = (values, field, nodeData) => {
     const error = 'required';
 
-    if (!field.mandatory) {
+    // An empty field keeps a stored value that the form did not load, see updateValue
+    if (!field.mandatory || hasUnreadableStoredValue(field, nodeData)) {
         return;
     }
 
@@ -216,7 +217,7 @@ const systemNameValidation = (values, field) => {
     }
 };
 
-export const validate = sections => {
+export const validate = (sections, nodeData) => {
     return values => {
         return sections.reduce((errors, section) => {
             const fieldSetErrors = section.fieldSets.reduce((fieldSetErrors, fieldset) => {
@@ -229,7 +230,7 @@ export const validate = sections => {
 
                     // Do the validation
                     const fieldError = (
-                        requiredFieldValidation(values, field) ||
+                        requiredFieldValidation(values, field, nodeData) ||
                         dateFieldValidation(values, field) ||
                         colorFieldValidation(values, field) ||
                         rangeFieldValidation(values, field) ||

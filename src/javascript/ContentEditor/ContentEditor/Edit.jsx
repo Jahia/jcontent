@@ -78,7 +78,7 @@ export const Edit = () => {
                     validateOnMount
                     validateOnChange={false}
                     initialValues={stableInitialValuesRef.current.initialValues}
-                    validate={validate(sections)}
+                    validate={validate(sections, nodeData)}
                     onSubmit={handleSubmit}
                 >
                     {() => <EditPanel title={title}/>}

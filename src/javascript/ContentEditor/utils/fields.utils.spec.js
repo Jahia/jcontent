@@ -918,6 +918,23 @@ describe('EditPanel utils', () => {
             expect(propsToDelete).toEqual([]);
         });
 
+        it('keeps the stored value of another language that the form did not load', () => {
+            const i18nField = {...singleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            const i18nContext = {en: {values: {[i18nField.name]: ''}, unreadable: [i18nField.name]}};
+            const {propsToSave, propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+            expect(propsToSave.filter(prop => prop.language === 'en')).toEqual([]);
+            expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([]);
+        });
+
+        it('removes the value of another language that the form loaded and the user emptied', () => {
+            const i18nField = {...singleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            const i18nContext = {en: {values: {[i18nField.name]: ''}}};
+            const {propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+            expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([{name: 'secret', language: 'en'}]);
+        });
+
         it('still removes a readable stored value that the user empties', () => {
             const {propsToDelete} = mutate(readableNode, {[singleField.name]: ''});
             expect(propsToDelete).toEqual([{name: 'secret', language: lang}]);

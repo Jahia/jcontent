@@ -182,4 +182,17 @@ describe('Text component', () => {
 
         expect(cmp.props().placeholder).toBeUndefined();
     });
+
+    it('should show no placeholder on a read-only field', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        props.field.readOnly = true;
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', value: 'cipher', decryptedValue: null, definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBeUndefined();
+    });
 });

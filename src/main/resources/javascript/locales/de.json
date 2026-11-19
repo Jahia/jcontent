@@ -1095,7 +1095,8 @@
         "localTimeHint": "Angezeigt in Ihrer lokalen Zeitzone ({{zone}})",
         "text": {
           "displayValue": "Text",
-          "description": "Simple-Text Eingabe"
+          "description": "Simple-Text Eingabe",
+          "storedValuePlaceholder": "Ein Wert ist gespeichert. Geben Sie einen neuen Wert ein, um ihn zu ersetzen."
         },
         "category": {
           "displayValue": "Hierarchical Tree selector",

@@ -4,9 +4,14 @@ import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
 import {Hidden, Visibility, Input, Button} from '@jahia/moonstone';
 import {useSelector} from 'react-redux';
 import NumericFormat from 'react-number-format';
+import {useTranslation} from 'react-i18next';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
+import {hasUnreadableStoredValue} from '~/ContentEditor/utils';
 
 export const Text = ({field, value, id, onChange, onBlur}) => {
     const [hidePassword, setHidePassword] = useState(true);
+    const {t} = useTranslation('jcontent');
+    const {nodeData} = useContentEditorContext();
 
     const uilang = useSelector(state => state.uilang);
     const fieldType = field.requiredType;
@@ -15,6 +20,9 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
     const controlledValue = value === undefined ? '' : (isNumber ? value?.replace('.', decimalSeparator) : value);
 
     const isPassword = field.selectorOptions?.find(option => option.name === 'password');
+    const placeholder = isPassword && hasUnreadableStoredValue(field, nodeData) ?
+        t('jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder') :
+        undefined;
     const Icon = hidePassword ? Visibility : Hidden;
     const postfixComponent = isPassword ? (
         <Button
@@ -56,6 +64,7 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
             aria-labelledby={`${field.name}-label`}
             aria-required={field.mandatory}
             maxLength={maxLength && maxLength.value}
+            placeholder={placeholder}
             value={controlledValue}
             isReadOnly={field.readOnly}
             type={isPassword && hidePassword ? 'password' : 'text'}

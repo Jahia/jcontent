@@ -64,7 +64,41 @@ const _adaptDecimalValues = (fieldType: string, value: string | null | undefined
     return fieldType === 'DECIMAL' || fieldType === 'DOUBLE' ? value?.replace(',', '.') : value;
 };
 
+function _isEmptyValue(field: EditorField, value: any): boolean {
+    if (value === undefined || value === null || value === '') {
+        return true;
+    }
+
+    return field.multiple && Array.isArray(value) && value.every(v => v === undefined || v === '');
+}
+
+/**
+ * Check if the node stores a value of a password field that the form did not receive in clear text
+ * @param field the property field
+ * @param nodeData the node data
+ * @returns true if a value is stored and its decrypted value is missing
+ */
+export function hasUnreadableStoredValue(field: EditorField, nodeData: any): boolean {
+    if (!field.selectorOptions?.find(option => option.name === 'password')) {
+        return false;
+    }
+
+    const property = getStoredProperty(field, nodeData);
+    if (!property) {
+        return false;
+    }
+
+    return field.multiple ?
+        Boolean(property.values?.length) && !property.decryptedValues?.length :
+        property.value !== undefined && property.value !== null && property.decryptedValue === null;
+}
+
 function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
+    if (nodeData && _isEmptyValue(field, value) && hasUnreadableStoredValue(field, nodeData)) {
+        // The form never held the stored value, so an empty field keeps it
+        return;
+    }
+
     const fieldSetName = getDynamicFieldSetNameOfField(sections, field);
     const mixinAdded = Boolean(fieldSetName) && mixinsToMutate.mixinsToAdd.includes(fieldSetName);
     // Is not dynamic OR is dynamic and the node keeps or gains the mixin

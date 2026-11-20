@@ -33,9 +33,14 @@ import org.jahia.modules.contenteditor.utils.ContentEditorUtils;
 import org.jahia.modules.graphql.provider.dxm.DataFetchingException;
 import org.jahia.modules.graphql.provider.dxm.node.GqlJcrNode;
 import org.jahia.services.content.JCRContentUtils;
+import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedNodeType;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
+import org.jahia.services.render.RenderService;
 import org.jahia.utils.LanguageCodeConverters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.AccessDeniedException;
 import javax.jcr.RepositoryException;
@@ -45,6 +50,8 @@ import javax.jcr.RepositoryException;
  */
 @GraphQLTypeExtension(GqlJcrNode.class)
 public class JCRNodeContentEditorExtensions {
+
+    private static final Logger logger = LoggerFactory.getLogger(JCRNodeContentEditorExtensions.class);
 
     private GqlJcrNode node;
 
@@ -118,5 +125,34 @@ public class JCRNodeContentEditorExtensions {
         return ChildrenOrderingUtils.canBeReordered(node.getNode());
     }
 
+    @GraphQLField
+    @GraphQLName("hasCmView")
+    @GraphQLDescription("Returns true if a module available on the node's site provides a 'cm' view for the primary type of the node, one of its mixins or one of their supertypes. The node's own j:view is not considered.")
+    public boolean hasCmView() {
+        try {
+            JCRNodeWrapper jcrNode = node.getNode();
+            JCRSiteNode site = jcrNode.getResolveSite();
+            if (hasCmView(jcrNode.getPrimaryNodeType(), site)) {
+                return true;
+            }
+            for (ExtendedNodeType mixin : jcrNode.getMixinNodeTypes()) {
+                if (hasCmView(mixin, site)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (RepositoryException e) {
+            // As RenderService.hasView(JCRNodeWrapper, ...) does: an unreadable type has no view.
+            logger.warn("Unable to read the types of node {} to look for its cm view: {}", node.getPath(), e.getMessage());            return false;
+        }
+    }
+
+    private static boolean hasCmView(ExtendedNodeType nodeType, JCRSiteNode site) {
+        // This overload of RenderService.hasView does not read its RenderContext argument.
+        return RenderService.getInstance().hasView(nodeType, CM_VIEW, site, HTML_TEMPLATE_TYPE, null);
+    }
+
     private static final String HISTORY_PERMISSION = "viewHistoryTab";
+    private static final String CM_VIEW = "cm";
+    private static final String HTML_TEMPLATE_TYPE = "html";
 }

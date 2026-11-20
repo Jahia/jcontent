@@ -45,6 +45,16 @@
                   <main-resource-display j:mainResourceView="default" jcr:primaryType="jnt:mainResourceDisplay"/>
                </pagecontent>
             </content-template>
+            <cm-view-main-resource j:applyOn="cent:mainResourceWithCmView"
+                                   j:defaultTemplate="true"
+                                   j:hiddenTemplate="false"
+                                   j:priority="200"
+                                   j:view="jcontent-test-template"
+                                   jcr:primaryType="jnt:contentTemplate">
+               <pagecontent jcr:primaryType="jnt:contentList">
+                  <main-resource-display j:mainResourceView="default" jcr:primaryType="jnt:mainResourceDisplay"/>
+               </pagecontent>
+            </cm-view-main-resource>
              <fullpage j:applyOn="jnt:content"
                        j:defaultTemplate="false"
                        j:hiddenTemplate="true"

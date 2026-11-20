@@ -80,6 +80,10 @@ describe('Page builder - frame keeps its position', () => {
      * create actions have resolved, which makes every list taller a moment later. A view noted before
      * that belongs to a layout the reloaded frame no longer has, so the anchor it yields is held in the
      * wrong place. The document height has to hold still too, since a row is not the only late arrival.
+     *
+     * Half a second is enough here, where EditFrame.anchor.js waits 5 s: its pauses of up to 3.6 s come
+     * from a long page that keeps loading images and content. This fixture has text only, and the
+     * placeholder rows are the one change that lands after the boxes.
      */
     const shouldHaveSettledLayout = () => {
         let lastHeight = -1;

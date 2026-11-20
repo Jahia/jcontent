@@ -93,6 +93,7 @@ export const EditPanelHeader = ({
                         <ButtonGroup
                             color="accent"
                             size="big"
+                            variant="default"
                             className={styles.publishActions}
                         >
                             <DisplayActions

@@ -4,6 +4,8 @@
     flex-direction: column;
     min-width: 0;
     height: 100%;
+
+    box-shadow: none !important; // reset bow-shadow from material Paper
 }
 
 .header {

@@ -265,11 +265,11 @@ describe('Content editor form', () => {
         ceEditor.switchToAdvancedMode();
         sidePanel.switchToDetailsTab();
 
-        sidePanel.getDetailRow('Creation date').should('be.visible');
-        sidePanel.getDetailRow('Last modification date').should('be.visible');
-        sidePanel.getDetailRow('Creator').should('be.visible');
-        sidePanel.getDetailRow('Last contributor').should('be.visible').should('contain', 'root');
-        // Publication date/publisher rows only appear after the content has been published
+        sidePanel.getByRole('detail-date-creation').should('be.visible');
+        sidePanel.getByRole('detail-date-lastModification').should('be.visible');
+        sidePanel.getByRole('detail-user-creation').should('be.visible');
+        sidePanel.getByRole('detail-user-lastModification').should('be.visible').should('contain', 'root');
+        // The publication row stays empty until the content has been published
 
         sidePanel.getDetailsSection('technical').scrollIntoView();
         sidePanel.getDetailRow('Content type').should('contain', 'Simple text (jnt:text)');
@@ -290,7 +290,7 @@ describe('Content editor form', () => {
         sidePanel.switchToDetailsTab();
 
         // Verify last contributor has changed
-        sidePanel.getDetailRow('Last contributor').should('contain', 'anne');
+        sidePanel.getByRole('detail-user-lastModification').should('contain', 'anne');
     });
 
     it('should be able to check and uncheck boolean', () => {

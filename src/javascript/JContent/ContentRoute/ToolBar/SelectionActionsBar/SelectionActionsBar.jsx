@@ -5,8 +5,9 @@ import {DisplayAction, DisplayActions} from '@jahia/ui-extender';
 import PropTypes from 'prop-types';
 import {ButtonRenderer, ButtonRendererNoLabel, ButtonRendererShortLabel} from '~/utils/getButtonRenderer';
 import {Selection} from './Selection';
+import {BulkActionsMenu} from './BulkActionsMenu';
 
-export const SelectionActionsBar = ({paths, clear}) => {
+export const SelectionActionsBar = ({paths, clear, hasBulkActionsMenu = false}) => {
     const {nodes} = useNodeInfo({paths}, {getIsNodeTypes: ['jnt:page', 'jnt:contentFolder', 'jnt:folder']});
 
     let publishAction;
@@ -29,6 +30,7 @@ export const SelectionActionsBar = ({paths, clear}) => {
                     buttonProps={{size: 'default', variant: 'ghost'}}
                     render={ButtonRenderer}
                 />
+                {hasBulkActionsMenu && <BulkActionsMenu paths={paths}/>}
             </div>
             <Separator variant="vertical" invisible="onlyChild"/>
             <ButtonGroup size="default" variant="outlined" color="accent">
@@ -51,5 +53,6 @@ export const SelectionActionsBar = ({paths, clear}) => {
 
 SelectionActionsBar.propTypes = {
     paths: PropTypes.arrayOf(PropTypes.string),
-    clear: PropTypes.func
+    clear: PropTypes.func,
+    hasBulkActionsMenu: PropTypes.bool
 };

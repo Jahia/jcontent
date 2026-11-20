@@ -5,9 +5,18 @@ import {CustomBar} from './CustomBar';
 import i18next from 'i18next';
 import {PickerDialog} from './PickerDialog';
 import {PageHeader} from './PageHeader';
+import {TestBulkActionComponent} from './TestBulkAction';
 
 export default function () {
     i18next.loadNamespaces('accordion-config');
+
+    registry.add('action', 'testBulkAction', {
+        buttonLabel: 'Test bulk action',
+        targets: ['bulkActions:10'],
+        showOnNodeTypes: ['jnt:bigText'],
+        requireModuleInstalledOnSite: ['jcontent-test-module'],
+        component: TestBulkActionComponent
+    });
 
     registry.add('callback', 'accordion-config', {
         targets: ['jahiaApp-init:60'],

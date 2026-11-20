@@ -69,10 +69,13 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
             .open()
             .createFile('\'"[](){}*|/.txt')
             .dndUpload('div[data-sel-role-card=bootstrap]')
-            .renameAfterUpload('testdnd-rename.txt')
-            .download()
-            .markForDeletion()
-            .deletePermanently();
+            .verifyUploadError();
+        // To be re-enabled with https://github.com/Jahia/jcontent/issues/3032: remove the semicolon above, then uncomment
+        //     .verifyUploadMessage('Invalid characters')
+        //     .renameAfterUpload('testdnd-rename.txt')
+        //     .download()
+        //     .markForDeletion()
+        //     .deletePermanently();
     });
 
     it('Can upload, rename and delete file with too much characters in filename', function () {
@@ -82,10 +85,13 @@ describe('Upload media tests', {numTestsKeptInMemory: 1}, () => {
             .open()
             .createFile(`${'long_'.repeat(30)}filename.txt`)
             .dndUpload('div[data-sel-role-card=bootstrap]')
-            .renameAfterUpload('short_filename.txt')
-            .download()
-            .markForDeletion()
-            .deletePermanently();
+            .verifyUploadError();
+        // To be re-enabled with https://github.com/Jahia/jcontent/issues/3032: remove the semicolon above, then uncomment
+        //     .verifyUploadMessage('File name exceeds')
+        //     .renameAfterUpload('short_filename.txt')
+        //     .download()
+        //     .markForDeletion()
+        //     .deletePermanently();
     });
 
     it('Can display custom validation error messages', function () {

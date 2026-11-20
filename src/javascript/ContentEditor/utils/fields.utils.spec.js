@@ -4,7 +4,8 @@ import {
     getDataToMutate,
     getDynamicFieldSets,
     getFields,
-    getValuePropName
+    getValuePropName,
+    hasUnreadableStoredValue
 } from './fields.utils';
 
 describe('EditPanel utils', () => {
@@ -862,6 +863,92 @@ describe('EditPanel utils', () => {
             expect(mixinsToAdd).toEqual(['cemix:subtypeExtendMixin']);
             expect(mixinsToDelete).toEqual([]);
             expect(propsToSave).toEqual([{name: 'title', type: 'STRING', value: 'new title', language: lang}]);
+        });
+    });
+
+    describe('password field without its decrypted value', () => {
+        const declaringNodeType = {name: 'jnt:secretHolder'};
+        const singleField = {
+            nodeType: 'jnt:secretHolder',
+            name: 'jnt:secretHolder_secret',
+            propertyName: 'secret',
+            requiredType: 'STRING',
+            multiple: false,
+            selectorOptions: [{name: 'password'}]
+        };
+        const multipleField = {...singleField, name: 'jnt:secretHolder_secrets', propertyName: 'secrets', multiple: true};
+        const secretSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [singleField, multipleField]}]}];
+        const unreadableNode = {
+            properties: [
+                {name: 'secret', value: 'cipher', decryptedValue: null, definition: {declaringNodeType}},
+                {name: 'secrets', values: ['cipher1', 'cipher2'], decryptedValues: [], definition: {declaringNodeType}}
+            ]
+        };
+        const readableNode = {
+            properties: [
+                {name: 'secret', value: 'cipher', decryptedValue: 'clear', definition: {declaringNodeType}},
+                {name: 'secrets', values: ['cipher1'], decryptedValues: ['clear1'], definition: {declaringNodeType}}
+            ]
+        };
+        const mutate = (nodeData, formValues) => getDataToMutate({nodeData, formValues, sections: secretSections, lang, i18nContext: {}});
+
+        it('detects a stored value whose decrypted value is missing', () => {
+            expect(hasUnreadableStoredValue(singleField, unreadableNode)).toBe(true);
+            expect(hasUnreadableStoredValue(multipleField, unreadableNode)).toBe(true);
+            expect(hasUnreadableStoredValue(singleField, readableNode)).toBe(false);
+            expect(hasUnreadableStoredValue(multipleField, readableNode)).toBe(false);
+            expect(hasUnreadableStoredValue(singleField, {properties: []})).toBe(false);
+            expect(hasUnreadableStoredValue({...singleField, selectorOptions: []}, unreadableNode)).toBe(false);
+        });
+
+        it('keeps the stored value when the field stays empty', () => {
+            [null, undefined, ''].forEach(value => {
+                const {propsToSave, propsToDelete} = mutate(unreadableNode, {[singleField.name]: value, [multipleField.name]: []});
+                expect(propsToSave).toEqual([]);
+                expect(propsToDelete).toEqual([]);
+            });
+        });
+
+        it('replaces the stored value with a typed value', () => {
+            const {propsToSave, propsToDelete} = mutate(unreadableNode, {[singleField.name]: 'new', [multipleField.name]: ['new1']});
+            expect(propsToSave).toEqual([
+                {name: 'secret', type: 'STRING', option: 'ENCRYPTED', value: 'new', language: lang},
+                {name: 'secrets', type: 'STRING', option: 'ENCRYPTED', values: ['new1'], language: lang}
+            ]);
+            expect(propsToDelete).toEqual([]);
+        });
+
+        it('keeps the stored value of another language that the form did not load', () => {
+            const i18nField = {...singleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            const i18nContext = {en: {values: {[i18nField.name]: ''}, unreadable: [i18nField.name]}};
+            const {propsToSave, propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+            expect(propsToSave.filter(prop => prop.language === 'en')).toEqual([]);
+            expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([]);
+        });
+
+        it('removes the value of another language that the form loaded and the user emptied', () => {
+            const i18nField = {...singleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            const i18nContext = {en: {values: {[i18nField.name]: ''}}};
+            const {propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+            expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([{name: 'secret', language: 'en'}]);
+        });
+
+        it('still removes a readable stored value that the user empties', () => {
+            const {propsToDelete} = mutate(readableNode, {[singleField.name]: ''});
+            expect(propsToDelete).toEqual([{name: 'secret', language: lang}]);
+        });
+
+        it('keeps the stored values of another language when a row added there stays empty', () => {
+            const i18nField = {...multipleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            [[''], [undefined], []].forEach(value => {
+                const i18nContext = {en: {values: {[i18nField.name]: value}, unreadable: [i18nField.name]}};
+                const {propsToSave, propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+                expect(propsToSave.filter(prop => prop.language === 'en')).toEqual([]);
+                expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([]);
+            });
         });
     });
 

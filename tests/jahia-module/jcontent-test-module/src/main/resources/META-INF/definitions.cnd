@@ -410,3 +410,8 @@
 // jmix:visuallyEditable ships with Jahia 8.2.4.0.
 [cent:visuallyEditable] > jnt:content, jmix:visuallyEditable, jmix:basicContent, jmix:editorialContent, jmix:visibleInContentTree, mix:title
  + * (cent:childObject1)
+
+[cent:passwordFields] > jnt:content, jmix:basicContent, jmix:editorialContent
+ - label (string)
+ - secret (string,text[password]) indexed=no
+ - multiSecret (string,text[password]) multiple indexed=no

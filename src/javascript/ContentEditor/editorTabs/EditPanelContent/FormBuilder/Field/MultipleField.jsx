@@ -1,10 +1,10 @@
-import {Button} from '@jahia/moonstone';
+import {Button, Typography} from '@jahia/moonstone';
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import {useTranslation} from 'react-i18next';
 import {FastField, useFormikContext} from 'formik';
 import {FieldPropTypes} from '~/ContentEditor/ContentEditor.proptypes';
-import {useReorderList} from '~/ContentEditor/utils';
+import {hasUnreadableStoredValue, useReorderList} from '~/ContentEditor/utils';
 import styles from '~/ContentEditor/utils/dragAndDrop.scss';
 import {OrderableValue} from '~/ContentEditor/DesignSystem/OrderableValue/OrderableValue';
 
@@ -12,6 +12,8 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     const {values, setFieldValue, setFieldTouched} = useFormikContext();
     const {t} = useTranslation('jcontent');
     const fieldValue = Array.isArray(values[field.name]) ? values[field.name] : [];
+    // With no row, no input shows the placeholder of the stored values
+    const showStoredValuesHint = !field.readOnly && fieldValue.length === 0 && hasUnreadableStoredValue(field, editorContext.nodeData);
 
     const {reorderedItems, handleReorder, reset} = useReorderList(fieldValue);
 
@@ -43,6 +45,11 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     return (
         <>
             <div className="flexFluid">
+                {showStoredValuesHint && (
+                    <Typography variant="caption" data-sel-role="stored-values-hint">
+                        {t('jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder')}
+                    </Typography>
+                )}
                 {reorderedItems?.length > 0 && (
                     reorderedItems.map(({item, id, index}) => {
                         const FieldComponent = inputContext.selectorType.cmp;

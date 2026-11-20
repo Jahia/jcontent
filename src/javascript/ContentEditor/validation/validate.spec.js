@@ -805,3 +805,36 @@ describe('validate', () => {
         );
     });
 });
+
+describe('validate a mandatory password field', () => {
+    const field = {name: 'jnt:secretHolder_secret', nodeType: 'jnt:secretHolder', propertyName: 'secret', mandatory: true, multiple: false, selectorOptions: [{name: 'password'}]};
+    const sections = [{fieldSets: [{name: 'jnt:secretHolder', dynamic: false, fields: [field]}]}];
+    const nodeData = decryptedValue => ({properties: [{name: 'secret', value: 'cipher', decryptedValue, definition: {declaringNodeType: {name: 'jnt:secretHolder'}}}]});
+
+    it('accepts an empty field that keeps a stored value the form did not load', () => {
+        expect(validate(sections, nodeData(null))({[field.name]: null})).toEqual({});
+    });
+
+    it('requires a value when the stored value was loaded', () => {
+        expect(validate(sections, nodeData('clear'))({[field.name]: ''})).toEqual({[field.name]: 'required'});
+    });
+
+    it('requires a value when nothing is stored', () => {
+        expect(validate(sections, {properties: []})({[field.name]: null})).toEqual({[field.name]: 'required'});
+    });
+
+    describe('multiple', () => {
+        const multipleField = {...field, name: 'jnt:secretHolder_secrets', propertyName: 'secrets', multiple: true};
+        const multipleSections = [{fieldSets: [{name: 'jnt:secretHolder', dynamic: false, fields: [multipleField]}]}];
+        const storedValues = decryptedValues => ({properties: [{name: 'secrets', values: ['cipher1'], decryptedValues, definition: {declaringNodeType: {name: 'jnt:secretHolder'}}}]});
+
+        it('accepts an empty list that keeps stored values the form did not load', () => {
+            expect(validate(multipleSections, storedValues([]))({[multipleField.name]: []})).toEqual({});
+            expect(validate(multipleSections, storedValues([]))({[multipleField.name]: ['']})).toEqual({});
+        });
+
+        it('requires a value when the stored values were loaded', () => {
+            expect(validate(multipleSections, storedValues(['clear1']))({[multipleField.name]: []})).toEqual({[multipleField.name]: 'required'});
+        });
+    });
+});

@@ -64,7 +64,41 @@ const _adaptDecimalValues = (fieldType: string, value: string | null | undefined
     return fieldType === 'DECIMAL' || fieldType === 'DOUBLE' ? value?.replace(',', '.') : value;
 };
 
-function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate}) {
+function _isEmptyValue(field: EditorField, value: any): boolean {
+    if (value === undefined || value === null || value === '') {
+        return true;
+    }
+
+    return field.multiple && Array.isArray(value) && value.every(v => v === undefined || v === '');
+}
+
+/**
+ * Check if the node stores a value of a password field that the form did not receive in clear text
+ * @param field the property field
+ * @param nodeData the node data
+ * @returns true if a value is stored and its decrypted value is missing
+ */
+export function hasUnreadableStoredValue(field: EditorField, nodeData: any): boolean {
+    if (!field.selectorOptions?.find(option => option.name === 'password')) {
+        return false;
+    }
+
+    const property = getStoredProperty(field, nodeData);
+    if (!property) {
+        return false;
+    }
+
+    return field.multiple ?
+        Boolean(property.values?.length) && !property.decryptedValues?.length :
+        property.value !== undefined && property.value !== null && property.decryptedValue === null;
+}
+
+function updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, forceUpdate, storedValueUnreadable}) {
+    if (storedValueUnreadable && _isEmptyValue(field, value)) {
+        // The form never held the stored value, so an empty field keeps it
+        return;
+    }
+
     const fieldSetName = getDynamicFieldSetNameOfField(sections, field);
     const mixinAdded = Boolean(fieldSetName) && mixinsToMutate.mixinsToAdd.includes(fieldSetName);
     // Is not dynamic OR is dynamic and the node keeps or gains the mixin
@@ -131,7 +165,8 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
         const field = fields.find(field => field.name === key);
         if (field) {
             const value = formValues[key];
-            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete});
+            const storedValueUnreadable = hasUnreadableStoredValue(field, nodeData);
+            updateValue({field, value, lang, nodeData, sections, mixinsToMutate, propsToSave, propsToDelete, storedValueUnreadable});
 
             if (field.i18n) {
                 Object.keys(i18nContext).filter(i18nLang => i18nLang !== lang && i18nLang !== 'shared' && i18nLang !== 'memo').forEach(i18nLang => {
@@ -149,7 +184,9 @@ export function getDataToMutate({nodeData, formValues, i18nContext, sections, la
                             mixinsToMutate,
                             propsToSave,
                             propsToDelete,
-                            forceUpdate
+                            forceUpdate,
+                            // The node data holds the current language only, so the language left records its own
+                            storedValueUnreadable: Boolean(i18nContext[i18nLang].unreadable?.includes(key))
                         });
                     }
                 });

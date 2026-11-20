@@ -3,6 +3,7 @@ import {shallow} from '@jahia/test-framework';
 import {useSelector} from 'react-redux';
 import NumericFormat from 'react-number-format';
 import {Text} from './Text';
+import {useContentEditorContext} from '~/ContentEditor/contexts';
 
 jest.mock('react-redux', () => {
     return {
@@ -10,6 +11,10 @@ jest.mock('react-redux', () => {
         useSelector: jest.fn()
     };
 });
+
+jest.mock('~/ContentEditor/contexts', () => ({
+    useContentEditorContext: jest.fn(() => ({}))
+}));
 
 describe('Text component', () => {
     let props;
@@ -152,5 +157,55 @@ describe('Text component', () => {
 
         cmp.props().postfixComponents.props.onClick();
         expect(cmp.props().type).toBe('password');
+    });
+
+    it('should show a placeholder when the stored password is not readable', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', value: 'cipher', decryptedValue: null, definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBe('translated_jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder');
+    });
+
+    it('should show no placeholder when the stored password is readable', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', value: 'cipher', decryptedValue: 'clear', definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBeUndefined();
+    });
+
+    it('should show no placeholder on a read-only field', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        props.field.readOnly = true;
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', value: 'cipher', decryptedValue: null, definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBeUndefined();
+    });
+
+    it('should say that typed values replace all stored values on a multiple field', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        props.field.multiple = true;
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', values: ['cipher'], decryptedValues: [], definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBe('translated_jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder');
     });
 });

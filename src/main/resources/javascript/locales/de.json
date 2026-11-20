@@ -405,7 +405,8 @@
             "variantLabel": "Ausrichtung",
             "variantDescription": "Wählen Sie die für das angegebene Gerät verfügbare Ausrichtung aus",
             "dateLabel": "Datum",
-            "dateDescription": "Wählen Sie ein Datum aus, um den Inhalt in der Vorschau anzuzeigen"
+            "dateDescription": "Wählen Sie ein Datum aus, um den Inhalt in der Vorschau anzuzeigen",
+            "noUsers": "Für diese Website sind keine Benutzer verfügbar"
           }
         },
         "menuLabel": {

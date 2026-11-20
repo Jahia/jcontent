@@ -20,7 +20,7 @@ import {Edit} from '~/ContentEditor/ContentEditor/Edit';
 import {Create} from '~/ContentEditor/ContentEditor/Create';
 import {JahiaRenderedModulesUtil} from '../../JContent/JContent.utils';
 
-function triggerEvents(nodeUuid, operator) {
+export function triggerEvents(nodeUuid, operator) {
     // Refresh contentEditorEventHandlers
     if (window.top.contentEditorEventHandlers && Object.keys(window.top.contentEditorEventHandlers).length > 0) {
         Object.values(window.top.contentEditorEventHandlers)

@@ -1097,7 +1097,8 @@
         "text": {
           "displayValue": "Text",
           "description": "Champ texte",
-          "storedValuePlaceholder": "Une valeur est enregistrée. Saisissez une nouvelle valeur pour la remplacer."
+          "storedValuePlaceholder": "Une valeur est enregistrée. Saisissez une nouvelle valeur pour la remplacer.",
+          "storedValuesPlaceholder": "Des valeurs sont enregistrées. Les valeurs que vous ajoutez les remplacent toutes."
         },
         "category": {
           "displayValue": "Sélecteur en arbre",

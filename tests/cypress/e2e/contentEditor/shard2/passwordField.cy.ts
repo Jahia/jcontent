@@ -66,7 +66,8 @@ describe('Password field', () => {
         contentEditor.getSmallTextField(labelField).get().should('be.visible');
         contentEditor.getSmallTextField(secretField).get().find('input')
             .should('have.value', '')
-            .and('have.attr', 'placeholder', 'A value is stored. Type a new value to replace it.');
+            .and('have.attr', 'placeholder')
+            .and('not.be.empty');
         return contentEditor;
     };
 

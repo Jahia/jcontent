@@ -195,4 +195,17 @@ describe('Text component', () => {
 
         expect(cmp.props().placeholder).toBeUndefined();
     });
+
+    it('should say that typed values replace all stored values on a multiple field', () => {
+        props.field.selectorOptions = [{name: 'password'}];
+        props.field.propertyName = 'toto';
+        props.field.nodeType = 'test';
+        props.field.multiple = true;
+        useContentEditorContext.mockReturnValue({
+            nodeData: {properties: [{name: 'toto', values: ['cipher'], decryptedValues: [], definition: {declaringNodeType: {name: 'test'}}}]}
+        });
+        const cmp = shallow(<Text {...props}/>);
+
+        expect(cmp.props().placeholder).toBe('translated_jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder');
+    });
 });

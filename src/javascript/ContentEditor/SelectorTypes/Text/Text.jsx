@@ -20,8 +20,10 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
     const controlledValue = value === undefined ? '' : (isNumber ? value?.replace('.', decimalSeparator) : value);
 
     const isPassword = field.selectorOptions?.find(option => option.name === 'password');
-    const placeholder = isPassword && !field.readOnly && hasUnreadableStoredValue(field, nodeData) ?
-        t('jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder') :
+    const placeholder = !field.readOnly && hasUnreadableStoredValue(field, nodeData) ?
+        t(field.multiple ?
+            'jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder' :
+            'jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder') :
         undefined;
     const Icon = hidePassword ? Visibility : Hidden;
     const postfixComponent = isPassword ? (

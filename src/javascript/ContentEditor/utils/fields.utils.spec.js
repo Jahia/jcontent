@@ -939,6 +939,17 @@ describe('EditPanel utils', () => {
             const {propsToDelete} = mutate(readableNode, {[singleField.name]: ''});
             expect(propsToDelete).toEqual([{name: 'secret', language: lang}]);
         });
+
+        it('keeps the stored values of another language when a row added there stays empty', () => {
+            const i18nField = {...multipleField, i18n: true};
+            const i18nSections = [{fieldSets: [{name: 'jnt:secretHolder', fields: [i18nField]}]}];
+            [[''], [undefined], []].forEach(value => {
+                const i18nContext = {en: {values: {[i18nField.name]: value}, unreadable: [i18nField.name]}};
+                const {propsToSave, propsToDelete} = getDataToMutate({nodeData: {properties: []}, formValues: {}, sections: i18nSections, lang, i18nContext});
+                expect(propsToSave.filter(prop => prop.language === 'en')).toEqual([]);
+                expect(propsToDelete.filter(prop => prop.language === 'en')).toEqual([]);
+            });
+        });
     });
 
     describe('getValuePropName', () => {

@@ -822,4 +822,19 @@ describe('validate a mandatory password field', () => {
     it('requires a value when nothing is stored', () => {
         expect(validate(sections, {properties: []})({[field.name]: null})).toEqual({[field.name]: 'required'});
     });
+
+    describe('multiple', () => {
+        const multipleField = {...field, name: 'jnt:secretHolder_secrets', propertyName: 'secrets', multiple: true};
+        const multipleSections = [{fieldSets: [{name: 'jnt:secretHolder', dynamic: false, fields: [multipleField]}]}];
+        const storedValues = decryptedValues => ({properties: [{name: 'secrets', values: ['cipher1'], decryptedValues, definition: {declaringNodeType: {name: 'jnt:secretHolder'}}}]});
+
+        it('accepts an empty list that keeps stored values the form did not load', () => {
+            expect(validate(multipleSections, storedValues([]))({[multipleField.name]: []})).toEqual({});
+            expect(validate(multipleSections, storedValues([]))({[multipleField.name]: ['']})).toEqual({});
+        });
+
+        it('requires a value when the stored values were loaded', () => {
+            expect(validate(multipleSections, storedValues(['clear1']))({[multipleField.name]: []})).toEqual({[multipleField.name]: 'required'});
+        });
+    });
 });

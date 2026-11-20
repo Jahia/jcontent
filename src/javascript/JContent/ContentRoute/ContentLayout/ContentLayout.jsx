@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {Paper} from '@material-ui/core';
 import {ContentTable} from './ContentTable';
@@ -12,7 +12,6 @@ import styles from './ContentLayout.scss';
 import {useSelector} from 'react-redux';
 
 export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isContentNotFound, totalCount, isLoading, isStructured}) => {
-    const contextualMenu = useRef();
     // The panel reads the rest of what it needs from the store itself - see ContentSidePanel.
     const isFullScreen = useSelector(state => state.jcontent.previewIsFullScreen);
 
@@ -21,10 +20,7 @@ export const ContentLayout = ({mode, filesMode, sidePanelSelection, rows, isCont
     return (
         <div className={styles.root}>
             {!isFullScreen && (
-                <div
-                    className={classNames(styles.content)}
-                    onContextMenu={event => contextualMenu.current(event)}
-                >
+                <div className={classNames(styles.content)} data-cm-role="content-area">
                     <Paper className={styles.contentPaper}>
                         <ErrorBoundary key={filesMode}>
                             {mode === JContentConstants.mode.MEDIA && filesMode === JContentConstants.mode.GRID ?

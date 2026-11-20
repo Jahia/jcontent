@@ -217,34 +217,38 @@ const systemNameValidation = (values, field) => {
     }
 };
 
+const validateFieldSet = (fieldset, values, sections, nodeData) => {
+    return fieldset.fields.reduce((fieldErrors, field) => {
+        // Do not validate field if it's dynamic and not enabled
+        const dynamicFieldSetName = getDynamicFieldSetNameOfField(sections, field);
+        if (dynamicFieldSetName && !values[dynamicFieldSetName]) {
+            return fieldErrors;
+        }
+
+        // Do the validation
+        const fieldError = (
+            requiredFieldValidation(values, field, nodeData) ||
+            dateFieldValidation(values, field) ||
+            colorFieldValidation(values, field) ||
+            rangeFieldValidation(values, field) ||
+            patternFieldValidation(values, field) ||
+            maxLengthFieldValidation(values, field) ||
+            systemNameValidation(values, field)
+        );
+
+        if (fieldError) {
+            fieldErrors[field.name] = fieldError;
+        }
+
+        return fieldErrors;
+    }, {});
+};
+
 export const validate = (sections, nodeData) => {
     return values => {
         return sections.reduce((errors, section) => {
             const fieldSetErrors = section.fieldSets.reduce((fieldSetErrors, fieldset) => {
-                const fieldErrors = fieldset.fields.reduce((fieldErrors, field) => {
-                    // Do not validate field if it's dynamic and not enabled
-                    const dynamicFieldSetName = getDynamicFieldSetNameOfField(sections, field);
-                    if (dynamicFieldSetName && !values[dynamicFieldSetName]) {
-                        return fieldErrors;
-                    }
-
-                    // Do the validation
-                    const fieldError = (
-                        requiredFieldValidation(values, field, nodeData) ||
-                        dateFieldValidation(values, field) ||
-                        colorFieldValidation(values, field) ||
-                        rangeFieldValidation(values, field) ||
-                        patternFieldValidation(values, field) ||
-                        maxLengthFieldValidation(values, field) ||
-                        systemNameValidation(values, field)
-                    );
-
-                    if (fieldError) {
-                        fieldErrors[field.name] = fieldError;
-                    }
-
-                    return fieldErrors;
-                }, {});
+                const fieldErrors = validateFieldSet(fieldset, values, sections, nodeData);
 
                 return {
                     ...fieldSetErrors,

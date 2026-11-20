@@ -8,6 +8,26 @@ import {useTranslation} from 'react-i18next';
 import {useContentEditorContext} from '~/ContentEditor/contexts';
 import {hasUnreadableStoredValue} from '~/ContentEditor/utils';
 
+const getControlledValue = (value, isNumber, decimalSeparator) => {
+    if (value === undefined) {
+        return '';
+    }
+
+    return isNumber ? value?.replace('.', decimalSeparator) : value;
+};
+
+const getStoredValuePlaceholder = (field, nodeData, t) => {
+    if (field.readOnly || !hasUnreadableStoredValue(field, nodeData)) {
+        return undefined;
+    }
+
+    if (field.multiple) {
+        return t('jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder');
+    }
+
+    return t('jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder');
+};
+
 export const Text = ({field, value, id, onChange, onBlur}) => {
     const [hidePassword, setHidePassword] = useState(true);
     const {t} = useTranslation('jcontent');
@@ -17,14 +37,10 @@ export const Text = ({field, value, id, onChange, onBlur}) => {
     const fieldType = field.requiredType;
     const isNumber = fieldType === 'DOUBLE' || fieldType === 'LONG' || fieldType === 'DECIMAL';
     const decimalSeparator = uilang === 'en' ? '.' : ',';
-    const controlledValue = value === undefined ? '' : (isNumber ? value?.replace('.', decimalSeparator) : value);
+    const controlledValue = getControlledValue(value, isNumber, decimalSeparator);
 
     const isPassword = field.selectorOptions?.find(option => option.name === 'password');
-    const placeholder = !field.readOnly && hasUnreadableStoredValue(field, nodeData) ?
-        t(field.multiple ?
-            'jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder' :
-            'jcontent:label.contentEditor.selectorTypes.text.storedValuePlaceholder') :
-        undefined;
+    const placeholder = getStoredValuePlaceholder(field, nodeData, t);
     const Icon = hidePassword ? Visibility : Hidden;
     const postfixComponent = isPassword ? (
         <Button

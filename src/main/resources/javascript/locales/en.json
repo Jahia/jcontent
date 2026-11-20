@@ -785,8 +785,6 @@
         "fields": {
           "created": "Created",
           "createdBy": "Created by",
-          "lastModified": "Last modified",
-          "lastModifiedBy": "Modified by",
           "lastPublished": "Last published",
           "lastPublishedBy": "Published by",
           "tags": "Tags",

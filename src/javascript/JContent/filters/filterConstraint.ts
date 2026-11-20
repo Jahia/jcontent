@@ -85,10 +85,11 @@ const SINGLE_VALUE_BUILDERS: Record<string, SingleBuilder> = {
 
     contains: (property, text, field) => like(property, `%${likeFragment(text, field)}%`),
     startsWith: (property, text, field) => like(property, `${likeFragment(text, field)}%`),
-    // A `none` with no `exists` arm has no base set, and returns every item
+    // A `none` alone has no base set, and returns every item. The first arm keeps the items with a value of at least one
+    // character: a blank value shows as an empty cell, so it counts as no value, as `exists` would not
     notContains: (property, text, field) => ({
         all: [
-            {property, exists: true},
+            like(property, '_%'),
             {none: [like(property, `%${likeFragment(text, field)}%`)]}
         ]
     }),

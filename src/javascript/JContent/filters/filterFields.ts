@@ -5,12 +5,13 @@ const LABEL_PREFIX = 'jcontent:label.contentManager.filters.fields';
 
 type StandardField = Omit<FilterField, 'label'> & {labelKey: string};
 
-/** The fields of every list: every item has these properties. */
+/**
+ * The fields of every list: every item has these properties.
+ * Last modified and Modified by are not offered: a query matches them on the translations too, where the table cannot show them.
+ */
 export const STANDARD_FILTER_FIELDS: readonly StandardField[] = Object.freeze([
     {key: 'std:created', labelKey: `${LABEL_PREFIX}.created`, property: 'jcr:created', kind: 'date'},
     {key: 'std:createdBy', labelKey: `${LABEL_PREFIX}.createdBy`, property: 'jcr:createdBy', kind: 'text'},
-    {key: 'std:lastModified', labelKey: `${LABEL_PREFIX}.lastModified`, property: 'jcr:lastModified', kind: 'date'},
-    {key: 'std:lastModifiedBy', labelKey: `${LABEL_PREFIX}.lastModifiedBy`, property: 'jcr:lastModifiedBy', kind: 'text'},
     {key: 'std:lastPublished', labelKey: `${LABEL_PREFIX}.lastPublished`, property: 'j:lastPublished', kind: 'date'},
     {key: 'std:lastPublishedBy', labelKey: `${LABEL_PREFIX}.lastPublishedBy`, property: 'j:lastPublishedBy', kind: 'text'},
     {key: 'std:tags', labelKey: `${LABEL_PREFIX}.tags`, property: 'j:tagList', kind: 'text', multiple: true},
@@ -54,7 +55,11 @@ export const isMediaReference = (definition: PropertyDefinition): boolean => REF
         return MEDIA_CONSTRAINT_PARTS.some(part => name.includes(part));
     });
 
-const valueOptions = (formField: FormField | undefined): FilterFieldOption[] => (formField?.valueConstraints || [])
+// The selectors that pick from the values of the form. A text or number field gives its range or pattern as a value
+// constraint too, such as `(0,)` or `.{0,255}`, which is no value to pick
+const LIST_SELECTOR = /choicelist|multipleleftright|checkboxes/i;
+
+const valueOptions = (formField: FormField | undefined): FilterFieldOption[] => (LIST_SELECTOR.test(formField?.selectorType || '') ? formField?.valueConstraints || [] : [])
     .map(constraint => ({value: constraint.value?.string ?? '', label: constraint.displayValue || constraint.value?.string || ''}))
     .filter(option => option.value !== '');
 

@@ -778,8 +778,6 @@
         "fields": {
           "created": "Erstellt am",
           "createdBy": "Erstellt von",
-          "lastModified": "Zuletzt geändert",
-          "lastModifiedBy": "Geändert von",
           "lastPublished": "Zuletzt veröffentlicht",
           "lastPublishedBy": "Veröffentlicht von",
           "tags": "Tags",

@@ -34,16 +34,15 @@ const form: FormField[] = [
 ];
 
 describe('the standard fields', () => {
-    it('lists 9 fields with the std: prefix', () => {
+    it('lists 7 fields with the std: prefix', () => {
         expect(STANDARD_FILTER_FIELDS.map(field => field.key)).toEqual([
-            'std:created', 'std:createdBy', 'std:lastModified', 'std:lastModifiedBy', 'std:lastPublished',
-            'std:lastPublishedBy', 'std:tags', 'std:systemName', 'std:type'
+            'std:created', 'std:createdBy', 'std:lastPublished', 'std:lastPublishedBy', 'std:tags', 'std:systemName', 'std:type'
         ]);
     });
 
     it('case 2: gives the standard fields only for a list of mixed types', () => {
         const fields = buildFilterFields({t});
-        expect(fields).toHaveLength(9);
+        expect(fields).toHaveLength(7);
         expect(fields[0]).toEqual({key: 'std:created', label: 't(created)', property: 'jcr:created', kind: 'date'});
         expect(fields.find(field => field.key === 'std:systemName')).toMatchObject({property: 'j:nodename', looseSeparators: true});
         expect(fields.find(field => field.key === 'std:tags')).toMatchObject({property: 'j:tagList', multiple: true});
@@ -77,6 +76,21 @@ describe('the fields of a content type', () => {
         });
     });
 
+    it('gives no choice for the range of a number or the pattern of a text', () => {
+        expect(propertyToFilterField({name: 'rooms', requiredType: 'LONG'}, {name: 'rooms', selectorType: 'Text', valueConstraints: [{value: {string: '(0,)'}}]}))
+            .toMatchObject({kind: 'number'});
+        expect(propertyToFilterField({name: 'code', requiredType: 'STRING'}, {name: 'code', selectorType: 'Tag', valueConstraints: [{value: {string: '.{0,255}'}}]}))
+            .toMatchObject({kind: 'text'});
+    });
+
+    it('gives a choice for a list of numbers and for a list of checkboxes', () => {
+        const values = [{value: {string: '1'}, displayValue: 'One'}, {value: {string: '2'}, displayValue: 'Two'}];
+        expect(propertyToFilterField({name: 'size', requiredType: 'LONG'}, {name: 'size', selectorType: 'Choicelist', valueConstraints: values}))
+            .toMatchObject({kind: 'choice', options: [{value: '1', label: 'One'}, {value: '2', label: 'Two'}]});
+        expect(propertyToFilterField({name: 'langs', requiredType: 'STRING', multiple: true}, {name: 'langs', selectorType: 'CheckboxesToMultiLeftRight', valueConstraints: values}))
+            .toMatchObject({kind: 'choice', multiple: true});
+    });
+
     it('maps each JCR type to its kind', () => {
         const kinds = Object.fromEntries(buildFilterFields({t, definitions: news, formFields: form})
             .filter(field => field.key.startsWith('prop:'))
@@ -103,7 +117,7 @@ describe('the fields of a content type', () => {
 
     it('gives no second field for a property that a standard field covers', () => {
         const fields = buildFilterFields({t, definitions: [{name: 'j:tagList', requiredType: 'STRING', multiple: true}, {name: 'jcr:createdBy', requiredType: 'STRING'}]});
-        expect(fields).toHaveLength(9);
+        expect(fields).toHaveLength(7);
     });
 });
 

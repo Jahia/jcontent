@@ -88,7 +88,7 @@ export const jContentAccordionItems = registry => {
     });
 
     // The chips that the filter bar shows by default. Each accordion turns the bar on with tableConfig.filters
-    const defaultFilterFields = ['std:lastModified', 'std:createdBy'];
+    const defaultFilterFields = ['std:createdBy'];
 
     registry.add('accordionItem', 'search', {
         tableConfig: {
@@ -207,7 +207,7 @@ export const jContentAccordionItems = registry => {
             // A filtered media folder lists files, so the content types do not apply
             filters: {
                 defaultFields: defaultFilterFields,
-                fields: ['std:created', 'std:createdBy', 'std:lastModified', 'std:lastModifiedBy', 'std:lastPublished', 'std:lastPublishedBy', 'std:tags', 'std:systemName']
+                fields: ['std:created', 'std:createdBy', 'std:lastPublished', 'std:lastPublishedBy', 'std:tags', 'std:systemName']
             },
             uploadType: JContentConstants.mode.UPLOAD,
             dnd: {

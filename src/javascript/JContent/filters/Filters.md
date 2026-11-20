@@ -3,7 +3,7 @@
 A filter narrows a jContent list by the value of a field. A filter is a field, an operator and a value:
 
 ```js
-{field: 'std:lastModified', operator: 'after', value: '2026-11-01'}
+{field: 'std:created', operator: 'after', value: '2026-11-01'}
 {field: 'prop:options', operator: 'is', value: ['garage', 'pool']}
 {field: 'std:lastPublished', operator: 'empty'}
 ```
@@ -28,6 +28,8 @@ A field has this shape:
 
 `useFilterFields({nodeType})` returns the standard fields, and the properties of `nodeType` when the list holds one type. A module can add its own fields to the list.
 
+The standard fields are `std:created`, `std:createdBy`, `std:lastPublished`, `std:lastPublishedBy`, `std:tags` and `std:systemName`. There is no field for `jcr:lastModified` or `jcr:lastModifiedBy`: Jahia records them on an item and on each of its translations, a query matches either value, and the table shows the value of the item. A property is a `choice` only when its form field picks from a list (`Choicelist`, a multiple left-right selector or checkboxes): the range of a number or the pattern of a text is not a value to pick. "Does not contain" leaves out items with no value or a blank value.
+
 A filter on a field that is not in the field list is ignored. The property name always comes from the field list, never from the URL.
 
 ### Turn on the filter bar for an accordion
@@ -40,9 +42,9 @@ registry.add('accordionItem', 'my-accordion', {
         queryHandler: MyQueryHandler,
         filters: {
             // The chips that the bar shows with no value
-            defaultFields: ['std:lastModified', 'std:createdBy'],
+            defaultFields: ['std:created', 'std:createdBy'],
             // Optional: the keys of the fields to offer, or a function of the options of the view
-            fields: ['std:lastModified', 'std:createdBy', 'std:tags']
+            fields: ['std:created', 'std:createdBy', 'std:tags']
         }
     }
 });
@@ -78,7 +80,7 @@ const MyRoute = ({contentType}) => {
                     {FilterBar && (
                         <FilterBar fields={fields}
                                    filters={filters}
-                                   defaultFields={['std:lastModified']}
+                                   defaultFields={['std:created']}
                                    onChange={setFilters}/>
                     )}
                     <MyColumnPicker/>

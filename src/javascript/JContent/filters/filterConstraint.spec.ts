@@ -90,10 +90,10 @@ describe('filterToConstraint', () => {
         expect(filterToConstraint(title, {field: title.key, operator: 'contains', value: 'a\\b'}).like).toBe('%a\\\\b%');
     });
 
-    it('gives notContains an exists arm', () => {
+    it('gives notContains an arm that keeps the items with a non-blank value', () => {
         expect(filterToConstraint(title, {field: title.key, operator: 'notContains', value: 'Garage'})).toEqual({
             all: [
-                {property: 'jcr:title', exists: true},
+                {property: 'jcr:title', like: '_%', function: 'LOWER_CASE'},
                 {none: [{property: 'jcr:title', like: '%garage%', function: 'LOWER_CASE'}]}
             ]
         });

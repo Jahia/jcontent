@@ -156,6 +156,29 @@ export const BaseChildrenQuery = gql`
     ${QueryHandlersFragments.childNodesCount.gql}
 `;
 
+/**
+ * The direct children of a path that match a node constraint: the list of a folder while a filter is active.
+ * `nodeType` takes one type, where `children` takes a list.
+ */
+export const BaseCriteriaChildrenQuery = gql`
+    query getNodeChildrenByCriteria($path:String!, $nodeType:String!, $language:String!, $displayLanguage:String!, $offset:Int, $limit:Int, $nodeConstraint: InputGqlJcrNodeConstraintInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput) {
+        jcr {
+            nodesByCriteria(criteria: {paths: [$path], pathType: PARENT, nodeType: $nodeType, language: $language, nodeConstraint: $nodeConstraint}, offset: $offset, limit: $limit, fieldSorter: $fieldSorter, fieldGrouping: $fieldGrouping) {
+                pageInfo {
+                    totalCount
+                }
+                nodes {
+                    ...NodeFields
+                    ...node
+                    ...ChildNodesCount
+                }
+            }
+        }
+    }
+    ${QueryHandlersFragments.nodeFields.gql}
+    ${QueryHandlersFragments.childNodesCount.gql}
+`;
+
 export const BaseDescendantsQuery = gql`
     query getNodeSubTree($path:String!, $language:String!, $offset:Int, $limit:Int, $displayLanguage:String!, $typeFilter:[String]!, $recursionTypesFilter: InputNodeTypesInput, $fieldSorter: InputFieldSorterInput, $fieldGrouping: InputFieldGroupingInput, $fieldFilter: InputFieldFiltersInput) {
         jcr {

@@ -4,6 +4,7 @@ import {replaceFragmentsInDocument, useTreeEntries} from '@jahia/data-helper';
 import {QueryHandlersFragments} from '~/JContent/ContentRoute/ContentLayout/queryHandlers';
 import {getAccordionItem} from '~/JContent/JContent.utils';
 import {Constants} from '~/ContentEditor/SelectorTypes/Picker/Picker.constants';
+import {useViewFilters} from '~/JContent/filters/useViewFilters';
 
 export function useLayoutQuery(options, fragments, queryVariables, accordionItemProps) {
     const defaultOptions = {
@@ -23,6 +24,13 @@ export function useLayoutQuery(options, fragments, queryVariables, accordionItem
     const tableConfig = getAccordionItem(registry.get('accordionItem', effectiveMode), accordionItemProps).tableConfig;
 
     options = {...defaultOptions, ...tableConfig, ...options};
+
+    // The filters of the URL, checked against the field list of the view. A handler that does not read
+    // options.nodeConstraint keeps its behaviour
+    const viewFilters = useViewFilters(options, tableConfig);
+    if (viewFilters.nodeConstraint) {
+        options.nodeConstraint = viewFilters.nodeConstraint;
+    }
 
     const queryHandler = options.queryHandler;
     // Dedupe by reference: when an accordion handles search in place, its fragments arrive both from the
@@ -50,16 +58,17 @@ export function useLayoutQuery(options, fragments, queryVariables, accordionItem
         return {isStructured, result, error, loading, refetch};
     }
 
-    const layoutQuery = queryHandler.getQuery && replaceFragmentsInDocument(queryHandler.getQuery(), allFragments);
+    const layoutQuery = queryHandler.getQuery && replaceFragmentsInDocument(queryHandler.getQuery(options), allFragments);
 
     // Conditional hook / branch 2 - both branches have the exact same hook structure, useTreeEntries just wraps useQuery
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const {data, error, loading, refetch} = useQuery(layoutQuery, {
         variables: queryVariables,
-        fetchPolicy: options.fetchPolicy
+        fetchPolicy: options.fetchPolicy,
+        skip: viewFilters.isLoading
     });
 
     const queryResult = data && queryHandler.getResults(data, options);
     const result = isStructured ? queryHandler.structureData(options.path, queryResult) : queryResult;
-    return {isStructured, result, error, loading, refetch};
+    return {isStructured, result, error, loading: loading || viewFilters.isLoading, refetch};
 }

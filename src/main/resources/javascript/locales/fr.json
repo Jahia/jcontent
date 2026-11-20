@@ -741,6 +741,61 @@
         "numAsc": "Petit > Grand",
         "dateDesc": "Récent > Anciens",
         "dateAsc": "Anciens > Récents"
+      },
+      "filters": {
+        "operator": {
+          "contains": "contient",
+          "notContains": "ne contient pas",
+          "startsWith": "commence par",
+          "text": {
+            "equals": "est exactement"
+          },
+          "number": {
+            "equals": "égal à"
+          },
+          "equals": "égal à",
+          "notEquals": "n'est pas",
+          "gt": "supérieur à",
+          "lt": "inférieur à",
+          "after": "après le",
+          "before": "avant le",
+          "lastDays": "dans les derniers (jours)",
+          "empty": "est vide",
+          "notEmpty": "n'est pas vide",
+          "isTrue": "est vrai",
+          "isFalse": "est faux",
+          "is": "est",
+          "isNot": "n'est pas",
+          "choiceMultiple": {
+            "is": "contient",
+            "isNot": "ne contient pas"
+          },
+          "media": {
+            "notEmpty": "a un média",
+            "empty": "n'a pas de média"
+          }
+        },
+        "valueSeparator": " ou ",
+        "fields": {
+          "created": "Créé le",
+          "createdBy": "Créé par",
+          "lastPublished": "Publié le",
+          "lastPublishedBy": "Publié par",
+          "tags": "Étiquettes",
+          "systemName": "Nom système",
+          "type": "Type de contenu"
+        },
+        "toolbarLabel": "Filtres de la liste",
+        "collapsed": "Filtres",
+        "collapsedCount": "Filtres ({{count}})",
+        "addFilter": "Ajouter un filtre",
+        "filterName": "{{name}} :",
+        "clearFilter": "Effacer le filtre {{name}}",
+        "clearAll": "Tout effacer",
+        "close": "Fermer",
+        "operatorField": "Condition",
+        "valueField": "Valeur",
+        "emptyList": "Aucun élément ne correspond aux filtres."
       }
     },
     "categoryManager": {

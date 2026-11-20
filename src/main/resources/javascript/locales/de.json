@@ -740,6 +740,61 @@
         "numAsc": "Niedrig zu hoch",
         "dateDesc": "Neu zu alt",
         "dateAsc": "Alt zu neu"
+      },
+      "filters": {
+        "operator": {
+          "contains": "enthält",
+          "notContains": "enthält nicht",
+          "startsWith": "beginnt mit",
+          "text": {
+            "equals": "ist genau"
+          },
+          "number": {
+            "equals": "gleich"
+          },
+          "equals": "gleich",
+          "notEquals": "ist nicht",
+          "gt": "größer als",
+          "lt": "kleiner als",
+          "after": "nach dem",
+          "before": "vor dem",
+          "lastDays": "in den letzten (Tagen)",
+          "empty": "ist leer",
+          "notEmpty": "ist nicht leer",
+          "isTrue": "ist wahr",
+          "isFalse": "ist falsch",
+          "is": "ist",
+          "isNot": "ist nicht",
+          "choiceMultiple": {
+            "is": "enthält",
+            "isNot": "enthält nicht"
+          },
+          "media": {
+            "notEmpty": "hat eine Mediendatei",
+            "empty": "hat keine Mediendatei"
+          }
+        },
+        "valueSeparator": " oder ",
+        "fields": {
+          "created": "Erstellt am",
+          "createdBy": "Erstellt von",
+          "lastPublished": "Zuletzt veröffentlicht",
+          "lastPublishedBy": "Veröffentlicht von",
+          "tags": "Tags",
+          "systemName": "Systemname",
+          "type": "Inhaltstyp"
+        },
+        "toolbarLabel": "Filter der Liste",
+        "collapsed": "Filter",
+        "collapsedCount": "Filter ({{count}})",
+        "addFilter": "Filter hinzufügen",
+        "filterName": "{{name}}:",
+        "clearFilter": "Filter {{name}} zurücksetzen",
+        "clearAll": "Alle zurücksetzen",
+        "close": "Schließen",
+        "operatorField": "Bedingung",
+        "valueField": "Wert",
+        "emptyList": "Kein Element entspricht den Filtern."
       }
     },
     "categoryManager": {

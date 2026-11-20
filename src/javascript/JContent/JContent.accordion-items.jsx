@@ -87,10 +87,14 @@ export const jContentAccordionItems = registry => {
         rootPath: '/'
     });
 
+    // The chips that the filter bar shows by default. Each accordion turns the bar on with tableConfig.filters
+    const defaultFilterFields = ['std:createdBy'];
+
     registry.add('accordionItem', 'search', {
         tableConfig: {
             queryHandler: SearchQueryHandler,
-            availableModes: ['flatList']
+            availableModes: ['flatList'],
+            filters: {defaultFields: defaultFilterFields}
         }
     });
 
@@ -170,6 +174,7 @@ export const jContentAccordionItems = registry => {
             queryHandler: ContentFoldersQueryHandler,
             typeFilter: ['jnt:content'],
             viewSelector: <ViewModeSelector/>,
+            filters: {defaultFields: defaultFilterFields},
             uploadType: JContentConstants.mode.IMPORT,
             dnd: {
                 canDrag: true, canDrop: true, canDropFile: true
@@ -199,6 +204,11 @@ export const jContentAccordionItems = registry => {
             typeFilter: ['jnt:file', 'jnt:folder'],
             viewSelector: <FileModeSelector/>,
             sortSelector: <SortSelector/>,
+            // A filtered media folder lists files, so the content types do not apply
+            filters: {
+                defaultFields: defaultFilterFields,
+                fields: ['std:created', 'std:createdBy', 'std:lastPublished', 'std:lastPublishedBy', 'std:tags', 'std:systemName']
+            },
             uploadType: JContentConstants.mode.UPLOAD,
             dnd: {
                 canDrag: true, canDrop: true, canDropFile: true

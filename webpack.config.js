@@ -34,7 +34,10 @@ module.exports = (env, argv) => {
                 '~': path.resolve(__dirname, './src/javascript'),
                 // Webpack does not support ?url on package identifiers,
                 // so we alias the identifier to its resolved path
-                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css')
+                'editframe-styles/scoped.css': path.resolve(__dirname, 'packages/editframe-styles/dist/editframe-styles.css'),
+                // LOCAL TEST ONLY: a name the module federation does not share, so CollectionBar is bundled.
+                // The app shell loads Moonstone 2.21.1 as the shared singleton, which has no CollectionBar.
+                'local-moonstone-2.22$': path.resolve(__dirname, 'node_modules/@jahia/moonstone/dist/index.js')
             },
             fallback: {
                 "url": false,

@@ -8,6 +8,13 @@ export {default as FileModeSelector} from '../JContent/ContentRoute/ToolBar/File
 export {BulkActionsMenu, BULK_ACTIONS_MENU, BULK_ACTIONS_TARGET} from '../JContent/ContentRoute/ToolBar/SelectionActionsBar/BulkActionsMenu';
 export {Export as ExportDialog, EXPORT_FORMATS} from '../JContent/actions/exportAction/Export/Export';
 export {STANDARD_COLUMNS as EXPORT_STANDARD_COLUMNS} from '../JContent/actions/exportAction/exportRecords/exportRecords';
+
+// The filters of a list, for a module that renders its own header and runs its own query. See JContent/filters/Filters.md
+export {FilterBar} from '../JContent/filters/FilterBar/FilterBar';
+export {useFilters} from '../JContent/filters/useFilters';
+export {useFilterFields} from '../JContent/filters/useFilterFields';
+export {filtersToNodeConstraint, FILTER_KINDS, FILTER_OPERATORS} from '../JContent/filters/filterConstraint';
+export {type Filter, type FilterField, type FilterFieldOption, type FilterKind, type NodeConstraint} from '../JContent/filters/filters.types';
 export {default as UploadTransformComponent} from '../JContent/ContentRoute/ContentLayout/UploadTransformComponent';
 export {ContentEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/ContentTable/ContentEmptyDropZone';
 export {default as FilesGridEmptyDropZone} from '../JContent/ContentRoute/ContentLayout/FilesGrid/FilesGridEmptyDropZone';

@@ -1,0 +1,84 @@
+// The bar sits inline in a toolbar row: no padding of its own, one line, the height of the other controls
+.inline {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+}
+
+.collectionBar {
+    padding: 0;
+
+    :global(.moonstone-collectionBar_toolbar) {
+        flex-wrap: nowrap;
+    }
+}
+
+.inline .collectionBar :global(.moonstone-collectionBar_chip) {
+    flex: none;
+    max-width: 260px;
+}
+
+// A hidden copy of the full bar, out of the layout, for its width
+.measure {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 0;
+    height: 0;
+
+    white-space: nowrap;
+
+    visibility: hidden;
+
+    pointer-events: none;
+    overflow: hidden;
+
+    .collectionBar {
+        display: inline-flex;
+    }
+}
+
+.collapsed {
+    display: inline-flex;
+    flex: none;
+}
+
+.collapsedChip:global(.moonstone-button) {
+    border-style: dashed;
+}
+
+.collapsedChipActive:global(.moonstone-button) {
+    color: var(--moon-color-accent_dark);
+
+    border-style: solid;
+    border-color: var(--moon-color-accent_light_plain20);
+    background-color: var(--moon-color-accent_light_plain20);
+}
+
+.popoverOverlay {
+    position: fixed;
+    z-index: 1300;
+
+    inset: 0;
+}
+
+.popover {
+    position: fixed;
+    z-index: 1301;
+
+    max-width: calc(100vw - 16px);
+    padding: var(--spacing-small) var(--spacing-medium);
+
+    border-radius: var(--moon-radius);
+    background-color: var(--color-light);
+    box-shadow: 0 2px 8px var(--moon-color-gray_dark60);
+
+    .collectionBar :global(.moonstone-collectionBar_toolbar) {
+        flex-wrap: wrap;
+    }
+}
+
+.selectorControl {
+    min-width: 220px;
+}

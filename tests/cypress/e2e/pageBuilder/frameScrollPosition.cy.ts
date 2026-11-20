@@ -33,10 +33,16 @@ describe('Page builder - frame keeps its position', () => {
         return element.getBoundingClientRect().top;
     });
 
-    /** The module the editor's view is anchored on: the one nearest the top edge of the viewport. */
+    /**
+     * The module the editor's view is anchored on: the one nearest the top edge of the viewport.
+     *
+     * Only a module with an absolute path can be an anchor, as in EditFrame.anchor.js. A "New content"
+     * placeholder renders `path="*"`, and looking it up again by that path finds the first placeholder
+     * of the page instead, far above the viewport.
+     */
     const anchorGeometry = () => activeFrame().then($frame => {
         const win = ($frame[0] as HTMLIFrameElement).contentWindow;
-        return [...win.document.querySelectorAll('[jahiatype="module"][path]')]
+        return [...win.document.querySelectorAll('[jahiatype="module"][path^="/"]')]
             .map(element => ({path: element.getAttribute('path'), rect: element.getBoundingClientRect()}))
             .filter(({rect}) => rect.bottom > 0 && rect.top < win.innerHeight)
             .reduce((best, c) => (!best || Math.abs(c.rect.top) < Math.abs(best.rect.top) ? c : best), null);

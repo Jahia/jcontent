@@ -34,6 +34,16 @@ export class File extends BasePage {
         return this.getUploadStatus().find('[data-sel-role="upload-error-msg"]').contains(msg);
     }
 
+    verifyUploadError(): File {
+        this.getUploadStatus().find('[data-sel-role="upload-error-msg"]').should('be.visible');
+        return this;
+    }
+
+    verifyUploadMessage(msg: string): File {
+        this.getUploadMessage(msg).should('be.visible');
+        return this;
+    }
+
     download(): File {
         this.getGridCard().contextMenu().selectByRole('downloadFile');
         // eslint-disable-next-line cypress/no-unnecessary-waiting

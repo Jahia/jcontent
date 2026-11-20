@@ -351,9 +351,18 @@
         "unPublishedBy": "Veröffentlichung wurde rückgängig gemacht von {{userName}} am",
         "moreOptions": "Mehr Optionen"
       },
+      "pdfViewer": {
+        "firstPage": "Erste Seite",
+        "previousPage": "Vorherige Seite",
+        "nextPage": "Nächste Seite",
+        "lastPage": "Letzte Seite",
+        "zoomOut": "Herauszoomen",
+        "zoomIn": "Hineinzoomen"
+      },
       "copyPaste": {
         "cut": "Ausschneiden",
         "copy": "Kopieren",
+        "copyValue": "{{label}} kopieren",
         "copyPageOnly": "Nur Seite",
         "copyPageWithSubPages": "Seite mit unter-Seiten",
         "paste": "Einfügen",
@@ -423,7 +432,8 @@
         "clearMultipleSelection": "Auswahl aufheben",
         "emptyContextMenu": "Für diese Elemente sind keine Aktionen verfügbar",
         "removed": "Zuvor selektierte Elemente, die nicht in dieser Ansicht angezeigt werden können, wurden von der Selektion entfernt",
-        "addTo": "Zur Selektion hinzufügen"
+        "addTo": "Zur Selektion hinzufügen",
+        "removeFrom": "Aus der Selektion entfernen"
       },
       "editImage": {
         "action": "Bild-Editor",
@@ -459,6 +469,7 @@
         "savedMessage": "Gespeichert",
         "ratioLocked": "Seitenverhältnis aktiviert",
         "ratioUnlocked": "Seitenverhältnis deaktiviert",
+        "keepRatio": "Seitenverhältnis beibehalten",
         "confirmSaveDialog": {
           "title": "Datei ersetzen",
           "text": "Eine Datei mit diesem Namen existiert bereits. Möchten Sie fortfahren?",
@@ -1174,6 +1185,8 @@
     "ok": "OK",
     "cancel": "Abbrechen",
     "no": "Nein",
-    "yes": "Ja"
+    "yes": "Ja",
+    "back": "Zurück",
+    "loading": "Laden..."
   }
 }

@@ -14,7 +14,7 @@ export const UploadHeader = ({status}) => {
     if (status.uploading !== 0) {
         return (
             <div className={classNames(styles.headerText)}>
-                <Loader isReversed size="small" className={styles.statusIcon}/>
+                <Loader isReversed size="small" className={styles.statusIcon} i18n={{loadingLabel: t('jcontent:label.loading')}}/>
                 <Typography data-cm-role="upload-status-uploading">
                     {t(status.type === 'import' ? 'jcontent:label.contentManager.fileUpload.importingMessage' : 'jcontent:label.contentManager.fileUpload.uploadingMessage', {
                         uploaded: status.uploaded,

@@ -34,8 +34,8 @@ describe('Reviewer permissions', () => {
         jcontent = JContent.visit(SiteKey, 'en', 'content-folders/contents');
 
         // Check new content folder action is not displayed
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContentFolder"]').should('not.exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContent"]').should('not.exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="createContentFolder"]').should('not.exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="createContent"]').should('not.exist');
 
         // Check action 'new content' under my-list is not displayed
         const contextMenu = jcontent.openContextMenuByRowName('my-list');

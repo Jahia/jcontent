@@ -66,7 +66,7 @@ const CategoriesHeader = () => {
 
         return narrow ? (
             <Header
-                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
+                backButton={<Button icon={<ArrowLeft/>} aria-label={t('label.back')} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
                 toolbarLeft={selection.length > 0 ?
@@ -81,7 +81,7 @@ const CategoriesHeader = () => {
             />
         ) : (
             <Header
-                backButton={<Button icon={<ArrowLeft/>} onClick={clearSearchFunc}/>}
+                backButton={<Button icon={<ArrowLeft/>} aria-label={t('label.back')} onClick={clearSearchFunc}/>}
                 mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
                 title={t('label.contentManager.title.search')}
                 toolbarLeft={

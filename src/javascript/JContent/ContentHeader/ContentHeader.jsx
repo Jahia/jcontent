@@ -44,7 +44,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
 
     return narrow ? (
         <Header
-            backButton={<Button icon={<ArrowLeft/>} data-sel-role="close" onClick={clearSearchFunc}/>}
+            backButton={<Button icon={<ArrowLeft/>} data-sel-role="close" aria-label={t('label.back')} onClick={clearSearchFunc}/>}
             mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             title={t('label.contentManager.title.search')}
             toolbarLeft={!previewSelection && selection.length > 0 ?
@@ -53,7 +53,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
         />
     ) : (
         <Header
-            backButton={<Button icon={<ArrowLeft/>} data-sel-role="close" onClick={clearSearchFunc}/>}
+            backButton={<Button icon={<ArrowLeft/>} data-sel-role="close" aria-label={t('label.back')} onClick={clearSearchFunc}/>}
             mainActions={JContentConstants.mode.SEARCH === mode && <SearchInput/>}
             title={t('label.contentManager.title.search')}
             toolbarLeft={

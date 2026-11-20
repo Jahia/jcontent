@@ -175,10 +175,10 @@ describe('Content editor fields tests', () => {
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[0]"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'true');
+            .should('be.checked');
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[1]"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'false');
+            .should('not.be.checked');
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[0]"]')
             .find('[data-sel-action="removeField_0"]')
@@ -186,7 +186,7 @@ describe('Content editor fields tests', () => {
 
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultiple_boolean[0]"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'false');
+            .should('not.be.checked');
     });
 
     it('should add and remove multiple values on date field', () => {

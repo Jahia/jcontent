@@ -355,9 +355,18 @@
         "unPublishedBy": "Unpublished by {{userName}} on",
         "moreOptions": "More Options"
       },
+      "pdfViewer": {
+        "firstPage": "First page",
+        "previousPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page",
+        "zoomOut": "Zoom out",
+        "zoomIn": "Zoom in"
+      },
       "copyPaste": {
         "cut": "Cut",
         "copy": "Copy",
+        "copyValue": "Copy {{label}}",
         "copyPageOnly": "Page only",
         "copyPageWithSubPages": "Page with Sub-pages",
         "paste": "Paste",
@@ -427,7 +436,8 @@
         "clearMultipleSelection": "Clear selection",
         "emptyContextMenu": "No actions available for those items",
         "removed": "{{count}} previously selected items have been removed from the selection, as they are not displayed in this view",
-        "addTo": "Add to selection"
+        "addTo": "Add to selection",
+        "removeFrom": "Remove from selection"
       },
       "editImage": {
         "action": "Image editor",
@@ -463,6 +473,7 @@
         "savedMessage": "Saved",
         "ratioLocked": "Ratio locked",
         "ratioUnlocked": "Ratio unlocked",
+        "keepRatio": "Keep ratio",
         "confirmSaveDialog": {
           "title": "Replace existing file",
           "text": "A file with this name already exists. Are you sure you want to continue?",
@@ -1193,6 +1204,8 @@
     "ok": "OK",
     "cancel": "Cancel",
     "no": "No",
-    "yes": "Yes"
+    "yes": "Yes",
+    "back": "Back",
+    "loading": "Loading..."
   }
 }

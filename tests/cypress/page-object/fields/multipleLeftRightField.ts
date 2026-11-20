@@ -7,7 +7,7 @@ export class MultipleLeftRightField extends Field {
     }
 
     removeValue(newValue: string, force = false) {
-        this.get().find('li[role="right-list"]').contains(newValue).closest('li').find('.moonstone-listItem_iconEnd').click({force});
+        this.get().find('ul[data-list="right"] > li').contains(newValue).closest('li').find('.moonstone-listItem_iconEnd').click({force});
         return this;
     }
 }

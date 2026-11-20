@@ -173,7 +173,7 @@ export const PickerContentLayoutContainer = ({pickerConfig, isMultiple, accordio
         <div className="flexFluid flexCol_nowrap" style={{position: 'relative'}}>
             {loading && (
                 <div className={clsx('flexCol_center', 'alignCenter', styles.loader)}>
-                    <Loader size="big"/>
+                    <Loader size="big" i18n={{loadingLabel: t('jcontent:label.loading')}}/>
                 </div>
             )}
             {!loading && isOverNodeLimit(error) && (

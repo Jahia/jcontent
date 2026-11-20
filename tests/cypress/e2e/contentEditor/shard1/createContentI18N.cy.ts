@@ -49,7 +49,7 @@ describe.skip('Create content tests in I18N site', () => {
         contentEditor.getLanguageSwitcher().selectLang('English');
         contentEditor.addAnotherContent();
         contentEditor.getLanguageSwitcher().selectLang('French');
-        cy.get('#createAnother').should('have.attr', 'aria-checked', 'true');
+        cy.get('#createAnother').should('be.checked');
 
         contentEditor.cancel();
     });

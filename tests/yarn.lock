@@ -182,9 +182,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jahia/cypress@npm:8.6.0":
-  version: 8.6.0
-  resolution: "@jahia/cypress@npm:8.6.0"
+"@jahia/cypress@https://pkg.pr.new/@jahia/cypress@7ed2c59":
+  version: 8.9.0
+  resolution: "@jahia/cypress@https://pkg.pr.new/@jahia/cypress@7ed2c59"
   dependencies:
     "@apollo/client": "npm:^3.4.9"
     "@faker-js/faker": "npm:^10.3.0"
@@ -193,12 +193,13 @@ __metadata:
     cypress-real-events: "npm:^1.11.0"
     graphql: "npm:^15.5.0"
     graphql-tag: "npm:^2.11.0"
+    yaml: "npm:^2.9.1"
   bin:
     ci.build: ./ci.build.sh
     ci.startup: ./ci.startup.sh
     env.debug: ./env.debug.sh
     env.run: ./env.run.sh
-  checksum: 10c0/8422f48157489cdb5d95a49fc60a45d7b5e328c204581ec10414973c4b7f08ddd1c12a313552c360fd16c7adeeb43f94c0161d65f8c4f9a489924335fc643a81
+  checksum: 10c0/877a521bcb856e43f12ceb30c6d68641b629561a48e4e166499623c44eb3e0cf9b214685159fefd4b365fb40e8d784ff30043baf254a3329ae042f9c33af28ea
   languageName: node
   linkType: hard
 
@@ -244,7 +245,7 @@ __metadata:
   resolution: "@jahia/jcontent-cypress@workspace:."
   dependencies:
     "@4tw/cypress-drag-drop": "npm:^2.3.0"
-    "@jahia/cypress": "npm:8.6.0"
+    "@jahia/cypress": "https://pkg.pr.new/@jahia/cypress@7ed2c59"
     "@jahia/jahia-reporter": "npm:^1.5.0"
     "@types/node": "npm:^22.14.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.29.1"
@@ -4765,6 +4766,15 @@ __metadata:
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
   checksum: 10c0/2286b5e8dbfe22204ab66e2ef5cc9bbb1e55dfc873bbe0d568aa943eb255d131890dfd5bf243637273d31119b870f49c18fcde2c6ffbb7a7a092b870dc90625a
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.9.1":
+  version: 2.9.1
+  resolution: "yaml@npm:2.9.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 10c0/9d06676ef02b89559a8b10a71882bd2cdae81e8393dc8dbc871615c3259475d9609ad973d19cb3c9e71e72d6206e3d1e7aa241c7e55f3d16fd2e77db305827d6
   languageName: node
   linkType: hard
 

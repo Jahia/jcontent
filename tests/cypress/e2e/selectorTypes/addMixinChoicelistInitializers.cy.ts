@@ -37,7 +37,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         contentEditor.getTitle().should('be.visible').and('contain', 'Create Image (Internationalized)');
         linkTypeField.selectValue('internal');
 
-        contentEditor.getLanguageSwitcher().select('French');
+        contentEditor.getLanguageSwitcher().selectLangByValue('fr');
 
         linkTypeField.selectValue('external');
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]').should('not.exist');
@@ -49,7 +49,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         urlField.get().scrollIntoView({offset: fieldOffset});
         urlField.get().should('be.visible');
 
-        contentEditor.getLanguageSwitcher().select('German');
+        contentEditor.getLanguageSwitcher().selectLangByValue('de');
 
         linkTitleField = contentEditor.getSmallTextField('jmix:externalLink_j:linkTitle');
         urlField = contentEditor.getSmallTextField('jmix:externalLink_j:url');
@@ -62,7 +62,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         linkTypeField.selectValue('none');
         cy.get('[data-sel-content-editor-field="jmix:externalLink_j:url"]').should('not.exist');
 
-        contentEditor.getLanguageSwitcher().select('English');
+        contentEditor.getLanguageSwitcher().selectLangByValue('en');
         linkTypeField.get().contains('No link');
         linkTypeField.selectValue('internal');
 
@@ -76,14 +76,14 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         contentEditor.create();
 
         // Edit
-        contentEditor = jcontent.editComponentByText(cypressDocumentManagerImageReferenceLinkTest);
+        contentEditor = jcontent.editComponentByRowName('cypress-document-manager-image-reference-link-test');
         linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
 
         contentEditor.getTitle().should('be.visible').and('contain', 'Cypress document manager image reference');
         linkTypeField.selectValue('none');
 
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]').should('not.exist');
-        contentEditor.getLanguageSwitcher().select('French');
+        contentEditor.getLanguageSwitcher().selectLangByValue('fr');
         // Choicelist labels follow the UI language, which stays English when only the content language changes
         linkTypeField.get().contains('No link');
         linkTypeField.selectValue('internal');
@@ -91,7 +91,7 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().scrollIntoView({offset: fieldOffset});
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().should('be.visible');
 
-        contentEditor.getLanguageSwitcher().select('English');
+        contentEditor.getLanguageSwitcher().selectLangByValue('en');
         linkTypeField.get().contains('Internal');
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().scrollIntoView({offset: fieldOffset});
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().should('be.visible');

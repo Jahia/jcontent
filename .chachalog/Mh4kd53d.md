@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-fix: Recursively resolve transitive mixin extensions in getExtendMixins (#2308)
+Fixed the fields of a template mixin not showing when a choicelist of an optional fieldset selects it (#2308)

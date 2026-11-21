@@ -10,9 +10,9 @@ import {ChoiceListField, PickerField, SmallTextField} from '../../page-object/fi
 //
 // The node type is cent:nodetypeVanilla, which is not a cemix:commonLink, so getExtendMixins used to
 // stop at cemix:mixinExtendWithLink and never reach the two template mixins: the form had no
-// fieldset for them, and changing linkType did nothing. Discovery now follows an extension into its
-// own extensions, so a template mixin reached through an applied mixin gets its fieldset like one
-// that extends the node type directly.
+// fieldset for them, and changing linkType did nothing. Discovery now follows an extension into the
+// template mixins that extend it, so a template mixin reached through an applied mixin gets its
+// fieldset like one that extends the node type directly.
 //
 // Every test seeds or creates its own node, so none depends on what another one saved.
 describe('Template mixins reached through the extends chain of an applied mixin', () => {
@@ -113,6 +113,31 @@ describe('Template mixins reached through the extends chain of an applied mixin'
         contentEditor.getLanguageSwitcher().selectLangByValue('fr');
         contentEditor.getField(SmallTextField, 'cemix:mixinExtendWithLink_linkLabel').assertVisible();
         contentEditor.getField(SmallTextField, 'cemix:externalLink_externalLink').checkValue('https://stored.example');
+
+        contentEditor.cancel();
+    });
+
+    // Past the first level only template mixins are followed: cemix:linkSeo is a plain mixin that extends
+    // cemix:commonLink, and its own switch could apply it to a node that is no cemix:commonLink.
+    it('offers no switch for a plain mixin that extends the applied mixin', () => {
+        const contentEditor = visitContents().createContent('cent:nodetypeVanilla');
+        contentEditor.getDynamicFieldset('cemix:mixinExtendWithLink').should('exist');
+        contentEditor.getDynamicFieldset('cemix:linkSeo').should('not.exist');
+
+        contentEditor.toggleOption('cemix:mixinExtendWithLink');
+        contentEditor.getField(ChoiceListField, 'cemix:mixinExtendWithLink_linkType').assertVisible();
+        contentEditor.getDynamicFieldset('cemix:linkSeo').should('not.exist');
+        cy.get('[data-sel-content-editor-field="cemix:linkSeo_seoTitle"]').should('not.exist');
+
+        contentEditor.cancelAndDiscard();
+    });
+
+    // Bad form, which the concept doc tells authors to avoid: the template mixin cemix:invalidInheritAndExtend
+    // inherits cemix:invalidInheritAndExtendBase and extends it. Once reached, it must not take away the
+    // switch of its base as a mixin that inherits it would. No other test uses these types.
+    it('keeps the switch of a mixin when a template mixin reached through it inherits it', () => {
+        const contentEditor = visitContents().createContent('cent:invalidInheritAndExtendTest');
+        contentEditor.getDynamicFieldset('cemix:invalidInheritAndExtendBase').find('input').should('exist');
 
         contentEditor.cancel();
     });

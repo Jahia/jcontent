@@ -47,6 +47,7 @@ import pl.touk.throwing.ThrowingFunction;
 import javax.jcr.RepositoryException;
 import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.jahia.modules.contenteditor.utils.ContentEditorUtils.hasComponentPermission;
@@ -428,7 +429,11 @@ public class EditorFormServiceImpl implements EditorFormService {
         // For system-level calls, all modules are considered available
         Set<String> installedModules = site != null && site.getPath().startsWith("/sites/") ? site.getInstalledModulesWithAllDependencies() : null;
 
-        List<ExtendedNodeType> res = collectExtendMixins(type, installedModules);
+        Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions = NodeTypeRegistry.getInstance().getMixinExtensions();
+        Set<String> visited = new HashSet<>();
+        visited.add(type.getName());
+        List<ExtendedNodeType> res = collectNewExtensions(type, mixinExtensions, extension -> true, installedModules, visited);
+        List<ExtendedNodeType> nested = collectNestedTemplateMixins(res, mixinExtensions, installedModules, visited);
 
         // If mixin A extends mixin B and both are in the list, remove B: A already carries B's
         // properties via the supertype chain, so B's fieldset would put a second enable switch on
@@ -438,33 +443,52 @@ public class EditorFormServiceImpl implements EditorFormService {
         // switch (see isExtend above), so dropping it hides no switch and instead leaves it no
         // fieldset: where a chain of template mixins are each a value of an addMixin choicelist,
         // every member but the most derived one would show nothing when selected.
+        //
+        // The nested template mixins join the list after this pass: one that inherits a first-level
+        // mixin would otherwise take away that mixin's switch, the only way to turn it on.
         res.removeIf(mixin -> !mixin.isNodeType(TEMPLATE_MIXIN) && res.stream()
             .anyMatch(other -> !other.getName().equals(mixin.getName()) && other.isNodeType(mixin.getName())));
+        res.addAll(nested);
 
         return res;
     }
 
     /**
-     * Collects the mixins that extend {@code type}, then the mixins that extend each of those, and so on:
-     * the transitive closure of the extensions. A mixin that extends an extension of the type
-     * (e.g. mymix:internalLink extends mymix:commonLink, which extends mynt:nodetypeVanilla) is found
-     * when its own base is processed. A visited set keeps a diamond or a cycle from adding a mixin twice.
+     * Collects the template mixins reached through the extensions of the type: those that extend one of
+     * {@code firstLevel} or one of its supertypes, then those that extend each of these, and so on.
+     * A template mixin that extends a supertype of an extension of the type (e.g. mymix:internalLink
+     * extends mymix:commonLink, a supertype of mymix:linkMixin, which extends mynt:nodetypeVanilla) is
+     * found when that extension is processed.
+     *
+     * <p>Only jmix:templateMixin is followed. A nested extension's fieldset is not tied to the mixin it
+     * extends, so any other mixin would get its own enable switch and could be applied to a node that
+     * lacks its base. A template mixin has no switch: the addMixin choicelist of its base turns it on,
+     * and that choicelist only shows once the base fieldset is on.
      */
-    private List<ExtendedNodeType> collectExtendMixins(ExtendedNodeType type, Set<String> installedModules) {
-        Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions = NodeTypeRegistry.getInstance().getMixinExtensions();
+    private List<ExtendedNodeType> collectNestedTemplateMixins(List<ExtendedNodeType> firstLevel, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions,
+                                                               Set<String> installedModules, Set<String> visited) {
         List<ExtendedNodeType> res = new ArrayList<>();
-        Queue<ExtendedNodeType> toProcess = new LinkedList<>();
-        toProcess.add(type);
-        Set<String> visited = new HashSet<>();
-        visited.add(type.getName());
-
+        Deque<ExtendedNodeType> toProcess = new ArrayDeque<>(firstLevel);
         while (!toProcess.isEmpty()) {
-            ExtendedNodeType current = toProcess.poll();
-            for (ExtendedNodeType extension : getDirectExtensions(current, mixinExtensions)) {
-                if (visited.add(extension.getName()) && isExtensionAvailable(extension, installedModules)) {
-                    res.add(extension);
-                    toProcess.add(extension);
-                }
+            List<ExtendedNodeType> found = collectNewExtensions(toProcess.poll(), mixinExtensions, extension -> extension.isNodeType(TEMPLATE_MIXIN),
+                installedModules, visited);
+            res.addAll(found);
+            toProcess.addAll(found);
+        }
+        return res;
+    }
+
+    /**
+     * The available mixins that {@code accepted} keeps among those registered as extending {@code type}
+     * or one of its supertypes, minus those already in {@code visited}, which this adds them to. The
+     * visited set keeps a diamond or a cycle from adding a mixin twice.
+     */
+    private List<ExtendedNodeType> collectNewExtensions(ExtendedNodeType type, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions,
+                                                        Predicate<ExtendedNodeType> accepted, Set<String> installedModules, Set<String> visited) {
+        List<ExtendedNodeType> res = new ArrayList<>();
+        for (ExtendedNodeType extension : getDirectExtensions(type, mixinExtensions)) {
+            if (accepted.test(extension) && visited.add(extension.getName()) && isExtensionAvailable(extension, installedModules)) {
+                res.add(extension);
             }
         }
         return res;

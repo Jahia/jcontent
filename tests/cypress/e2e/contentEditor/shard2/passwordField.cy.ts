@@ -14,9 +14,11 @@ describe('Password field', () => {
             jcr {
                 nodeByPath(path: $path) {
                     secret: property(name: "secret") {
+                        value
                         decryptedValue
                     }
                     multiSecret: property(name: "multiSecret") {
+                        values
                         decryptedValues
                     }
                 }
@@ -28,23 +30,11 @@ describe('Password field', () => {
     const storedValues = (name: string) => {
         cy.apolloClient();
         return cy.apollo({query: storedValuesQuery, variables: {path: `/sites/${siteKey}/contents/${name}`}})
-            .then(result => {
-                const node = result?.data?.jcr?.nodeByPath;
-                return {secret: node?.secret?.decryptedValue, multiSecret: node?.multiSecret?.decryptedValues};
-            });
+            .then(result => result?.data?.jcr?.nodeByPath);
     };
 
-    // The editor's own read of the stored single value
-    const editorReadsStoredValue = (name: string) => {
-        cy.apolloClient({username: editor.username, password: editor.password});
-        return cy.apollo({query: storedValuesQuery, variables: {path: `/sites/${siteKey}/contents/${name}`}})
-            .then(result => {
-                const readable = result?.data?.jcr?.nodeByPath?.secret?.decryptedValue !== null;
-                cy.apolloClient();
-                return cy.wrap(readable, {log: false});
-            });
-    };
-
+    // Stored without encryption, so the server cannot decrypt them for any user,
+    // as with content encrypted by another server
     const addContent = (name: string) => {
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
@@ -52,9 +42,13 @@ describe('Password field', () => {
             primaryNodeType: 'cent:passwordFields',
             properties: [
                 {name: 'label', value: 'first label'},
-                {name: 'secret', value: 'stored secret', option: 'ENCRYPTED'},
-                {name: 'multiSecret', values: ['stored one', 'stored two'], option: 'ENCRYPTED'}
+                {name: 'secret', value: 'stored secret'},
+                {name: 'multiSecret', values: ['stored one', 'stored two']}
             ]
+        });
+        storedValues(name).then(node => {
+            expect(node.secret.decryptedValue, 'the server cannot decrypt the stored value').to.equal(null);
+            expect(node.multiSecret.decryptedValues, 'the server cannot decrypt the stored values').to.deep.equal([]);
         });
     };
 
@@ -75,16 +69,6 @@ describe('Password field', () => {
         createSite(siteKey, {templateSet: 'dx-base-demo-templates', serverName: 'localhost', locale: 'en'});
         createUser(editor.username, editor.password);
         grantRoles(`/sites/${siteKey}`, ['editor'], editor.username, 'USER');
-        addContent('probe');
-    });
-
-    // Both tests need an editor whose form does not receive the stored value
-    beforeEach(function () {
-        editorReadsStoredValue('probe').then(readable => {
-            if (readable) {
-                this.skip();
-            }
-        });
     });
 
     after(() => {
@@ -100,7 +84,10 @@ describe('Password field', () => {
         contentEditor.save();
         cy.logout();
 
-        storedValues('keep-values').should('deep.equal', {secret: 'stored secret', multiSecret: ['stored one', 'stored two']});
+        storedValues('keep-values').then(node => {
+            expect(node.secret.value).to.equal('stored secret');
+            expect(node.multiSecret.values).to.deep.equal(['stored one', 'stored two']);
+        });
     });
 
     it('replaces the stored value with the value an editor types', () => {
@@ -111,7 +98,9 @@ describe('Password field', () => {
         contentEditor.save();
         cy.logout();
 
-        storedValues('replace-value').its('secret').should('equal', 'typed secret');
-        storedValues('replace-value').its('multiSecret').should('deep.equal', ['stored one', 'stored two']);
+        storedValues('replace-value').then(node => {
+            expect(node.secret.decryptedValue).to.equal('typed secret');
+            expect(node.multiSecret.values).to.deep.equal(['stored one', 'stored two']);
+        });
     });
 });

@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-Fixed the fields of a template mixin not showing when a choicelist of an optional fieldset selects it (#2308)
+Fixed template mixin fields not showing when a choicelist of an optional fieldset or an added mixin selects them (#2308)

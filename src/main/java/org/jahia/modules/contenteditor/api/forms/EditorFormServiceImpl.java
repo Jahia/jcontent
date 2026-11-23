@@ -25,6 +25,7 @@ package org.jahia.modules.contenteditor.api.forms;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jahia.api.Constants;
 import org.jahia.api.templates.JahiaTemplateManagerService;
 import org.jahia.data.templates.JahiaTemplatesPackage;
 import org.jahia.modules.contenteditor.api.forms.model.*;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import pl.touk.throwing.ThrowingFunction;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.nodetype.NoSuchNodeTypeException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -137,7 +137,7 @@ public class EditorFormServiceImpl implements EditorFormService {
             addFormNodeType(primaryNodeType, site, mergeSet, locale, false, processedNodeTypes, nodeTypes);
 
             // Available extends mixins
-            List<ExtendedNodeType> extendMixins = getExtendMixins(primaryNodeType, site);
+            List<ExtendedNodeType> extendMixins = getExtendMixins(primaryNodeType, existingNode, nodeTypeResolver, site);
             for (ExtendedNodeType extendMixin : extendMixins) {
                 addFormNodeType(extendMixin, site, mergeSet, locale, true, processedNodeTypes, nodeTypes);
             }
@@ -198,7 +198,7 @@ public class EditorFormServiceImpl implements EditorFormService {
                     // Check if fieldset is dynamic
                     ExtendedNodeType nodeType = fieldSet.getNodeType();
                     if (nodeType != null) {
-                        boolean isExtend = !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
+                        boolean isExtend = isExtend(nodeType, primaryNodeType);
                         if (isExtend) {
                             fieldSet.setDynamic(true);
                             boolean isTemplateMixin = nodeType.isNodeType(TEMPLATE_MIXIN);
@@ -424,15 +424,38 @@ public class EditorFormServiceImpl implements EditorFormService {
         return valueConstraints;
     }
 
-    private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRSiteNode site) throws NoSuchNodeTypeException {
+    /**
+     * Whether the form shows the fieldset of {@code nodeType} as an optional one: a mixin that declares
+     * {@code extends} and that the primary type does not inherit. The editor turns such a fieldset off
+     * with its switch, or, for a template mixin, by selecting another value of its choicelist.
+     */
+    private static boolean isExtend(ExtendedNodeType nodeType, ExtendedNodeType primaryNodeType) {
+        return !nodeType.getMixinExtends().isEmpty() && !primaryNodeType.isNodeType(nodeType.getName());
+    }
+
+    private List<ExtendedNodeType> getExtendMixins(ExtendedNodeType type, JCRNodeWrapper existingNode, NodeTypeResolver nodeTypeResolver, JCRSiteNode site) throws RepositoryException {
         // Only filter by installed modules when we're in a site context (path starts with /sites/)
         // For system-level calls, all modules are considered available
         Set<String> installedModules = site != null && site.getPath().startsWith("/sites/") ? site.getInstalledModulesWithAllDependencies() : null;
 
-        Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions = NodeTypeRegistry.getInstance().getMixinExtensions();
+        Map<String, Set<ExtendedNodeType>> mixinExtensions = indexByBaseName(NodeTypeRegistry.getInstance().getMixinExtensions());
         Set<String> visited = new HashSet<>();
         visited.add(type.getName());
         List<ExtendedNodeType> res = collectNewExtensions(type, mixinExtensions, extension -> true, installedModules, visited);
+
+        // A mixin applied to the node is a base like the primary type when its fieldset is not optional:
+        // the editor cannot remove it, so no extension of it can be left without it. An optional one is
+        // either on the form already, through the walk from the type, or applied outside its extends: its
+        // inherited choicelist can then sit in a fieldset that stays on once the mixin is off, so it is
+        // no base. Only a node that exists carries its mixins: in a create form the save adds no mixin
+        // that the resolver lists, so none of them can be a base.
+        if (existingNode != null && nodeTypeResolver != null) {
+            for (ExtendedNodeType appliedMixin : nodeTypeResolver.getAppliedMixins()) {
+                if (!isExtend(appliedMixin, type)) {
+                    res.addAll(collectNewExtensions(appliedMixin, mixinExtensions, extension -> true, installedModules, visited));
+                }
+            }
+        }
         List<ExtendedNodeType> nested = collectNestedTemplateMixins(res, mixinExtensions, installedModules, visited);
 
         // If mixin A extends mixin B and both are in the list, remove B: A already carries B's
@@ -440,8 +463,8 @@ public class EditorFormServiceImpl implements EditorFormService {
         // the form over a fieldset the reader has no reason to turn on by itself.
         //
         // That only holds for a fieldset the reader can switch. A jmix:templateMixin has no enable
-        // switch (see isExtend above), so dropping it hides no switch and instead leaves it no
-        // fieldset: where a chain of template mixins are each a value of an addMixin choicelist,
+        // switch, as setHasEnableSwitch above sets, so dropping it hides no switch and instead leaves it
+        // no fieldset: where a chain of template mixins are each a value of an addMixin choicelist,
         // every member but the most derived one would show nothing when selected.
         //
         // The nested template mixins join the list after this pass: one that inherits a first-level
@@ -454,8 +477,8 @@ public class EditorFormServiceImpl implements EditorFormService {
     }
 
     /**
-     * Collects the template mixins reached through the extensions of the type: those that extend one of
-     * {@code firstLevel} or one of its supertypes, then those that extend each of these, and so on.
+     * Collects the template mixins reached from {@code roots}, the mixins of level 1: those that extend
+     * one of them or one of its supertypes, then those that extend each of these, and so on.
      * A template mixin that extends a supertype of an extension of the type (e.g. mymix:internalLink
      * extends mymix:commonLink, a supertype of mymix:linkMixin, which extends mynt:nodetypeVanilla) is
      * found when that extension is processed.
@@ -465,10 +488,10 @@ public class EditorFormServiceImpl implements EditorFormService {
      * lacks its base. A template mixin has no switch: the addMixin choicelist of its base turns it on,
      * and that choicelist only shows once the base fieldset is on.
      */
-    private List<ExtendedNodeType> collectNestedTemplateMixins(List<ExtendedNodeType> firstLevel, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions,
+    private List<ExtendedNodeType> collectNestedTemplateMixins(List<ExtendedNodeType> roots, Map<String, Set<ExtendedNodeType>> mixinExtensions,
                                                                Set<String> installedModules, Set<String> visited) {
         List<ExtendedNodeType> res = new ArrayList<>();
-        Deque<ExtendedNodeType> toProcess = new ArrayDeque<>(firstLevel);
+        Deque<ExtendedNodeType> toProcess = new ArrayDeque<>(roots);
         while (!toProcess.isEmpty()) {
             List<ExtendedNodeType> found = collectNewExtensions(toProcess.poll(), mixinExtensions, extension -> extension.isNodeType(TEMPLATE_MIXIN),
                 installedModules, visited);
@@ -483,7 +506,7 @@ public class EditorFormServiceImpl implements EditorFormService {
      * or one of its supertypes, minus those already in {@code visited}, which this adds them to. The
      * visited set keeps a diamond or a cycle from adding a mixin twice.
      */
-    private List<ExtendedNodeType> collectNewExtensions(ExtendedNodeType type, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions,
+    private List<ExtendedNodeType> collectNewExtensions(ExtendedNodeType type, Map<String, Set<ExtendedNodeType>> mixinExtensions,
                                                         Predicate<ExtendedNodeType> accepted, Set<String> installedModules, Set<String> visited) {
         List<ExtendedNodeType> res = new ArrayList<>();
         for (ExtendedNodeType extension : getDirectExtensions(type, mixinExtensions)) {
@@ -495,14 +518,26 @@ public class EditorFormServiceImpl implements EditorFormService {
     }
 
     /**
-     * The mixins registered as extending {@code type} or one of its supertypes.
+     * The mixin extensions of the registry, keyed by the name of the type they extend.
      */
-    private static List<ExtendedNodeType> getDirectExtensions(ExtendedNodeType type, Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions) {
+    private static Map<String, Set<ExtendedNodeType>> indexByBaseName(Map<ExtendedNodeType, Set<ExtendedNodeType>> mixinExtensions) {
+        Map<String, Set<ExtendedNodeType>> res = new HashMap<>();
+        mixinExtensions.forEach((base, extensions) -> res.computeIfAbsent(base.getName(), name -> new LinkedHashSet<>()).addAll(extensions));
+        return res;
+    }
+
+    /**
+     * The mixins registered as extending {@code type} or one of its supertypes. These are the names for
+     * which {@code type.isNodeType} answers true, nt:base included.
+     */
+    private static List<ExtendedNodeType> getDirectExtensions(ExtendedNodeType type, Map<String, Set<ExtendedNodeType>> mixinExtensions) {
+        Set<String> names = new LinkedHashSet<>();
+        names.add(type.getName());
+        type.getSupertypeSet().forEach(supertype -> names.add(supertype.getName()));
+        names.add(Constants.NT_BASE);
         List<ExtendedNodeType> res = new ArrayList<>();
-        for (Map.Entry<ExtendedNodeType, Set<ExtendedNodeType>> entry : mixinExtensions.entrySet()) {
-            if (type.isNodeType(entry.getKey().getName())) {
-                res.addAll(entry.getValue());
-            }
+        for (String name : names) {
+            res.addAll(mixinExtensions.getOrDefault(name, Collections.emptySet()));
         }
         return res;
     }

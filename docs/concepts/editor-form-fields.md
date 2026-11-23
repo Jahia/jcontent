@@ -19,7 +19,12 @@ The form collects the optional fieldsets in levels:
 2. The next level holds every template mixin whose `extends` names a mixin of the level above or one of its supertypes. The form repeats this step until it finds no new template mixin.
 3. At every level, on a site, a mixin counts only when it comes from a system module, from a module enabled on the site, or from a dependency of such a module. A mixin that no module declares always counts, and a form built outside a site counts every mixin.
 
-The form does not offer a plain mixin whose `extends` names only mixins that are not supertypes of the primary type.
+The edit form of a node can also start from a mixin applied to the node:
+
+- A mixin that declares no `extends`, or that the primary type inherits, has a fieldset that is not optional, so the editor cannot remove it. Such a mixin counts like the primary type: the mixins whose `extends` names it or one of its supertypes join level 1.
+- Any other applied mixin is optional, and the form does not start from it. Such a mixin is either on the form already, through the walk from the primary type, or it is applied outside its `extends`. In the second case, its inherited choicelist can stay on the form after the editor turns the mixin off.
+
+The form does not offer a plain mixin below level 1.
 
 The definitions below show the three cases. `ex:article` is the primary type, and the `ex:link` mixin holds a choicelist whose values add `ex:internalLink` or `ex:externalLink`.
 

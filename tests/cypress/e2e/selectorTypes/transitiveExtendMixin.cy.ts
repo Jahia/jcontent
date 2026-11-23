@@ -1,6 +1,7 @@
 import {JContent} from '../../page-object';
 import {addNode, createSite, deleteSite, enableModule} from '@jahia/cypress';
 import {ChoiceListField, PickerField, SmallTextField} from '../../page-object/fields';
+import gql from 'graphql-tag';
 
 // Regression test for https://github.com/Jahia/jcontent/issues/2853
 //
@@ -38,6 +39,16 @@ describe('Template mixins reached through the extends chain of an applied mixin'
             primaryNodeType: 'cent:nodetypeVanilla',
             ...STORED_EXTERNAL
         }));
+        addNode({
+            parentPathOrId: contents,
+            name: 'appliedCommonLink',
+            primaryNodeType: 'cent:appliedMixinTest',
+            mixins: ['cemix:commonLink'],
+            properties: [
+                {name: 'jcr:title', value: 'Applied common link', language: 'en'},
+                {name: 'linkType', value: 'internalLink'}
+            ]
+        });
     });
 
     after(() => {
@@ -53,6 +64,18 @@ describe('Template mixins reached through the extends chain of an applied mixin'
         queryFile: 'jcontent/getMixinTypes.graphql',
         variables: {path: `${contents}/${name}`}
     }).then(resp => resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name).filter((n: string) => n.startsWith('cemix:')).sort().join(', '));
+
+    const createFormFieldSets = (primaryNodeType: string) => cy.apollo({
+        query: gql`query createFormFieldSets($primaryNodeType: String!, $path: String!) {
+            forms {
+                createForm(primaryNodeType: $primaryNodeType, uiLocale: "en", locale: "en", uuidOrPath: $path) {
+                    sections { fieldSets { name } }
+                }
+            }
+        }`,
+        variables: {primaryNodeType, path: contents}
+    }).then(resp => resp.data.forms.createForm.sections
+        .reduce((names: string[], section: {fieldSets: {name: string}[]}) => names.concat(section.fieldSets.map(fieldSet => fieldSet.name)), []));
 
     const visitContents = () => JContent.visit(siteKey, 'en', 'content-folders/contents');
 
@@ -152,5 +175,29 @@ describe('Template mixins reached through the extends chain of an applied mixin'
         contentEditor.save();
 
         appliedMixins('storedSwitch').should('equal', 'cemix:internalLink, cemix:mixinExtendWithLink');
+    });
+
+    // The mixin cemix:commonLink is applied to the node, not offered through an extends of its type: the form
+    // shows it with no switch, so it counts like the primary type and its choicelist reaches the template mixins.
+    it('applies the template mixin that the choicelist of a mixin applied to the node selects', () => {
+        const contentEditor = edit('appliedCommonLink');
+        contentEditor.getField(SmallTextField, 'cent:appliedMixinTest_jcr:title').checkValue('Applied common link');
+
+        cy.log('a plain mixin that extends cemix:commonLink gets a switch, since the node keeps cemix:commonLink');
+        contentEditor.getDynamicFieldset('cemix:linkSeo').find('input').should('exist');
+
+        contentEditor.getField(ChoiceListField, 'cemix:commonLink_linkType').selectValue('externalLink');
+        contentEditor.getField(SmallTextField, 'cemix:externalLink_externalLink').addNewValue('https://applied.example');
+        contentEditor.save();
+
+        appliedMixins('appliedCommonLink').should('equal', 'cemix:commonLink, cemix:externalLink');
+    });
+
+    // The template mixin cemix:templateChainSecond is two levels below cemix:templateChainBase, and it extends
+    // back the member that leads to it: the form reaches it and its request ends.
+    it('reaches a template mixin two levels down a chain that loops', () => {
+        createFormFieldSets('cent:templateChainTest').should(names => {
+            expect(names).to.include.members(['cemix:templateChainBase', 'cemix:templateChainFirst', 'cemix:templateChainSecond']);
+        });
     });
 });

@@ -252,6 +252,27 @@
 [cemix:invalidInheritAndExtend] > jmix:templateMixin, cemix:invalidInheritAndExtendBase mixin
  extends = cemix:invalidInheritAndExtendBase
 
+// A node type that no mixin extends: a node of it gets cemix:commonLink as an applied mixin, and the
+// choicelist of cemix:commonLink must still turn on cemix:internalLink or cemix:externalLink.
+[cent:appliedMixinTest] > jnt:content, mix:title, jmix:basicContent
+
+// A chain of template mixins that loops: cemix:templateChainFirst extends the base, and
+// cemix:templateChainSecond extends cemix:templateChainFirst, which also extends it back. The form must
+// reach the second member, two levels below the base, and must stop on the loop.
+[cent:templateChainTest] > jnt:content, mix:title, jmix:basicContent
+
+[cemix:templateChainBase] mixin
+ extends = cent:templateChainTest
+ - chainBaseText (string)
+
+[cemix:templateChainFirst] > jmix:templateMixin mixin
+ extends = cemix:templateChainBase, cemix:templateChainSecond
+ - chainFirstText (string)
+
+[cemix:templateChainSecond] > jmix:templateMixin mixin
+ extends = cemix:templateChainFirst
+ - chainSecondText (string)
+
 // Regression test types for jahia-private#4940:
 // jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist
 [cent:emptyTemplateMixinTest] > jnt:content, jmix:basicContent, jmix:editorialContent

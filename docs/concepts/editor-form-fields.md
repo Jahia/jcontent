@@ -64,13 +64,13 @@ The form of an `ex:article` node shows an enable switch for `ex:linkable`. When 
 
 A choicelist can only turn on a template mixin whose fieldset is on the form. If the form stopped at level 1, the template mixins that extend a level-1 mixin would have no fieldset. In the example, the editor turns `ex:linkable` on and selects a link type, and the form shows no link field. The save then does not apply `ex:internalLink` or `ex:externalLink`.
 
-A template mixin below level 1 is safe to offer, because it has no enable switch. Only a choicelist in the fieldset of its base mixin turns it on, and that choicelist appears only while the base mixin is on. When the editor turns the base mixin off, the choicelist leaves the form and turns the template mixin off.
+A template mixin below level 1 is safe to offer, because it has no enable switch. Only a choicelist in the fieldset of its base mixin turns it on, and that choicelist appears only while the base mixin is on.
 
 ### Why the form does not offer plain mixins below level 1
 
 An optional fieldset carries no link to the mixin that its `extends` names. A plain mixin below level 1 would therefore get its own enable switch at the top of the form. That switch would show while the base mixin is off. In the example, the editor could turn `ex:seo` on with `ex:linkable` off and save a node that carries `ex:seo` but is not an `ex:link`. The `extends` of `ex:seo` does not allow that node, and the repository does not check it.
 
-The cost is a limit: the form does not offer a plain mixin that extends a mixin outside the supertypes of the primary type, even while that base mixin is on. To offer such a mixin, each fieldset would have to carry the mixin it depends on. The form could then tie the switch of the fieldset to the switch of that mixin.
+The form leaves out such a plain mixin even while its base mixin is on. To offer such a mixin, each fieldset would have to carry the mixin it depends on. The form could then tie the switch of the fieldset to the switch of that mixin.
 
 ### Duplicate switches
 

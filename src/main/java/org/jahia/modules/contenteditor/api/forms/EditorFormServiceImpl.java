@@ -510,7 +510,8 @@ public class EditorFormServiceImpl implements EditorFormService {
     /**
      * Determines whether a mixin extension is available in the current context.
      * When {@code installedModules} is {@code null} (system-level call) all extensions are available.
-     * Otherwise, only extensions from system modules or from modules installed on the site are available.
+     * Otherwise, an extension that no module declares is available, and so is one from a system module
+     * or from a module installed on the site.
      */
     private boolean isExtensionAvailable(ExtendedNodeType extension, Set<String> installedModules) {
         if (installedModules == null || extension.getTemplatePackage() == null) {

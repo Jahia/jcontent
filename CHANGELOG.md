@@ -1,5 +1,21 @@
 # @jahia/jcontent Changelog
 
+## 3.8.2
+
+### Bug Fixes
+
+* Fixed Content Editor so a rich text field keeps its unsaved text after switching to another language and back.
+
+* Fixed the Visibility dialog so it lists only the conditions of the edited content and opens fast on large sites.
+
+* Fixed the preview so it renders the `cm` view of a content that has a content template again, in Content Folders, in pages mode and in Content Editor.
+
+* Fixed the Edit action of the picker context menu so the Content Editor opens in front of the picker.
+
+* Fixed the page builder so the create button of an empty list or area is visible when the page layout gives it no width, for example in a flex container.
+
+* Modules can now build their own multi-language editing screens on top of Content Editor: the field renderer and the fieldset filter are exported to federation, and a field's description can be suppressed so the same field can be repeated down a list without repeating its help text.
+
 ## 3.8.1
 
 ### Bug Fixes

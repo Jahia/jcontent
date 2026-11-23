@@ -33,10 +33,16 @@ describe('Page builder - frame keeps its position', () => {
         return element.getBoundingClientRect().top;
     });
 
-    /** The module the editor's view is anchored on: the one nearest the top edge of the viewport. */
+    /**
+     * The module the editor's view is anchored on: the one nearest the top edge of the viewport.
+     *
+     * Only a module with an absolute path can be an anchor, as in EditFrame.anchor.js. A "New content"
+     * placeholder renders `path="*"`, and looking it up again by that path finds the first placeholder
+     * of the page instead, far above the viewport.
+     */
     const anchorGeometry = () => activeFrame().then($frame => {
         const win = ($frame[0] as HTMLIFrameElement).contentWindow;
-        return [...win.document.querySelectorAll('[jahiatype="module"][path]')]
+        return [...win.document.querySelectorAll('[jahiatype="module"][path^="/"]')]
             .map(element => ({path: element.getAttribute('path'), rect: element.getBoundingClientRect()}))
             .filter(({rect}) => rect.bottom > 0 && rect.top < win.innerHeight)
             .reduce((best, c) => (!best || Math.abs(c.rect.top) < Math.abs(best.rect.top) ? c : best), null);
@@ -66,6 +72,40 @@ describe('Page builder - frame keeps its position', () => {
         expect(element, `module ${path} is rendered`).to.not.be.null;
         expect(element.getBoundingClientRect().top).to.be.closeTo(expected, tolerance);
     });
+
+    /**
+     * Waits for the page builder to finish laying out the frame, before a test scrolls it or measures it.
+     *
+     * The boxes are not the end of it: each list's "New content" row only takes its height once the
+     * create actions have resolved, which makes every list taller a moment later. A view noted before
+     * that belongs to a layout the reloaded frame no longer has, so the anchor it yields is held in the
+     * wrong place. The document height has to hold still too, since a row is not the only late arrival.
+     *
+     * Half a second is enough here, where EditFrame.anchor.js waits 5 s: its pauses of up to 3.6 s come
+     * from a long page that keeps loading images and content. This fixture has text only, and the
+     * placeholder rows are the one change that lands after the boxes.
+     */
+    const shouldHaveSettledLayout = () => {
+        let lastHeight = -1;
+        let stillSince = 0;
+
+        return activeFrame().should($frame => {
+            const doc = ($frame[0] as HTMLIFrameElement).contentDocument;
+            const placeholders = [...doc.querySelectorAll('[jahiatype="module"][type="placeholder"]')];
+            expect(placeholders, 'the "New content" placeholders').to.not.be.empty;
+            placeholders.forEach(placeholder => {
+                expect(placeholder.getBoundingClientRect().height, 'height of a "New content" row').to.be.greaterThan(0);
+            });
+
+            const height = doc.documentElement.scrollHeight;
+            if (height !== lastHeight) {
+                lastHeight = height;
+                stillSince = Date.now();
+            }
+
+            expect(Date.now() - stillSince, 'ms the document height has held still').to.be.at.least(500);
+        });
+    };
 
     let jcontent: JContentPageBuilder;
 
@@ -110,6 +150,7 @@ describe('Page builder - frame keeps its position', () => {
         jcontent = JContent
             .visit(siteKey, 'en', 'pages/home')
             .switchToPageBuilder();
+        shouldHaveSettledLayout();
     });
 
     it('Leaves the page where it was, and the edited content in view, when it is saved', () => {

@@ -1,0 +1,17 @@
+# Release testing of jContent 3.8.2 on the Nexus staging repository (Jahia/jcontent#2968).
+# Temporary: this file lives on the test branch only.
+- addMavenRepository: 'https://devtools.jahia.com/nexus/content/repositories/jahia_staging_releases-3168/@id=staging-repository'
+  username: 'NEXUS_USERNAME'
+  password: 'NEXUS_PASSWORD'
+- addMavenRepository: 'https://devtools.jahia.com/nexus/content/repositories/jahia-releases/@id=jahia-releases'
+
+# jcontent 3.8.2 depends on graphql-dxm-provider 3.5, and Jahia 8.2.1.0 ships 3.4.0
+- installBundle:
+    - 'mvn:org.jahia.modules/graphql-dxm-provider/3.10.0'
+    - 'mvn:org.jahia.modules/jcontent/3.8.2'
+    - 'mvn:org.jahia.test/jcontent-test-module/3.8.2'
+    - 'mvn:org.jahia.test/jcontent-test-template/3.8.2'
+    - 'js:mvn:org.jahia.modules.javascript/jcontent-test-js-template/LATEST/tgz'
+  autoStart: true
+  uninstallPreviousVersion: true
+- include: 'provisioning.yml'

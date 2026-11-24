@@ -137,7 +137,12 @@ describe('Template mixins reached through the extends chain of an applied mixin'
         contentEditor.getField(SmallTextField, 'cemix:mixinExtendWithLink_linkLabel').assertVisible();
         contentEditor.getField(SmallTextField, 'cemix:externalLink_externalLink').checkValue('https://stored.example');
 
-        contentEditor.cancel();
+        cy.log('the node does not carry cemix:internalLink: only the walk through cemix:mixinExtendWithLink builds its fieldset');
+        contentEditor.getField(ChoiceListField, 'cemix:mixinExtendWithLink_linkType').selectValue('internalLink');
+        contentEditor.getField(PickerField, 'cemix:internalLink_internalLink').assertVisible();
+        cy.get('[data-sel-content-editor-field="cemix:externalLink_externalLink"]').should('not.exist');
+
+        contentEditor.cancelAndDiscard();
     });
 
     // Past the first level only template mixins are followed: cemix:linkSeo is a plain mixin that extends
@@ -193,8 +198,9 @@ describe('Template mixins reached through the extends chain of an applied mixin'
         appliedMixins('appliedCommonLink').should('equal', 'cemix:commonLink, cemix:externalLink');
     });
 
-    // The template mixin cemix:templateChainSecond is two levels below cemix:templateChainBase, and it extends
-    // back the member that leads to it: the form reaches it and its request ends.
+    // The template mixin cemix:templateChainSecond is two levels below cemix:templateChainBase. The template mixin
+    // cemix:templateChainFirst also extends cemix:templateChainSecond, which closes the loop: the form reaches the
+    // second member, and its request ends.
     it('reaches a template mixin two levels down a chain that loops', () => {
         createFormFieldSets('cent:templateChainTest').should(names => {
             expect(names).to.include.members(['cemix:templateChainBase', 'cemix:templateChainFirst', 'cemix:templateChainSecond']);

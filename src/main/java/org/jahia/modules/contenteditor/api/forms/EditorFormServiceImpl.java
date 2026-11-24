@@ -327,10 +327,12 @@ public class EditorFormServiceImpl implements EditorFormService {
             processedNodeTypes.add(nodeType.getName());
             // A single-fieldset form names its one fieldset after the mixin itself, so a supertype
             // that is a template mixin too is another choicelist value with a fieldset of its own,
-            // not a duplicate: marking it would leave that value nothing to show. Since
-            // getExtendMixins iterates a HashMap, which member of a chain got marked first would be
-            // decided by hash order. Any other supertype stays marked, so a node carrying both a
-            // mixin and its supertype gets no second, empty fieldset for the supertype (#2467).
+            // not a duplicate: marking it would leave that value nothing to show. getExtendMixins
+            // takes the type, then each of its supertypes, and lists the extensions of each in the
+            // order of the HashSet the registry keeps for it, so which member of a chain got marked
+            // first would be decided by hash order. Any other supertype stays marked, so a node
+            // carrying both a mixin and its supertype gets no second, empty fieldset for the
+            // supertype (#2467).
             processedNodeTypes.addAll(nodeType.getSupertypeSet().stream()
                 .filter(supertype -> !singleFieldSet || !supertype.isNodeType(TEMPLATE_MIXIN))
                 .map(ExtendedNodeType::getName)
@@ -479,9 +481,9 @@ public class EditorFormServiceImpl implements EditorFormService {
     /**
      * Collects the template mixins reached from {@code roots}, the mixins of level 1: those that extend
      * one of them or one of its supertypes, then those that extend each of these, and so on.
-     * A template mixin that extends a supertype of an extension of the type (e.g. mymix:internalLink
-     * extends mymix:commonLink, a supertype of mymix:linkMixin, which extends mynt:nodetypeVanilla) is
-     * found when that extension is processed.
+     * A template mixin that extends a supertype of an extension of the type (e.g. cemix:internalLink
+     * extends cemix:commonLink, a supertype of cemix:mixinExtendWithLink, which extends
+     * cent:nodetypeVanilla) is found when that extension is processed.
      *
      * <p>Only jmix:templateMixin is followed. A nested extension's fieldset is not tied to the mixin it
      * extends, so any other mixin would get its own enable switch and could be applied to a node that

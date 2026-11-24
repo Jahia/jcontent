@@ -63,7 +63,7 @@ flowchart TD
     linkable -.->|"not offered: plain mixin below level 1"| seo
 ```
 
-The form of an `ex:article` node shows an enable switch for `ex:linkable`. When the editor turns `ex:linkable` on, the `linkType` choicelist appears, and its values turn `ex:internalLink` or `ex:externalLink` on. The form never offers `ex:seo`.
+The form of an `ex:article` node shows an enable switch for `ex:linkable`. When the editor turns `ex:linkable` on, the `linkType` choicelist appears, and its values turn `ex:internalLink` or `ex:externalLink` on. The walk through `ex:linkable` never offers `ex:seo`. Only an `ex:link` applied to the node directly brings `ex:seo` in, at level 1.
 
 ### Why the form offers template mixins below level 1
 

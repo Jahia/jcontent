@@ -36,8 +36,12 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
 
         contentEditor.getTitle().should('be.visible').and('contain', 'Create Image (Internationalized)');
         linkTypeField.selectValue('internal');
+        contentEditor.getPickerField('jmix:internalLink_j:linknode').get().scrollIntoView({offset: fieldOffset});
+        contentEditor.getPickerField('jmix:internalLink_j:linknode').get().should('be.visible');
 
         contentEditor.getLanguageSwitcher().selectLangByValue('fr');
+        contentEditor.getPickerField('jmix:internalLink_j:linknode').get().scrollIntoView({offset: fieldOffset});
+        contentEditor.getPickerField('jmix:internalLink_j:linknode').get().should('be.visible');
 
         linkTypeField.selectValue('external');
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]').should('not.exist');
@@ -75,11 +79,21 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
 
         contentEditor.create();
 
+        // The create applied the template mixin of the selected link type
+        cy.apollo({
+            queryFile: 'jcontent/getMixinTypes.graphql',
+            variables: {path: `/sites/${sitekey}/contents/cypress-document-manager-image-reference-link-test`}
+        }).then(resp => {
+            expect(resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name)).to.include('jmix:internalLink');
+        });
+
         // Edit
         contentEditor = jcontent.editComponentByRowName('cypress-document-manager-image-reference-link-test');
         linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
 
         contentEditor.getTitle().should('be.visible').and('contain', 'Cypress document manager image reference');
+        // The create saved the internal link type
+        linkTypeField.get().contains('Internal');
         linkTypeField.selectValue('none');
 
         cy.get('[data-sel-content-editor-field="jmix:internalLink_j:linknode"]').should('not.exist');

@@ -1,22 +1,28 @@
+import {addNode, getNodeByPath, uploadFile} from '@jahia/cypress';
 import {JContent} from '../../page-object/';
 
 const sitekey = 'contentEditorSiteAddMixin';
 const fieldOffset = {top: -200, left: 0};
 describe('Add Mixin by using choice list initializers (Image Reference)', () => {
     let jcontent: JContent;
+    const contents = `/sites/${sitekey}/contents`;
     const cypressDocumentManagerImageReferenceLinkTest = 'Cypress document manager image reference link Test';
+
+    // The fixtures go through GraphQL, so no test depends on the node that another one saved.
     before(function () {
         cy.executeGroovy('contentEditor/createSiteI18N.groovy', {SITEKEY: sitekey});
-        cy.loginAndStoreSession(); // Edit in chief
-        JContent.visit(sitekey, 'en', 'media/file');
-        cy.get('div[data-cm-role="grid-content-list"]')
-            .should('be.visible')
-            .children('div')
-            .selectFile('cypress/fixtures/contentEditor/snowbearHome.jpeg', {
-                action: 'drag-drop',
-                waitForAnimations: true
-            });
-        cy.get('[data-sel-role-card="snowbearHome.jpeg"]').should('be.visible');
+        uploadFile('contentEditor/snowbearHome.jpeg', `/sites/${sitekey}/files`, 'snowbearHome.jpeg', 'image/jpeg')
+            .its('data.jcr.addNode.uuid').should('be.a', 'string');
+        addNode({
+            parentPathOrId: contents,
+            name: 'stored-internal-link',
+            primaryNodeType: 'jnt:imageReferenceLink',
+            mixins: ['jmix:internalLink'],
+            properties: [
+                {name: 'jcr:title', value: 'Stored internal link', language: 'en'},
+                {name: 'j:linkType', value: 'internal'}
+            ]
+        }).its('data.jcr.addNode.uuid').should('be.a', 'string');
     });
 
     after(function () {
@@ -29,9 +35,9 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         jcontent = JContent.visit(sitekey, 'en', 'content-folders/content');
     });
 
-    it('Can create and edit a document manager image reference link', () => {
-        let contentEditor = jcontent.createContent('jnt:imageReferenceLink');
-        let linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
+    it('Can create a document manager image reference link', () => {
+        const contentEditor = jcontent.createContent('jnt:imageReferenceLink');
+        const linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
         const internalLinkField = contentEditor.getPickerField('jnt:imageReferenceLink_j:node');
 
         contentEditor.getTitle().should('be.visible').and('contain', 'Create Image (Internationalized)');
@@ -79,20 +85,24 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
 
         contentEditor.create();
 
-        // The create applied the template mixin of the selected link type
+        // The create saved the selected link type and applied its template mixin
+        const created = `${contents}/cypress-document-manager-image-reference-link-test`;
+        getNodeByPath(created, ['j:linkType']).then(resp => {
+            expect(resp?.data?.jcr.nodeByPath.properties.find((p: {name: string}) => p.name === 'j:linkType')?.value).to.equal('internal');
+        });
         cy.apollo({
             queryFile: 'jcontent/getMixinTypes.graphql',
-            variables: {path: `/sites/${sitekey}/contents/cypress-document-manager-image-reference-link-test`}
+            variables: {path: created}
         }).then(resp => {
             expect(resp?.data?.jcr.nodeByPath.mixinTypes.map((m: {name: string}) => m.name)).to.include('jmix:internalLink');
         });
+    });
 
-        // Edit
-        contentEditor = jcontent.editComponentByRowName('cypress-document-manager-image-reference-link-test');
-        linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
+    it('Can edit a document manager image reference link', () => {
+        const contentEditor = jcontent.editComponentByRowName('stored-internal-link');
+        const linkTypeField = contentEditor.getChoiceListField('jnt:imageReferenceLink_j:linkType');
 
-        contentEditor.getTitle().should('be.visible').and('contain', 'Cypress document manager image reference');
-        // The create saved the internal link type
+        contentEditor.getTitle().should('be.visible').and('contain', 'Stored internal link');
         linkTypeField.get().contains('Internal');
         linkTypeField.selectValue('none');
 
@@ -109,7 +119,6 @@ describe('Add Mixin by using choice list initializers (Image Reference)', () => 
         linkTypeField.get().contains('Internal');
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().scrollIntoView({offset: fieldOffset});
         contentEditor.getPickerField('jmix:internalLink_j:linknode').get().should('be.visible');
-        // ContentEditor.cancelAndDiscard()
         contentEditor.cancel();
     });
 });

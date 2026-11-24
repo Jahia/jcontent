@@ -8,7 +8,6 @@ describe('Page builder - boxes and header tests', () => {
     before(() => {
         createSite(siteKey);
         cy.apollo({mutationFile: 'jcontent/createContent.graphql'});
-        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
     });
 
     after(() => {

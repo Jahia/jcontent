@@ -3,10 +3,6 @@ import {addNode, createSite, deleteSite} from '@jahia/cypress';
 import {addPageGql, addContentGql} from '../../fixtures/jcontent/pageComposer/setLimitContent';
 
 describe('Page builder - list limit restrictions tests', () => {
-    before(() => {
-        cy.apollo({mutationFile: 'jcontent/enablePageBuilder.graphql'});
-    });
-
     beforeEach(() => {
         cy.loginAndStoreSession();
     });

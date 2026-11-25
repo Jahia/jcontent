@@ -215,6 +215,64 @@
 - longOpenLower (long) < '(0,)'
 - longOpenUpper (long) < '(,10]'
 
+[cemix:commonLink] mixin
+ - linkLabel (string) i18n
+ - linkType (string, choicelist[myLinkTypeInitializer]) = 'internalLink'
+
+[cemix:internalLink] > jmix:templateMixin mixin
+ extends = cemix:commonLink
+ - internalLink (weakreference)
+
+[cemix:externalLink] > jmix:templateMixin mixin
+ extends = cemix:commonLink
+ - externalLink (string) mandatory
+
+[cent:nodetypeVanilla] > jnt:content, mix:title, jmix:basicContent
+
+[cemix:mixinExtendWithLink] > cemix:commonLink mixin
+ extends = cent:nodetypeVanilla
+
+// A plain mixin, not a template one, that extends the base of cemix:mixinExtendWithLink:
+// cent:nodetypeVanilla must not offer it, since nothing ties its switch to cemix:mixinExtendWithLink.
+[cemix:linkSeo] mixin
+ extends = cemix:commonLink
+ - seoTitle (string)
+
+// Bad form, for one test only: cemix:invalidInheritAndExtend is a template mixin that inherits
+// cemix:invalidInheritAndExtendBase and extends it, which docs/concepts/editor-form-fields.md tells
+// authors to avoid. Reaching it must not take away the switch of its base, the only way to turn the base
+// on. The types hang off a node type of their own, so no other test sees them, and no other type here
+// inherits the mixin it extends.
+[cent:invalidInheritAndExtendTest] > jnt:content, mix:title, jmix:basicContent
+
+[cemix:invalidInheritAndExtendBase] mixin
+ extends = cent:invalidInheritAndExtendTest
+ - baseText (string)
+
+[cemix:invalidInheritAndExtend] > jmix:templateMixin, cemix:invalidInheritAndExtendBase mixin
+ extends = cemix:invalidInheritAndExtendBase
+
+// A node type that no mixin extends: a node of it gets cemix:commonLink as an applied mixin, and the
+// choicelist of cemix:commonLink must still turn on cemix:internalLink or cemix:externalLink.
+[cent:appliedMixinTest] > jnt:content, mix:title, jmix:basicContent
+
+// A chain of template mixins that loops: cemix:templateChainFirst extends the base, and
+// cemix:templateChainSecond extends cemix:templateChainFirst, which also extends it back. The form must
+// reach the second member, two levels below the base, and must stop on the loop.
+[cent:templateChainTest] > jnt:content, mix:title, jmix:basicContent
+
+[cemix:templateChainBase] mixin
+ extends = cent:templateChainTest
+ - chainBaseText (string)
+
+[cemix:templateChainFirst] > jmix:templateMixin mixin
+ extends = cemix:templateChainBase, cemix:templateChainSecond
+ - chainFirstText (string)
+
+[cemix:templateChainSecond] > jmix:templateMixin mixin
+ extends = cemix:templateChainFirst
+ - chainSecondText (string)
+
 // Regression test types for jahia-private#4940:
 // jmix:templateMixin with NO visible properties must still be applied via addMixin choicelist
 [cent:emptyTemplateMixinTest] > jnt:content, jmix:basicContent, jmix:editorialContent

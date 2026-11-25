@@ -4,8 +4,8 @@ import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 import {v4 as uuidv4} from 'uuid';
 import gql from 'graphql-tag';
 
-// The schema and the version of Jahia tell which answer the probe below must give, so a broken probe fails the suite
-// instead of skipping its test.
+// The schema and the version of Jahia tell which answer unsavedValuesSupportQuery must give, so a broken probe fails
+// the suite instead of skipping its test.
 const unsavedValuesArgumentQuery = gql`
     query unsavedValuesArgument {
         __type(name: "InputJCRUnsavedValues") {

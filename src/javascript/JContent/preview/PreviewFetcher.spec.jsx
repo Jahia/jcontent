@@ -34,7 +34,7 @@ const renderFetcher = (previewContext, cssResult) => {
 
 const base = {path: '/sites/site/contents/form', workspace: 'EDIT', language: 'en', contextConfiguration: 'module'};
 
-/** A fetcher of unsaved values whose next result the test sets, as Apollo answers one render after another. */
+/** A fetcher, with unsaved values unless hasUnsavedValues is false, whose next result the test sets render after render. */
 const renderSequence = (hasUnsavedValues = true) => {
     let result = preview;
     useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));

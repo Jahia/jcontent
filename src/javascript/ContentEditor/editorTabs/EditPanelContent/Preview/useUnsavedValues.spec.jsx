@@ -8,9 +8,13 @@ import {buildUnsavedValues, hasChangesOutsidePreview, useUnsavedValues} from './
 
 jest.mock('formik', () => ({useFormikContext: jest.fn()}));
 jest.mock('@apollo/client', () => ({useQuery: jest.fn()}));
-jest.mock('~/ContentEditor/utils', () => ({getDataToMutate: jest.fn(), getChildrenOrder: jest.fn(), encodeSystemName: name => name}));
+jest.mock('~/ContentEditor/utils', () => ({
+    getDataToMutate: jest.fn(),
+    getChildrenOrder: jest.fn(),
+    encodeSystemName: jest.requireActual('~/ContentEditor/utils/systemName.utils').encodeSystemName
+}));
 jest.mock('~/JContent/preview/useContentPreview', () => ({UNSAVED_VALUES_SUPPORT_CONTEXT: {headers: {'X-Jahia-Unsaved-Values': 'support'}}}));
-const mockNodeData = {uuid: 'node-uuid', name: 'node', properties: [{name: 'jcr:title'}]};
+const mockNodeData = {uuid: 'node-uuid', name: 'a%5Bb%5D', primaryNodeType: {name: 'jnt:text'}, properties: [{name: 'jcr:title'}]};
 jest.mock('~/ContentEditor/contexts', () => ({
     useContentEditorContext: () => ({nodeData: mockNodeData, lang: 'en', i18nContext: {}}),
     useContentEditorSectionContext: () => ({sections: []})
@@ -68,8 +72,8 @@ describe('buildUnsavedValues', () => {
 
         getDataToMutate.mockReturnValue({propsToSave: [text], propsToDelete: []});
         expect(hasChangesOutsidePreview(form)).toBe(false);
-        // The form always sends its system name, and an unchanged name renames nothing.
-        getDataToMutate.mockReturnValue({propsToSave: [text, {...systemName, value: 'node'}], propsToDelete: []});
+        // An editable system name field sends the decoded name, and the save encodes it before it compares.
+        getDataToMutate.mockReturnValue({propsToSave: [text, {...systemName, value: 'a[b]'}], propsToDelete: []});
         expect(hasChangesOutsidePreview(form)).toBe(false);
         getChildrenOrder.mockReturnValue({shouldModifyChildren: true});
         expect(hasChangesOutsidePreview(form)).toBe(true);

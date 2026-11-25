@@ -10,13 +10,17 @@ import {UNSAVED_VALUES_SUPPORT_CONTEXT} from '~/JContent/preview/useContentPrevi
 import {UnsavedValuesSupportQuery} from './useUnsavedValues.gql-queries';
 
 const DEBOUNCE_DELAY = 500;
+const NO_UNSAVED_VALUES = {unsavedValues: null, isPartial: false};
 
 /**
- * The unsaved values of the form, in the shape of the save: the properties that the form sets and removes, and the
- * mixins that it adds and removes. A removal of a property that the node does not store changes nothing, so it stays out.
- * @returns {object|null} the unsaved values, or null when the form changes nothing that the preview shows
+ * Reads the form for the preview. The unsaved values take the shape of the save: the properties that the form sets and
+ * removes, and the mixins that it adds and removes. A removal of a property that the node does not store changes
+ * nothing, so it stays out. The preview shows the form in part when the form renames the node, as the save decides it,
+ * or gives its children a new order.
+ * @returns {{unsavedValues: object|null, isPartial: boolean}} the values to show, or null when the form changes nothing
+ * that the preview shows, and whether the form holds a change that the preview cannot show
  */
-export const buildUnsavedValues = ({nodeData, values, i18nContext, sections, lang}) => {
+export const readUnsavedValues = ({nodeData, values, i18nContext, sections, lang}) => {
     const {propsToSave, propsToDelete, mixinsToAdd = [], mixinsToDelete = []} = getDataToMutate({
         nodeData,
         formValues: values,
@@ -24,31 +28,17 @@ export const buildUnsavedValues = ({nodeData, values, i18nContext, sections, lan
         sections,
         lang
     });
+    // The save request removes the system name from the list that it receives, so it gets a copy.
+    const isPartial = adaptUpdateRequest(nodeData, {propertiesToSave: [...propsToSave]}).shouldRename ||
+        getChildrenOrder(values, nodeData, sections).shouldModifyChildren;
     // The system name renames the node on save, and the preview reads the node at its current path.
     const properties = propsToSave.filter(property => property.name !== Constants.systemName.propertyName);
     const propertiesToDelete = propsToDelete.filter(property => nodeData.properties?.some(stored => stored.name === property.name));
-    if (properties.length === 0 && propertiesToDelete.length === 0 && mixinsToAdd.length === 0 && mixinsToDelete.length === 0) {
-        return null;
-    }
-
+    const isEmpty = properties.length === 0 && propertiesToDelete.length === 0 && mixinsToAdd.length === 0 && mixinsToDelete.length === 0;
     return {
-        node: nodeData.uuid,
-        properties,
-        propertiesToDelete,
-        mixinsToAdd,
-        mixinsToDelete
+        unsavedValues: isEmpty ? null : {node: nodeData.uuid, properties, propertiesToDelete, mixinsToAdd, mixinsToDelete},
+        isPartial
     };
-};
-
-/**
- * Whether the form holds a change that the preview cannot show: a rename of the node, as the save decides it, or a new
- * order of the children.
- * @returns {boolean} true when the preview shows the form only in part
- */
-export const hasChangesOutsidePreview = ({nodeData, values, i18nContext, sections, lang}) => {
-    const {propsToSave} = getDataToMutate({nodeData, formValues: values, i18nContext, sections, lang});
-    return adaptUpdateRequest(nodeData, {propertiesToSave: propsToSave}).shouldRename ||
-        getChildrenOrder(values, nodeData, sections).shouldModifyChildren;
 };
 
 /**
@@ -67,17 +57,16 @@ export const useUnsavedValues = () => {
         context: UNSAVED_VALUES_SUPPORT_CONTEXT
     });
     const isSupported = Boolean(data?.jcr?.workspace) && !error;
-    const [state, setState] = useState({unsavedValues: null, isPartial: false});
+    const [state, setState] = useState(NO_UNSAVED_VALUES);
 
     useEffect(() => {
         if (!isSupported || !dirty) {
-            setState(previous => (previous.unsavedValues === null && !previous.isPartial ? previous : {unsavedValues: null, isPartial: false}));
+            setState(NO_UNSAVED_VALUES);
             return undefined;
         }
 
         const timeout = setTimeout(() => {
-            const form = {nodeData, values, i18nContext, sections, lang};
-            const next = {unsavedValues: buildUnsavedValues(form), isPartial: hasChangesOutsidePreview(form)};
+            const next = readUnsavedValues({nodeData, values, i18nContext, sections, lang});
             // The same values keep the same object, so the preview does not render them again.
             setState(previous => (isEqual(previous, next) ? previous : next));
         }, DEBOUNCE_DELAY);

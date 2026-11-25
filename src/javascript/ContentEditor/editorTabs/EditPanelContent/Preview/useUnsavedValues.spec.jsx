@@ -4,7 +4,7 @@ import {act} from 'react-dom/test-utils';
 import {useFormikContext} from 'formik';
 import {useQuery} from '@apollo/client';
 import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
-import {buildUnsavedValues, hasChangesOutsidePreview, useUnsavedValues} from './useUnsavedValues';
+import {readUnsavedValues, useUnsavedValues} from './useUnsavedValues';
 
 jest.mock('formik', () => ({useFormikContext: jest.fn()}));
 jest.mock('@apollo/client', () => ({useQuery: jest.fn()}));
@@ -38,7 +38,7 @@ const wait = cmp => {
     cmp.update();
 };
 
-describe('buildUnsavedValues', () => {
+describe('readUnsavedValues', () => {
     beforeEach(() => {
         getChildrenOrder.mockReturnValue({shouldModifyChildren: false});
     });
@@ -51,7 +51,7 @@ describe('buildUnsavedValues', () => {
             mixinsToDelete: []
         });
 
-        expect(buildUnsavedValues(form)).toEqual({
+        expect(readUnsavedValues(form).unsavedValues).toEqual({
             node: 'node-uuid',
             properties: [text],
             propertiesToDelete: [{name: 'jcr:title', language: 'en'}],
@@ -63,20 +63,20 @@ describe('buildUnsavedValues', () => {
     it('leaves out the removal of a property that the node does not store', () => {
         getDataToMutate.mockReturnValue({propsToSave: [systemName], propsToDelete: [{name: 'jcr:description', language: 'en'}]});
 
-        expect(buildUnsavedValues(form)).toBeNull();
+        expect(readUnsavedValues(form).unsavedValues).toBeNull();
     });
 
     it('tells that a new system name or a new order of the children stays out of the preview', () => {
         getDataToMutate.mockReturnValue({propsToSave: [systemName], propsToDelete: []});
-        expect(hasChangesOutsidePreview(form)).toBe(true);
+        expect(readUnsavedValues(form).isPartial).toBe(true);
 
         getDataToMutate.mockReturnValue({propsToSave: [text], propsToDelete: []});
-        expect(hasChangesOutsidePreview(form)).toBe(false);
+        expect(readUnsavedValues(form).isPartial).toBe(false);
         // An editable system name field sends the decoded name, and the save encodes it before it compares.
         getDataToMutate.mockReturnValue({propsToSave: [text, {...systemName, value: 'a[b]'}], propsToDelete: []});
-        expect(hasChangesOutsidePreview(form)).toBe(false);
+        expect(readUnsavedValues(form).isPartial).toBe(false);
         getChildrenOrder.mockReturnValue({shouldModifyChildren: true});
-        expect(hasChangesOutsidePreview(form)).toBe(true);
+        expect(readUnsavedValues(form).isPartial).toBe(true);
     });
 });
 

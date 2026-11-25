@@ -36,7 +36,7 @@ describe('CE Preview tests', () => {
     const simpleText = 'Simple Text ' + uuidv4();
     const updatedText = 'Updated Text ' + uuidv4();
     let isUnsavedValuesSupported = false;
-    const createdNodes: string[] = [];
+    const unsavedTextName = 'unsavedText';
 
     before(() => {
         cy.apollo({query: unsavedValuesSupportQuery, variables: {node: `/sites/${siteKey}`}, errorPolicy: 'all'}).then(response => {
@@ -66,7 +66,7 @@ describe('CE Preview tests', () => {
     });
 
     after(() => {
-        createdNodes.forEach(path => deleteNode(path));
+        deleteNode(`/sites/${siteKey}/contents/${unsavedTextName}`);
         deleteNode(`/sites/${siteKey}/home/chocolate,-sweets,-cakes`);
         deleteNode(`/sites/${siteKey}/contents/simpleText`);
         disableModule('jcontent-test-module', siteKey);
@@ -218,11 +218,9 @@ describe('CE Preview tests', () => {
 
         const savedText = 'Saved Text ' + uuidv4();
         const typedText = 'Typed Text ' + uuidv4();
-        const name = 'unsavedText-' + uuidv4().slice(0, 8);
-        createdNodes.push(`/sites/${siteKey}/contents/${name}`);
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
-            name,
+            name: unsavedTextName,
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', language: 'en', value: savedText}]
         });
@@ -237,7 +235,7 @@ describe('CE Preview tests', () => {
         });
 
         cy.loginAndStoreSession();
-        const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${name}`);
+        const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${unsavedTextName}`);
         const contentEditor = jcontent.editContent();
         contentEditor.switchToAdvancedMode();
         contentEditor.switchToSidePanelPreviewTab();
@@ -255,7 +253,7 @@ describe('CE Preview tests', () => {
             query: gql`query savedText($path: String!) {
                 jcr { nodeByPath(path: $path) { property(name: "text", language: "en") { value } } }
             }`,
-            variables: {path: `/sites/${siteKey}/contents/${name}`},
+            variables: {path: `/sites/${siteKey}/contents/${unsavedTextName}`},
             fetchPolicy: 'no-cache'
         }).its('data.jcr.nodeByPath.property.value').should('equal', savedText);
     });

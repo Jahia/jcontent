@@ -39,14 +39,15 @@ const renderSequence = (hasUnsavedValues = true) => {
     let result = preview;
     useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
     const onUnsavedValuesRefused = jest.fn();
-    const contextOf = nextResult => (hasUnsavedValues ? {...base, unsavedValues: {node: 'node-uuid', properties: [nextResult]}} : {...base, view: String(Math.random())});
-    const cmp = mount(<PreviewFetcher previewContext={contextOf(null)} onContentNotFound={jest.fn()} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
+    // A new context object at each render, as the preview of a form builds one at each change.
+    const contextOf = () => (hasUnsavedValues ? {...base, unsavedValues: {node: 'node-uuid', properties: []}} : {...base});
+    const cmp = mount(<PreviewFetcher previewContext={contextOf()} onContentNotFound={jest.fn()} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
     return {
         cmp,
         onUnsavedValuesRefused,
         next: nextResult => {
             result = {refetch: jest.fn(), ...nextResult};
-            cmp.setProps({previewContext: contextOf(nextResult)});
+            cmp.setProps({previewContext: contextOf()});
             cmp.update();
         }
     };

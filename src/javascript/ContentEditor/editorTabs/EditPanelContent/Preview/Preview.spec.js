@@ -35,12 +35,16 @@ jest.mock('~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyList
 }));
 jest.mock('~/JContent/preview/viewers/PDFViewer', () => ({PDFViewer: () => null}));
 jest.mock('~/JContent/preview/viewers/PDFViewer/index.js', () => ({PDFViewer: () => null}));
+jest.mock('./useUnsavedValues', () => ({
+    useUnsavedValues: jest.fn(() => ({isSupported: false, unsavedValues: null}))
+}));
 jest.mock('~/JContent/preview/Preview', () => ({
     // eslint-disable-next-line react/prop-types
     Preview: ({header, ...rest}) => <div data-testid="shared-preview" {...rest}>{header}</div>
 }));
 
 import {CEPreview} from './CEPreview';
+import {useUnsavedValues} from './useUnsavedValues';
 
 // Helper: shallow-render a React element returned as a prop
 const renderProp = element => shallow(<div>{element}</div>);
@@ -70,6 +74,15 @@ describe('CE Preview', () => {
         const headerEl = cmp.find('Preview').prop('header');
         const header = renderProp(headerEl);
         expect(header.find('UpdateOnSaveBadge').exists()).toBe(true);
+    });
+
+    it('shows the unsaved values in the preview when the server supports them', () => {
+        const unsavedValues = {node: 'test-uuid', properties: [{name: 'text', value: 'typed', language: 'fr'}]};
+        useUnsavedValues.mockReturnValueOnce({isSupported: true, unsavedValues});
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        expect(cmp.find('Preview').prop('previewContext').unsavedValues).toBe(unsavedValues);
+        const header = renderProp(cmp.find('Preview').prop('header'));
+        expect(header.find('UpdateOnSaveBadge').exists()).toBe(false);
     });
 
     it('shows no-preview badge in header for folder nodes', () => {

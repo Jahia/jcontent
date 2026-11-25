@@ -35,7 +35,7 @@ export const PreviewFetcher = React.memo(({
     onRefetchReady = null,
     onRefetchInvalidated = null
 }) => {
-    const {data, loading, error, refetch} = useContentPreview({
+    const {data, previousData, loading, error, refetch} = useContentPreview({
         ...previewContext,
         fetchPolicy: 'network-only'
     });
@@ -62,11 +62,14 @@ export const PreviewFetcher = React.memo(({
     // A content with no page renders itself through the content-template wrapper for its CSS. That render is as slow as
     // the preview and no other item shares it, so the preview shows first and takes the stylesheets when they arrive.
     const isCssSourceShared = !previewContext.cssSourceView;
-    if (loading || (hasCssSource && isCssSourceShared && cssLoading)) {
+    // While the render of new unsaved values loads, or when the server refuses them, such as a half-typed number, the
+    // last render stays on screen.
+    const keptData = previewContext.unsavedValues && (loading || error) ? previousData : null;
+    if ((loading && !keptData) || (hasCssSource && isCssSourceShared && cssLoading)) {
         return <LoaderOverlay/>;
     }
 
-    if (error) {
+    if (error && !keptData) {
         console.error('Error while fetching preview', error);
         return <NoView/>;
     }
@@ -75,7 +78,7 @@ export const PreviewFetcher = React.memo(({
 
     return (
         <PreviewViewers
-            data={data?.jcr ?? {}}
+            data={(keptData ?? data)?.jcr ?? {}}
             isFullScreen={isFullScreen}
             nodeData={nodeData}
             pageCssHtml={pageCssHtml}
@@ -100,7 +103,8 @@ PreviewFetcher.propTypes = {
         requestParameters: PropTypes.array,
         mainResourcePath: PropTypes.string,
         mainResourceContextConfiguration: PropTypes.string,
-        cssSourcePath: PropTypes.string
+        cssSourcePath: PropTypes.string,
+        unsavedValues: PropTypes.object
     }).isRequired,
     nodeData: PropTypes.shape({
         isPage: PropTypes.bool,

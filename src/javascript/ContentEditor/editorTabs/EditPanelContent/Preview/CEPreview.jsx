@@ -8,6 +8,7 @@ import {UpdateOnSaveBadge} from '~/ContentEditor/editorTabs/EditPanelContent/Pre
 import {useSelector} from 'react-redux';
 import {buildPreviewContexts} from '~/JContent/preview/previewContext.utils';
 import {useEmptyListComponent} from '~/JContent/ContentRoute/ContentLayout/PreviewDrawer/Preview/EmptyListComponent/EmptyListComponent';
+import {useUnsavedValues} from './useUnsavedValues';
 
 const parseQueryString = queryString => {
     if (!queryString) {
@@ -49,8 +50,12 @@ export const CEPreview = () => {
     const {nodeData, lang} = useSidePanelContext();
     const mode = useSelector(state => state.jcontent?.mode);
 
-    const {primary: previewContext, fallback: fallbackPreviewContext} = usePreviewContexts(nodeData || {}, lang, mode);
+    const {primary, fallback} = usePreviewContexts(nodeData || {}, lang, mode);
     const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
+    const {isSupported: isUnsavedValuesSupported, unsavedValues} = useUnsavedValues();
+    // The preview shows the values that the editor typed, on the node of the form only.
+    const previewContext = unsavedValues ? {...primary, unsavedValues} : primary;
+    const fallbackPreviewContext = unsavedValues && fallback ? {...fallback, unsavedValues} : fallback;
 
     const onRefetchReady = useCallback(refetch => {
         setPreviewRefetcher({
@@ -73,7 +78,7 @@ export const CEPreview = () => {
 
     const header = (
         <>
-            <UpdateOnSaveBadge/>
+            {!isUnsavedValuesSupported && <UpdateOnSaveBadge/>}
             {nodeData.isFolder && (
                 <div>
                     <Badge

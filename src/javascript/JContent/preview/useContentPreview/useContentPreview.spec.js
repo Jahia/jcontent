@@ -51,6 +51,6 @@ describe('useContentPreview', () => {
         expect(options.fetchPolicy).toBe('no-cache');
         expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'preview'});
         // The support query travels in a batch of its own too.
-        expect(UNSAVED_VALUES_SUPPORT_CONTEXT.headers).not.toEqual(options.context.headers);
+        expect(UNSAVED_VALUES_SUPPORT_CONTEXT.headers).toEqual({'X-Jahia-Unsaved-Values': 'support'});
     });
 });

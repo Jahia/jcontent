@@ -34,23 +34,19 @@ const renderFetcher = (previewContext, cssResult) => {
 
 const base = {path: '/sites/site/contents/form', workspace: 'EDIT', language: 'en', contextConfiguration: 'module'};
 
-const renderResult = (previewContext, result) => {
-    useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
-    return mount(<PreviewFetcher previewContext={{...base, ...previewContext}} onContentNotFound={jest.fn()}/>);
-};
-
 /** A fetcher of unsaved values whose next result the test sets, as Apollo answers one render after another. */
-const renderSequence = () => {
+const renderSequence = (hasUnsavedValues = true) => {
     let result = preview;
     useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
     const onUnsavedValuesRefused = jest.fn();
-    const cmp = mount(<PreviewFetcher previewContext={{...base, unsavedValues: {node: 'node-uuid'}}} onContentNotFound={jest.fn()} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
+    const contextOf = nextResult => (hasUnsavedValues ? {...base, unsavedValues: {node: 'node-uuid', properties: [nextResult]}} : {...base, view: String(Math.random())});
+    const cmp = mount(<PreviewFetcher previewContext={contextOf(null)} onContentNotFound={jest.fn()} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
     return {
         cmp,
         onUnsavedValuesRefused,
         next: nextResult => {
             result = {refetch: jest.fn(), ...nextResult};
-            cmp.setProps({previewContext: {...base, unsavedValues: {node: 'node-uuid', properties: [nextResult]}}});
+            cmp.setProps({previewContext: contextOf(nextResult)});
             cmp.update();
         }
     };
@@ -58,6 +54,8 @@ const renderSequence = () => {
 
 const output = cmp => cmp.find('[data-testid="viewers"]').prop('data-output');
 const refused = {loading: false, error: new Error('refused'), data: {jcr: null}};
+// A render error under errorPolicy 'all' keeps the node with no render, so only the error keeps it out of the kept render.
+const refusedRender = {loading: false, error: new Error('render failed'), data: {jcr: {nodeByPath: {renderedContent: null}}}};
 const other = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>other</p>'}}}}, loading: false};
 
 describe('PreviewFetcher', () => {
@@ -77,7 +75,9 @@ describe('PreviewFetcher', () => {
 
         next({loading: true, data: undefined});
         expect(output(cmp)).toBe('<p>form</p>');
-        next(refused);
+        // A render that loads keeps the last answer.
+        expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
+        next(refusedRender);
         expect(output(cmp)).toBe('<p>form</p>');
     });
 
@@ -89,8 +89,10 @@ describe('PreviewFetcher', () => {
         expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(false);
     });
 
-    it('shows the loader while a render without unsaved values loads', () => {
-        const cmp = renderResult({}, {loading: true, previousData: preview.data, refetch: jest.fn()});
+    it('shows the loader, not the last render, while a render without unsaved values loads', () => {
+        const {cmp, next} = renderSequence(false);
+        expect(output(cmp)).toBe('<p>form</p>');
+        next({loading: true});
         expect(cmp.find('[data-testid="loader"]').exists()).toBe(true);
     });
 

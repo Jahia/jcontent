@@ -4,9 +4,7 @@ import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 import {v4 as uuidv4} from 'uuid';
 import gql from 'graphql-tag';
 
-// A server that shows unsaved values (Jahia 8.2.4 with graphql-dxm-provider 3.13) previews the values of a form
-// before its save, and answers this query without an error. An older server shows the "Preview will update on save"
-// badge instead. The schema and the version of Jahia tell which answer to expect, so a broken probe fails the suite
+// The schema and the version of Jahia tell which answer the probe below must give, so a broken probe fails the suite
 // instead of skipping its test.
 const unsavedValuesArgumentQuery = gql`
     query unsavedValuesArgument {
@@ -21,6 +19,9 @@ const isAtLeast824 = (release: string): boolean => {
     return major > 8 || (major === 8 && (minor > 2 || (minor === 2 && patch >= 4)));
 };
 
+// A server that shows unsaved values (Jahia 8.2.4 with graphql-dxm-provider 3.13) previews the values of a form
+// before its save, and answers this probe without an error. An older server shows the "Preview will update on save"
+// badge instead.
 const unsavedValuesSupportQuery = gql`
     query unsavedValuesSupport($node: String!) {
         jcr(workspace: EDIT, unsavedValues: {node: $node}) {

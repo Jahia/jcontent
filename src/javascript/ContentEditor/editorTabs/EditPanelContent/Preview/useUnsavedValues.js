@@ -3,7 +3,7 @@ import {useFormikContext} from 'formik';
 import {useQuery} from '@apollo/client';
 import {isEqual} from 'lodash';
 import {useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
-import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
+import {encodeSystemName, getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
 import {UNSAVED_VALUES_SUPPORT_CONTEXT} from '~/JContent/preview/useContentPreview';
 import {UnsavedValuesSupportQuery} from './useUnsavedValues.gql-queries';
@@ -41,12 +41,14 @@ export const buildUnsavedValues = ({nodeData, values, i18nContext, sections, lan
 
 /**
  * Whether the form holds a change that the preview cannot show: a new system name, which renames the node on save, or a
- * new order of the children.
+ * new order of the children. The form always sends its system name, so only a name that differs from the name of the
+ * node counts, as the save compares it.
  * @returns {boolean} true when the preview shows the form only in part
  */
 export const hasChangesOutsidePreview = ({nodeData, values, i18nContext, sections, lang}) => {
     const {propsToSave} = getDataToMutate({nodeData, formValues: values, i18nContext, sections, lang});
-    return propsToSave.some(property => property.name === Constants.systemName.propertyName) ||
+    const systemName = propsToSave.find(property => property.name === Constants.systemName.propertyName);
+    return (systemName !== undefined && encodeSystemName(systemName.value) !== nodeData.name) ||
         getChildrenOrder(values, nodeData, sections).shouldModifyChildren;
 };
 

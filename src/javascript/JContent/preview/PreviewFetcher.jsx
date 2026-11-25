@@ -64,10 +64,13 @@ export const PreviewFetcher = React.memo(({
         lastRender.current = data;
     }
 
+    // A render that loads has no answer yet, so the last answer stands until the server gives the next one.
     const isRefused = Boolean(previewContext.unsavedValues && error);
     useEffect(() => {
-        onUnsavedValuesRefused?.(isRefused);
-    }, [isRefused, onUnsavedValuesRefused]);
+        if (!loading) {
+            onUnsavedValuesRefused?.(isRefused);
+        }
+    }, [loading, isRefused, onUnsavedValuesRefused]);
 
     useEffect(() => {
         onRefetchReady?.(refetch);

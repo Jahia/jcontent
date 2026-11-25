@@ -45,6 +45,7 @@ jest.mock('~/JContent/preview/Preview', () => ({
 
 import {CEPreview} from './CEPreview';
 import {useUnsavedValues} from './useUnsavedValues';
+import {act} from 'react-dom/test-utils';
 
 // Helper: shallow-render a React element returned as a prop
 const renderProp = element => shallow(<div>{element}</div>);
@@ -90,6 +91,25 @@ describe('CE Preview', () => {
         const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         const header = renderProp(cmp.find('Preview').prop('header'));
         expect(header.find('UpdateOnSaveBadge').exists()).toBe(true);
+    });
+
+    it('shows the update-on-save badge while the server refuses the unsaved values', () => {
+        const unsavedValues = {node: 'test-uuid', properties: [{name: 'text', value: '12a', language: 'fr'}]};
+        useUnsavedValues.mockReturnValue({isSupported: true, unsavedValues, isPartial: false});
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        expect(renderProp(cmp.find('Preview').prop('header')).find('UpdateOnSaveBadge').exists()).toBe(false);
+
+        act(() => {
+            cmp.find('Preview').prop('onUnsavedValuesRefused')(true);
+        });
+        cmp.update();
+        expect(renderProp(cmp.find('Preview').prop('header')).find('UpdateOnSaveBadge').exists()).toBe(true);
+
+        useUnsavedValues.mockReturnValue({isSupported: true, unsavedValues: null, isPartial: false});
+        cmp.setProps({});
+        // No badge without unsaved values.
+        expect(renderProp(cmp.find('Preview').prop('header')).find('UpdateOnSaveBadge').exists()).toBe(false);
+        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
     });
 
     it('shows no-preview badge in header for folder nodes', () => {

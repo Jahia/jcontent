@@ -19,6 +19,7 @@ import {PreviewFetcher} from './PreviewFetcher';
  *   onFullScreenToggle   — optional; renders fullscreen button when provided
  *   onRefetchReady       — (refetch) => void — wire to caller's refetch bus (Decision #4)
  *   onRefetchInvalidated — () => void (Decision #4)
+ *   onUnsavedValuesRefused — (isRefused) => void — passed through to PreviewFetcher
  *   header               — optional React node rendered above the preview (badges, info, etc.)
  *   footer               — optional React node rendered below the preview (name/size card, etc.)
  */
@@ -30,6 +31,7 @@ export const Preview = ({
     onFullScreenToggle = null,
     onRefetchReady = null,
     onRefetchInvalidated = null,
+    onUnsavedValuesRefused = null,
     header = null,
     footer = null
 }) => {
@@ -77,6 +79,7 @@ export const Preview = ({
                     previewContext={activeContext}
                     onContentNotFound={handleContentNotFound}
                     onRefetchInvalidated={onRefetchInvalidated}
+                    onUnsavedValuesRefused={onUnsavedValuesRefused}
                     onRefetchReady={onRefetchReady}
                 />
             )}
@@ -95,6 +98,7 @@ Preview.propTypes = {
     onFullScreenToggle: PropTypes.func,
     onRefetchReady: PropTypes.func,
     onRefetchInvalidated: PropTypes.func,
+    onUnsavedValuesRefused: PropTypes.func,
     header: PropTypes.node,
     footer: PropTypes.node
 };

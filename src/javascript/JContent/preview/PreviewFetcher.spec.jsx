@@ -32,22 +32,61 @@ const renderFetcher = (previewContext, cssResult) => {
     return mount(<PreviewFetcher previewContext={{path: '/sites/site/contents/form', workspace: 'EDIT', language: 'en', contextConfiguration: 'module', ...previewContext}} onContentNotFound={jest.fn()}/>);
 };
 
+const base = {path: '/sites/site/contents/form', workspace: 'EDIT', language: 'en', contextConfiguration: 'module'};
+
 const renderResult = (previewContext, result) => {
     useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
-    return mount(<PreviewFetcher previewContext={{path: '/sites/site/contents/form', workspace: 'EDIT', language: 'en', contextConfiguration: 'module', ...previewContext}} onContentNotFound={jest.fn()}/>);
+    return mount(<PreviewFetcher previewContext={{...base, ...previewContext}} onContentNotFound={jest.fn()}/>);
 };
+
+/** A fetcher of unsaved values whose next result the test sets, as Apollo answers one render after another. */
+const renderSequence = () => {
+    let result = preview;
+    useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
+    const onUnsavedValuesRefused = jest.fn();
+    const cmp = mount(<PreviewFetcher previewContext={{...base, unsavedValues: {node: 'node-uuid'}}} onContentNotFound={jest.fn()} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
+    return {
+        cmp,
+        onUnsavedValuesRefused,
+        next: nextResult => {
+            result = {refetch: jest.fn(), ...nextResult};
+            cmp.setProps({previewContext: {...base, unsavedValues: {node: 'node-uuid', properties: [nextResult]}}});
+            cmp.update();
+        }
+    };
+};
+
+const output = cmp => cmp.find('[data-testid="viewers"]').prop('data-output');
+const refused = {loading: false, error: new Error('refused'), data: {jcr: null}};
+const other = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>other</p>'}}}}, loading: false};
 
 describe('PreviewFetcher', () => {
     it('keeps the last render on screen while the render of new unsaved values loads', () => {
-        const cmp = renderResult({unsavedValues: {node: 'node-uuid'}}, {loading: true, previousData: preview.data, refetch: jest.fn()});
+        const {cmp, next} = renderSequence();
+        next({loading: true});
         expect(cmp.find('[data-testid="loader"]').exists()).toBe(false);
-        expect(cmp.find('[data-testid="viewers"]').prop('data-output')).toBe('<p>form</p>');
+        expect(output(cmp)).toBe('<p>form</p>');
     });
 
-    it('keeps the last render on screen when the server refuses the unsaved values', () => {
-        const cmp = renderResult({unsavedValues: {node: 'node-uuid'}}, {loading: false, error: new Error('refused'), previousData: preview.data, refetch: jest.fn()});
+    it('keeps the last render with no error through two refusals in a row', () => {
+        const {cmp, next, onUnsavedValuesRefused} = renderSequence();
+        next(refused);
         expect(cmp.find('[data-testid="no-view"]').exists()).toBe(false);
-        expect(cmp.find('[data-testid="viewers"]').prop('data-output')).toBe('<p>form</p>');
+        expect(output(cmp)).toBe('<p>form</p>');
+        expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
+
+        next({loading: true, data: undefined});
+        expect(output(cmp)).toBe('<p>form</p>');
+        next(refused);
+        expect(output(cmp)).toBe('<p>form</p>');
+    });
+
+    it('shows the next render with no error, and reports that the server accepts the values again', () => {
+        const {cmp, next, onUnsavedValuesRefused} = renderSequence();
+        next(refused);
+        next(other);
+        expect(output(cmp)).toBe('<p>other</p>');
+        expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(false);
     });
 
     it('shows the loader while a render without unsaved values loads', () => {

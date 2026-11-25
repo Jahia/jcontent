@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {PreviewViewers} from './viewers';
@@ -20,12 +20,17 @@ import {useContentPreview} from './useContentPreview';
  * a content with no page of its own is rendered through the content-template wrapper, and the
  * preview does not wait for that render.
  *
+ * When previewContext.unsavedValues is set, the fetch renders the unsaved values of a form, outside
+ * the Apollo cache. While a new render loads, or when the server refuses the values, the last render
+ * that the server answered with no error stays on screen, and onUnsavedValuesRefused reports the refusal.
+ *
  * Props:
  *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
  *   nodeData           — { isPage, path, displayableNode } — passed to IframeViewer for zoom logic
  *   onContentNotFound  — called when zoom anchor (#ce_preview_content) is missing
  *   onRefetchReady     — (refetch) => void  — called on mount; register with your refetch bus
  *   onRefetchInvalidated — () => void       — called on unmount; deregister from your refetch bus
+ *   onUnsavedValuesRefused — (isRefused) => void — called when the server refuses or accepts the unsaved values
  */
 export const PreviewFetcher = React.memo(({
     previewContext,
@@ -33,9 +38,10 @@ export const PreviewFetcher = React.memo(({
     isFullScreen = false,
     onContentNotFound,
     onRefetchReady = null,
-    onRefetchInvalidated = null
+    onRefetchInvalidated = null,
+    onUnsavedValuesRefused = null
 }) => {
-    const {data, previousData, loading, error, refetch} = useContentPreview({
+    const {data, loading, error, refetch} = useContentPreview({
         ...previewContext,
         fetchPolicy: 'network-only'
     });
@@ -52,6 +58,17 @@ export const PreviewFetcher = React.memo(({
         skip: !hasCssSource
     });
 
+    // Apollo keeps the data of a refused result as previousData, so the last render with no error is kept here.
+    const lastRender = useRef(null);
+    if (!loading && !error && data?.jcr?.nodeByPath) {
+        lastRender.current = data;
+    }
+
+    const isRefused = Boolean(previewContext.unsavedValues && error);
+    useEffect(() => {
+        onUnsavedValuesRefused?.(isRefused);
+    }, [isRefused, onUnsavedValuesRefused]);
+
     useEffect(() => {
         onRefetchReady?.(refetch);
         return () => {
@@ -64,7 +81,7 @@ export const PreviewFetcher = React.memo(({
     const isCssSourceShared = !previewContext.cssSourceView;
     // While the render of new unsaved values loads, or when the server refuses them, such as a half-typed number, the
     // last render stays on screen.
-    const keptData = previewContext.unsavedValues && (loading || error) ? previousData : null;
+    const keptData = previewContext.unsavedValues && (loading || error) ? lastRender.current : null;
     if ((loading && !keptData) || (hasCssSource && isCssSourceShared && cssLoading)) {
         return <LoaderOverlay/>;
     }
@@ -116,5 +133,6 @@ PreviewFetcher.propTypes = {
     isFullScreen: PropTypes.bool,
     onContentNotFound: PropTypes.func.isRequired,
     onRefetchReady: PropTypes.func,
-    onRefetchInvalidated: PropTypes.func
+    onRefetchInvalidated: PropTypes.func,
+    onUnsavedValuesRefused: PropTypes.func
 };

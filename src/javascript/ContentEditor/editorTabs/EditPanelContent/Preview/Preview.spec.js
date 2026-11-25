@@ -85,6 +85,13 @@ describe('CE Preview', () => {
         expect(header.find('UpdateOnSaveBadge').exists()).toBe(false);
     });
 
+    it('shows the update-on-save badge for a change that the preview cannot show', () => {
+        useUnsavedValues.mockReturnValueOnce({isSupported: true, unsavedValues: null, isPartial: true});
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        const header = renderProp(cmp.find('Preview').prop('header'));
+        expect(header.find('UpdateOnSaveBadge').exists()).toBe(true);
+    });
+
     it('shows no-preview badge in header for folder nodes', () => {
         editorContext.nodeData.isFolder = true;
         const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);

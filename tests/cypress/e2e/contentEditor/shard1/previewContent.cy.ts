@@ -1,12 +1,26 @@
 import {PageComposer} from '../../../page-object/pageComposer';
-import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
+import {addNode, deleteNode, enableModule, disableModule, getJahiaVersion} from '@jahia/cypress';
 import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 import {v4 as uuidv4} from 'uuid';
 import gql from 'graphql-tag';
 
 // A server that shows unsaved values (Jahia 8.2.4 with graphql-dxm-provider 3.13) previews the values of a form
 // before its save, and answers this query without an error. An older server shows the "Preview will update on save"
-// badge instead.
+// badge instead. The schema and the version of Jahia tell which answer to expect, so a broken probe fails the suite
+// instead of skipping its test.
+const unsavedValuesArgumentQuery = gql`
+    query unsavedValuesArgument {
+        __type(name: "InputJCRUnsavedValues") {
+            name
+        }
+    }
+`;
+
+const isAtLeast824 = (release: string): boolean => {
+    const [major, minor, patch] = release.split(/[.-]/).map(part => Number.parseInt(part, 10));
+    return major > 8 || (major === 8 && (minor > 2 || (minor === 2 && patch >= 4)));
+};
+
 const unsavedValuesSupportQuery = gql`
     query unsavedValuesSupport($node: String!) {
         jcr(workspace: EDIT, unsavedValues: {node: $node}) {
@@ -21,10 +35,17 @@ describe('CE Preview tests', () => {
     const simpleText = 'Simple Text ' + uuidv4();
     const updatedText = 'Updated Text ' + uuidv4();
     let isUnsavedValuesSupported = false;
+    const createdNodes: string[] = [];
 
     before(() => {
         cy.apollo({query: unsavedValuesSupportQuery, variables: {node: `/sites/${siteKey}`}, errorPolicy: 'all'}).then(response => {
             isUnsavedValuesSupported = Boolean(response.data?.jcr?.workspace) && !response.errors;
+        });
+        cy.apollo({query: unsavedValuesArgumentQuery}).then(response => {
+            getJahiaVersion().then(version => {
+                const isExpected = Boolean(response.data.__type) && isAtLeast824(version.release);
+                expect(isUnsavedValuesSupported, 'the probe of unsaved values matches the schema and the version of Jahia').to.equal(isExpected);
+            });
         });
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         enableModule('jcontent-test-module', siteKey);
@@ -44,6 +65,7 @@ describe('CE Preview tests', () => {
     });
 
     after(() => {
+        createdNodes.forEach(path => deleteNode(path));
         deleteNode(`/sites/${siteKey}/home/chocolate,-sweets,-cakes`);
         deleteNode(`/sites/${siteKey}/contents/simpleText`);
         disableModule('jcontent-test-module', siteKey);
@@ -196,6 +218,7 @@ describe('CE Preview tests', () => {
         const savedText = 'Saved Text ' + uuidv4();
         const typedText = 'Typed Text ' + uuidv4();
         const name = 'unsavedText-' + uuidv4().slice(0, 8);
+        createdNodes.push(`/sites/${siteKey}/contents/${name}`);
         addNode({
             parentPathOrId: `/sites/${siteKey}/contents`,
             name,
@@ -234,7 +257,6 @@ describe('CE Preview tests', () => {
             variables: {path: `/sites/${siteKey}/contents/${name}`},
             fetchPolicy: 'no-cache'
         }).its('data.jcr.nodeByPath.property.value').should('equal', savedText);
-        deleteNode(`/sites/${siteKey}/contents/${name}`);
     });
 
     describe('via PageComposer', {testIsolation: false}, () => {

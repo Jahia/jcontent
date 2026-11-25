@@ -1,4 +1,4 @@
-import {useContentPreview} from './useContentPreview';
+import {useContentPreview, UNSAVED_VALUES_SUPPORT_CONTEXT} from './useContentPreview';
 import {useQuery} from '@apollo/client';
 import {CONTENT_PREVIEW_QUERY, CONTENT_PREVIEW_UNSAVED_VALUES_QUERY} from './useContentPreview.gql-queries';
 
@@ -49,6 +49,8 @@ describe('useContentPreview', () => {
         expect(query).toBe(CONTENT_PREVIEW_UNSAVED_VALUES_QUERY);
         expect(options.variables.unsavedValues).toBe(unsavedValues);
         expect(options.fetchPolicy).toBe('no-cache');
-        expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'true'});
+        expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'preview'});
+        // The support query travels in a batch of its own too.
+        expect(UNSAVED_VALUES_SUPPORT_CONTEXT.headers).not.toEqual(options.context.headers);
     });
 });

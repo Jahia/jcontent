@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -52,7 +52,11 @@ export const CEPreview = () => {
 
     const {primary, fallback} = usePreviewContexts(nodeData || {}, lang, mode);
     const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
-    const {isSupported: isUnsavedValuesSupported, unsavedValues} = useUnsavedValues();
+    const {isSupported: isUnsavedValuesSupported, unsavedValues, isPartial} = useUnsavedValues();
+    const [isRefused, setRefused] = useState(false);
+    // The badge tells that the preview waits for the save: on a server without unsaved values, for a change that the
+    // preview cannot show, and while the server refuses the values of the form.
+    const showsUpdateOnSave = !isUnsavedValuesSupported || isPartial || (isRefused && Boolean(unsavedValues));
     // The preview shows the values that the editor typed, on the node of the form only.
     const previewContext = unsavedValues ? {...primary, unsavedValues} : primary;
     const fallbackPreviewContext = unsavedValues && fallback ? {...fallback, unsavedValues} : fallback;
@@ -78,7 +82,7 @@ export const CEPreview = () => {
 
     const header = (
         <>
-            {!isUnsavedValuesSupported && <UpdateOnSaveBadge/>}
+            {showsUpdateOnSave && <UpdateOnSaveBadge/>}
             {nodeData.isFolder && (
                 <div>
                     <Badge
@@ -99,6 +103,7 @@ export const CEPreview = () => {
             fallbackPreviewContext={fallbackPreviewContext}
             onRefetchInvalidated={onRefetchInvalidated}
             onRefetchReady={onRefetchReady}
+            onUnsavedValuesRefused={setRefused}
         />
     );
 };

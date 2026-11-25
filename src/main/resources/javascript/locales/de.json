@@ -1097,7 +1097,7 @@
           "displayValue": "Text",
           "description": "Simple-Text Eingabe",
           "storedValuePlaceholder": "Ein Wert ist gespeichert. Geben Sie einen neuen Wert ein, um ihn zu ersetzen.",
-          "storedValuesPlaceholder": "Werte sind gespeichert. Die Werte, die Sie hinzufügen, ersetzen alle."
+          "storedValuesPlaceholder": "Werte sind gespeichert. Die Werte, die Sie hinzufügen, ersetzen alle gespeicherten Werte."
         },
         "category": {
           "displayValue": "Hierarchical Tree selector",

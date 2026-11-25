@@ -14,6 +14,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
     const fieldValue = Array.isArray(values[field.name]) ? values[field.name] : [];
     // With no row, no input shows the placeholder of the stored values
     const showStoredValuesHint = !field.readOnly && fieldValue.length === 0 && hasUnreadableStoredValue(field, editorContext.nodeData);
+    const storedValuesHintId = `${field.name}-stored-values-hint`;
 
     const {reorderedItems, handleReorder, reset} = useReorderList(fieldValue);
 
@@ -46,7 +47,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
         <>
             <div className="flexFluid">
                 {showStoredValuesHint && (
-                    <Typography variant="caption" data-sel-role="stored-values-hint">
+                    <Typography id={storedValuesHintId} variant="caption" data-sel-role="stored-values-hint">
                         {t('jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder')}
                     </Typography>
                 )}
@@ -86,6 +87,7 @@ export const MultipleField = ({editorContext, inputContext, field, onChange, onB
             {!field.readOnly &&
             <Button className={styles.addButton}
                     data-sel-action="addField"
+                    aria-describedby={showStoredValuesHint ? storedValuesHintId : undefined}
                     variant="outlined"
                     size="big"
                     label={t('jcontent:label.contentEditor.edit.fields.actions.add')}

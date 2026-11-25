@@ -901,6 +901,17 @@ describe('EditPanel utils', () => {
             expect(hasUnreadableStoredValue({...singleField, selectorOptions: []}, unreadableNode)).toBe(false);
         });
 
+        it('detects no stored value when the property holds none', () => {
+            const emptyNode = {
+                properties: [
+                    {name: 'secret', value: null, decryptedValue: null, definition: {declaringNodeType}},
+                    {name: 'secrets', values: [], decryptedValues: [], definition: {declaringNodeType}}
+                ]
+            };
+            expect(hasUnreadableStoredValue(singleField, emptyNode)).toBe(false);
+            expect(hasUnreadableStoredValue(multipleField, emptyNode)).toBe(false);
+        });
+
         it('keeps the stored value when the field stays empty', () => {
             [null, undefined, ''].forEach(value => {
                 const {propsToSave, propsToDelete} = mutate(unreadableNode, {[singleField.name]: value, [multipleField.name]: []});

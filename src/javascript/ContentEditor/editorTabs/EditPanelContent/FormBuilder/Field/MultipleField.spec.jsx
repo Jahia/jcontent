@@ -166,6 +166,18 @@ describe('Multiple component', () => {
             expect(cmp.children().text()).toBe('translated_jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder');
         });
 
+        it('describes the add button with the hint', () => {
+            useFormikContext.mockReturnValue({values: {[secretsField.name]: []}});
+            const cmp = shallowWithTheme(
+                <MultipleField {...defaultProps} field={secretsField} editorContext={{nodeData: storedSecrets([])}}/>,
+                {},
+                dsGenericTheme
+            );
+            const hintId = cmp.find('[data-sel-role="stored-values-hint"]').prop('id');
+            expect(hintId).toBeTruthy();
+            expect(cmp.find('[data-sel-action="addField"]').prop('aria-describedby')).toBe(hintId);
+        });
+
         it('shows no hint when the form loaded the stored values', () => {
             expect(hint(storedSecrets(['clear1', 'clear2']), ['clear1', 'clear2']).exists()).toBe(false);
         });

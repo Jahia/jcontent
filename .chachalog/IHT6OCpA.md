@@ -3,4 +3,4 @@
 "@jahia/jcontent": patch
 ---
 
-Fixed Content Editor so that saving content keeps a stored password the form cannot display, unless a new value is typed.
+Fixed Content Editor so that saving keeps a stored password the form cannot display, unless a new value is typed.

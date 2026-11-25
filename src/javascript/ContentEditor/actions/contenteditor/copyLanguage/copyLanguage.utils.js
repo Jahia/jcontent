@@ -1,5 +1,6 @@
 import {getInitialValues} from '../../../ContentEditor/useEditFormDefinition';
 import {adaptSections} from '~/ContentEditor/ContentEditor/adaptSections';
+import {hasUnreadableStoredValue} from '~/ContentEditor/utils/fields.utils';
 
 /**
  * This function get the full name of a language by his id
@@ -18,7 +19,7 @@ export function getFullLanguageName(languages, id) {
  * This function gets the internationalized fields and their associated values from a form
  *
  * @param formAndData form and values of a node
- * @returns The internationalized field and their values
+ * @returns The internationalized field and their values, without a field whose stored value the form cannot read
  */
 export function getI18nFieldAndValues(formAndData) {
     const {forms, jcr} = formAndData.data;
@@ -27,6 +28,6 @@ export function getI18nFieldAndValues(formAndData) {
     return adaptedSections
         .flatMap(section => section.fieldSets)
         .flatMap(fieldSet => fieldSet.fields)
-        .filter(field => field.i18n)
+        .filter(field => field.i18n && !hasUnreadableStoredValue(field, jcr.result))
         .reduce((acc, field) => ({...acc, [field.name]: initialValues[field.name]}), {});
 }

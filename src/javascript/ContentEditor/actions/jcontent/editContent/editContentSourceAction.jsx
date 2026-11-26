@@ -7,6 +7,7 @@ import {useContentEditorApiContext} from '~/ContentEditor/contexts';
 
 export const EditContentSource = ({
     path,
+    usagesForPath,
     isFullscreen,
     editCallback,
     render: Render,
@@ -33,9 +34,15 @@ export const EditContentSource = ({
         return <Loading {...otherProps}/>;
     }
 
+    // Offered from a list of what uses `usagesForPath`, the source is that node itself, so the
+    // action would reopen the editor on what the reader is already looking at. Compared rather
+    // than suppressed wholesale, because the same menu is shown elsewhere, where a reference's
+    // source is somewhere the reader has not been.
+    const leadsBackToTheNodeBeingViewed = Boolean(usagesForPath) && res2.node?.path === usagesForPath;
+
     return (
         <Render {...otherProps}
-                isVisible={res.checksResult && res2.checksResult && refUuid}
+                isVisible={res.checksResult && res2.checksResult && refUuid && !leadsBackToTheNodeBeingViewed}
                 onClick={() => api.edit({
                     uuid: refUuid,
                     lang: language,
@@ -55,6 +62,8 @@ EditContentSource.defaultProps = {
 
 EditContentSource.propTypes = {
     path: PropTypes.string.isRequired,
+    /** Set when the action is offered from the usages of a node, and holds that node's path. */
+    usagesForPath: PropTypes.string,
     isFullscreen: PropTypes.bool,
     editCallback: PropTypes.func,
     render: PropTypes.func.isRequired,

@@ -99,6 +99,7 @@ export const ContentUsages = () => {
                 <div onClick={e => e.stopPropagation()}>
                     <DisplayAction actionKey="contentItemActionsMenu"
                                    path={data.path}
+                                   usagesForPath={path}
                                    render={ButtonRendererNoLabel}
                                    buttonProps={{variant: 'ghost', size: 'default'}}/>
                 </div>

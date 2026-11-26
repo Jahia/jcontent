@@ -17,6 +17,26 @@ describe('Content editor side panel usages tab', () => {
             primaryNodeType: 'jnt:text',
             properties: [{name: 'text', value: 'side-panel-usages-empty-text', language: 'en'}]
         });
+        // A content referencing a CONTENT, unlike the fixture above which references a file:
+        // "Go to source" only resolves a source that is a jnt:content, so a file-backed usage
+        // never offers it and could not show the behaviour under test.
+        addNode({
+            parentPathOrId: '/sites/digitall/contents',
+            name: 'side-panel-usages-source-text',
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', value: 'side-panel-usages-source-text', language: 'en'}]
+        });
+        addNode({
+            parentPathOrId: '/sites/digitall/contents',
+            name: 'side-panel-usages-reference',
+            primaryNodeType: 'jnt:contentReference',
+            properties: [{
+                name: 'j:node',
+                language: 'en',
+                type: 'REFERENCE',
+                value: '/sites/digitall/contents/side-panel-usages-source-text'
+            }]
+        });
     });
 
     beforeEach(() => {
@@ -35,6 +55,18 @@ describe('Content editor side panel usages tab', () => {
             mutationFile: 'jcontent/jcrDeleteNode.graphql',
             variables: {
                 pathOrId: '/sites/digitall/contents/side-panel-usages-empty-text'
+            }
+        });
+        cy.apollo({
+            mutationFile: 'jcontent/jcrDeleteNode.graphql',
+            variables: {
+                pathOrId: '/sites/digitall/contents/side-panel-usages-reference'
+            }
+        });
+        cy.apollo({
+            mutationFile: 'jcontent/jcrDeleteNode.graphql',
+            variables: {
+                pathOrId: '/sites/digitall/contents/side-panel-usages-source-text'
             }
         });
     });
@@ -77,6 +109,28 @@ describe('Content editor side panel usages tab', () => {
 
         ceSidePanel.switchToUsagesTab();
         ceSidePanel.getByRole('usages-empty').should('contain.text', 'No usages');
+    });
+
+    it('does not offer "Go to source" on a usage whose source is the content being viewed', () => {
+        const jcontent = JContent.visit('digitall', 'en', 'content-folders/contents');
+        jcontent.editComponentByRowName('side-panel-usages-source-text');
+        const contentEditor = new ContentEditor();
+        contentEditor.switchToAdvancedMode();
+
+        ceSidePanel.switchToUsagesTab();
+        ceSidePanel.getUsagesRows().should('have.length', 1);
+
+        ceSidePanel.getUsagesRows().first()
+            .find('[data-sel-role="contentItemActionsMenu"]')
+            .click();
+
+        // Edit is asserted too, so that a menu which failed to open cannot pass this test by
+        // simply containing nothing.
+        cy.get('#menuHolder .moonstone-menu:not(.moonstone-hidden)')
+            .should('be.visible')
+            .and('contain.text', 'Edit')
+            .and('not.contain.text', 'Go to source');
+        cy.get('.moonstone-menu_overlay').click();
     });
 
     describe('permission enforcement', () => {

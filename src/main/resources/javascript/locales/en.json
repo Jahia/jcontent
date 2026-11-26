@@ -409,7 +409,8 @@
             "variantLabel": "Orientation",
             "variantDescription": "Select the orientation available for the given device",
             "dateLabel": "Date",
-            "dateDescription": "Select a date to preview the content"
+            "dateDescription": "Select a date to preview the content",
+            "noUsers": "No users are available for this site"
           }
         },
         "menuLabel": {

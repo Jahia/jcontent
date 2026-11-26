@@ -405,7 +405,8 @@
             "variantLabel": "Orientation",
             "variantDescription": "Sélectionnez l'orientation disponible pour l'appareil donné",
             "dateLabel": "Date",
-            "dateDescription": "Sélectionnez une date pour prévisualiser le contenu"
+            "dateDescription": "Sélectionnez une date pour prévisualiser le contenu",
+            "noUsers": "Aucun utilisateur n'est disponible pour ce site"
           }
         },
         "menuLabel": {

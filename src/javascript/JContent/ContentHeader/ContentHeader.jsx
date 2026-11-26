@@ -59,7 +59,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
             toolbarLeft={
                 <>
                     {!previewSelection && selection.length > 0 &&
-                        <SelectionActionsBar paths={selection} clear={clear}/>}
+                        <SelectionActionsBar hasBulkActionsMenu paths={selection} clear={clear}/>}
                     {selection.length === 0 && <SearchControlBar/>}
                 </>
             }
@@ -70,7 +70,7 @@ function getSearchHeader({dispatch, preSearchModeMemo, site, narrow, mode, t, pr
 const ContentHeader = () => {
     const {t} = useTranslation('jcontent');
     const dispatch = useDispatch();
-    const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection, site} = useSelector(state => ({
+    const {mode, preSearchModeMemo, path, language, displayLanguage, selection, previewSelection, site, viewMode} = useSelector(state => ({
         mode: state.jcontent.mode,
         preSearchModeMemo: state.jcontent.preSearchModeMemo,
         path: state.jcontent.path,
@@ -78,7 +78,8 @@ const ContentHeader = () => {
         displayLanguage: state.uilang,
         selection: state.jcontent.selection,
         previewSelection: state.jcontent.sidePanelSelection !== null,
-        site: state.site
+        site: state.site,
+        viewMode: state.jcontent.tableView?.viewMode
     }), shallowEqual);
 
     const width = useContext(ResizeContext);
@@ -90,6 +91,7 @@ const ContentHeader = () => {
     const viewSelector = tableConfig?.viewSelector;
     const sortSelector = tableConfig?.sortSelector;
     const showStatus = tableConfig?.header?.showStatus !== false;
+    const isTableView = viewMode === JContentConstants.tableView.viewMode.FLAT || viewMode === JContentConstants.tableView.viewMode.STRUCTURED;
 
     const {loading, node} = useNodeInfo({path, language, displayLanguage}, {
         getPrimaryNodeType: true,
@@ -130,7 +132,8 @@ const ContentHeader = () => {
             status={showStatus && <ContentStatuses node={node}/>}
             toolbarLeft={
                 <>
-                    {!previewSelection && selection.length > 0 && <SelectionActionsBar paths={selection} clear={clear}/>}
+                    {!previewSelection && selection.length > 0 &&
+                        <SelectionActionsBar paths={selection} clear={clear} hasBulkActionsMenu={isTableView}/>}
                     <BrowseControlBar isShowingActions={selection.length === 0}/>
                 </>
             }

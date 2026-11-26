@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 import {validate} from '~/ContentEditor/validation';
-import {getDynamicFieldSets, getFields, isSameValue} from '~/ContentEditor/utils/index';
+import {getDynamicFieldSets, getFields, hasUnreadableStoredValue, isSameValue} from '~/ContentEditor/utils/index';
 import {useContentEditorConfigContext, useContentEditorContext, useContentEditorSectionContext} from '~/ContentEditor/contexts';
 import {useFormikContext} from 'formik';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
@@ -75,7 +75,7 @@ function fillErrors(validation, fieldsObj, i18nValues) {
 
 export const useSwitchLanguage = () => {
     const formik = useFormikContext();
-    const {setI18nContext} = useContentEditorContext();
+    const {nodeData, setI18nContext} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
     const {lang: previousLanguage, updateEditorConfig, sideBySideContext, setSideBySideContext} = useContentEditorConfigContext();
 
@@ -114,8 +114,14 @@ export const useSwitchLanguage = () => {
             const newValues = Object.keys(nonI18nValues.values).length > 0 ? {shared: nonI18nValues} : {};
 
             if (Object.keys(i18nValues.values).length > 0) {
-                const validation = validate(sections)(formik.values);
+                const validation = validate(sections, nodeData)(formik.values);
                 fillErrors(validation, fieldsObj, i18nValues);
+
+                const unreadable = fields.filter(field => field.i18n && hasUnreadableStoredValue(field, nodeData)).map(field => field.name);
+                if (unreadable.length > 0) {
+                    i18nValues.unreadable = unreadable;
+                }
+
                 newValues[previousLanguage] = i18nValues;
             }
 
@@ -145,5 +151,5 @@ export const useSwitchLanguage = () => {
                 lang: newLanguage
             });
         }
-    }, [updateEditorConfig, formik, sections, setI18nContext, previousLanguage, sideBySideContext.enabled, setSideBySideContext]);
+    }, [updateEditorConfig, formik, sections, nodeData, setI18nContext, previousLanguage, sideBySideContext.enabled, setSideBySideContext]);
 };

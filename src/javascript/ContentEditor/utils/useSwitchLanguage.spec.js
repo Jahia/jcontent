@@ -22,15 +22,17 @@ const sharedMode = player => ({...sharedNote(player), name: `${player}_sharedMod
 const mockFields = players.map(sharedNote);
 const mockDynamicFieldSets = Object.fromEntries([...players, nativePlayer].map(mixin => [mixin, false]));
 let mockSetI18nContext;
+let mockNodeData;
+let mockExtraFields = [];
 
 jest.mock('~/ContentEditor/contexts', () => ({
-    useContentEditorContext: () => ({setI18nContext: mockSetI18nContext}),
+    useContentEditorContext: () => ({nodeData: mockNodeData, setI18nContext: mockSetI18nContext}),
     useContentEditorSectionContext: () => ({sections: []}),
     useContentEditorConfigContext: () => ({lang: 'en', updateEditorConfig: jest.fn(), sideBySideContext: {enabled: false}})
 }));
 jest.mock('~/ContentEditor/utils/index', () => ({
     ...jest.requireActual('~/ContentEditor/utils/fields.utils'),
-    getFields: () => mockFields,
+    getFields: () => [...mockFields, ...mockExtraFields],
     getDynamicFieldSets: () => mockDynamicFieldSets
 }));
 
@@ -122,5 +124,32 @@ describe('useSwitchLanguage, back in en after an edit saved in the en bucket', (
         const next = switchFromEn({...initialValues, 'cemix:vimeoGenericPlayer': true, [youtube]: 'B', [vimeo]: 'C', [switchTube]: 'B'});
 
         expect(next.en.values).toEqual({[youtube]: 'C', [vimeo]: 'C', [switchTube]: 'C'});
+    });
+});
+
+describe('useSwitchLanguage, leaving a language with a password field', () => {
+    const secretField = {nodeType: 'jnt:secretHolder', name: 'jnt:secretHolder_secret', propertyName: 'secret', i18n: true, selectorOptions: [{name: 'password'}]};
+    const storedSecret = decryptedValue => ({name: 'secret', value: 'cipher', decryptedValue, definition: {declaringNodeType: {name: 'jnt:secretHolder'}}});
+
+    const switchFromEn = decryptedValue => {
+        mockExtraFields = [secretField];
+        mockNodeData = {properties: [storedSecret(decryptedValue)]};
+        useFormikContext.mockReturnValue({values: {[secretField.name]: ''}, initialValues: {[secretField.name]: decryptedValue}});
+        mockSetI18nContext = jest.fn();
+        switchLanguage()('fr');
+        return mockSetI18nContext.mock.calls[0][0]({});
+    };
+
+    afterEach(() => {
+        mockExtraFields = [];
+        mockNodeData = undefined;
+    });
+
+    it('records the fields whose stored value the form did not load', () => {
+        expect(switchFromEn(null).en.unreadable).toEqual([secretField.name]);
+    });
+
+    it('records nothing when the stored value was loaded', () => {
+        expect(switchFromEn('clear').en.unreadable).toBeUndefined();
     });
 });

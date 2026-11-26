@@ -1112,7 +1112,9 @@
         "localTimeHint": "Shown in your local time zone ({{zone}})",
         "text": {
           "displayValue": "Text",
-          "description": "Simple text input"
+          "description": "Simple text input",
+          "storedValuePlaceholder": "A value is stored. Type a new value to replace it.",
+          "storedValuesPlaceholder": "Values are stored. The values you add replace all of them."
         },
         "category": {
           "displayValue": "Hierarchical Tree selector",

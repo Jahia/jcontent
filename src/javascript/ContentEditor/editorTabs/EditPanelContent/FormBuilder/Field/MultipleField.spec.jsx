@@ -138,4 +138,56 @@ describe('Multiple component', () => {
     const generateFieldCmp = (arrayCmp, index) => {
         return arrayCmp.find('OrderableValue').at(index).shallow().find('FormikConnect(FastFieldInner)');
     };
+
+    describe('password field with stored values', () => {
+        const secretsField = {
+            multiple: true,
+            name: 'jnt:secretHolder_secrets',
+            nodeType: 'jnt:secretHolder',
+            propertyName: 'secrets',
+            readOnly: false,
+            selectorOptions: [{name: 'password'}]
+        };
+        const storedSecrets = decryptedValues => ({
+            properties: [{name: 'secrets', values: ['cipher1', 'cipher2'], decryptedValues, definition: {declaringNodeType: {name: 'jnt:secretHolder'}}}]
+        });
+        const hint = (nodeData, values, field = secretsField) => {
+            useFormikContext.mockReturnValue({values: {[field.name]: values}});
+            return shallowWithTheme(
+                <MultipleField {...defaultProps} field={field} editorContext={{nodeData}}/>,
+                {},
+                dsGenericTheme
+            ).find('[data-sel-role="stored-values-hint"]');
+        };
+
+        it('shows a hint when the form did not load the stored values', () => {
+            const cmp = hint(storedSecrets([]), []);
+            expect(cmp.exists()).toBe(true);
+            expect(cmp.children().text()).toBe('translated_jcontent:label.contentEditor.selectorTypes.text.storedValuesPlaceholder');
+        });
+
+        it('describes the add button with the hint', () => {
+            useFormikContext.mockReturnValue({values: {[secretsField.name]: []}});
+            const cmp = shallowWithTheme(
+                <MultipleField {...defaultProps} field={secretsField} editorContext={{nodeData: storedSecrets([])}}/>,
+                {},
+                dsGenericTheme
+            );
+            const hintId = cmp.find('[data-sel-role="stored-values-hint"]').prop('id');
+            expect(hintId).toBeTruthy();
+            expect(cmp.find('[data-sel-action="addField"]').prop('aria-describedby')).toBe(hintId);
+        });
+
+        it('shows no hint when the form loaded the stored values', () => {
+            expect(hint(storedSecrets(['clear1', 'clear2']), ['clear1', 'clear2']).exists()).toBe(false);
+        });
+
+        it('shows no hint once the user added a value', () => {
+            expect(hint(storedSecrets([]), ['new']).exists()).toBe(false);
+        });
+
+        it('shows no hint on a read-only field', () => {
+            expect(hint(storedSecrets([]), [], {...secretsField, readOnly: true}).exists()).toBe(false);
+        });
+    });
 });

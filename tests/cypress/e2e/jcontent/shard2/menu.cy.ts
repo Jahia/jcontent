@@ -53,4 +53,24 @@ describe('Menu tests', () => {
         contentEditor.create();
         navAccordion.click('pages').getContent().find('[role="tree"]').find('[data-sel-role="new-root-level-page"]').should('be.visible').click();
     });
+
+    it('Raises no error when the empty part of the content panel is right-clicked', () => {
+        // Uncaught exceptions are answered with false for every spec in support/e2e.js, so a
+        // thrown error cannot fail a test on its own. This listener records them instead,
+        // which is what lets this test assert on something the suite otherwise swallows.
+        const onUncaughtError = cy.spy().as('uncaughtError');
+        cy.on('uncaught:exception', error => {
+            onUncaughtError(error);
+            return false;
+        });
+
+        const jcontent = JContent.visit('jcontentSite', 'en', 'pages/home');
+        jcontent.switchToListMode();
+
+        // The panel itself, not a row: a row stops the event propagating and opens its own
+        // menu, so only a click that reaches the panel exercises what this covers.
+        cy.get('[data-cm-role="content-area"]').rightclick('bottomRight');
+
+        cy.get('@uncaughtError').should('not.have.been.called');
+    });
 });

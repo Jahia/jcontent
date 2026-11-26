@@ -10,10 +10,13 @@ import {
     HandleMove,
     CloudUpload,
     NoCloud,
-    Pagination
+    Pagination,
+    EmptyData,
+    Typography
 } from '@jahia/moonstone';
 import {useTranslation} from 'react-i18next';
 import {useSidePanelContext} from '~/JContent/SidePanel';
+import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import styles from './ContentHistory.scss';
 import {HistoryList} from '~/JContent/SidePanel/ContentHistory/HistoryList';
 
@@ -46,13 +49,13 @@ export const ContentHistory = () => {
     const uiLanguage = useSelector(state => state.uilang);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(20);
-    const [actionFilter, setActionFilter] = useState(null);
+    const [actionFilter, setActionFilter] = useState('all');
 
     const {data, loading, error} = useQuery(GetContentHistoryQuery, {
         variables: {
             path: nodeData?.path,
             withLanguageNodes: true,
-            action: actionFilter,
+            action: actionFilter === 'all' ? null : actionFilter,
             offset: page * pageSize,
             limit: pageSize,
             uiLanguage: uiLanguage
@@ -77,7 +80,7 @@ export const ContentHistory = () => {
             .map(toOption);
 
         return [
-            {groupLabel: '', options: [{value: null, label: t('jcontent:label.contentEditor.history.allActions')}]},
+            {groupLabel: '', options: [{value: 'all', label: t('jcontent:label.contentEditor.history.allActions')}]},
             {groupLabel: t('jcontent:label.contentEditor.history.node'), options: nodeOptions},
             {groupLabel: t('jcontent:label.contentEditor.history.property'), options: propertyOptions}
         ];
@@ -85,6 +88,47 @@ export const ContentHistory = () => {
 
     const entries = data?.jcr?.nodeByPath?.history?.entries || [];
     const totalCount = data?.jcr?.nodeByPath?.history?.count || 0;
+    const isEmpty = entries.length === 0;
+
+    // Empty state: no history at all (no active filter).
+    if (data && !error && isEmpty && actionFilter === 'all') {
+        return (
+            <EmptyData
+                data-sel-role="history-empty"
+                title={t('jcontent:label.contentEditor.history.noEntries')}
+                message={t('jcontent:label.contentEditor.history.noEntriesDescription')}
+            />
+        );
+    }
+
+    // Apollo drops data while new variables load, so the filter and the pagination stay mounted
+    let list;
+    if (loading && !data) {
+        list = <LoaderOverlay/>;
+    } else if (error) {
+        list = (
+            <div className={styles.error}>
+                <Typography variant="body">
+                    {t('jcontent:label.contentEditor.history.errorLoading')}
+                </Typography>
+            </div>
+        );
+    } else if (isEmpty) {
+        list = (
+            <EmptyData
+                data-sel-role="history-filter-empty"
+                message={t('jcontent:label.contentEditor.history.noEntriesForFilter')}
+            />
+        );
+    } else {
+        list = (
+            <HistoryList
+                entries={entries}
+                uiLanguage={uiLanguage}
+                t={t}
+            />
+        );
+    }
 
     return (
         <div className={styles.container} data-sel-role="history-container">
@@ -94,6 +138,7 @@ export const ContentHistory = () => {
                     data={getActionOptions}
                     className={styles.dropDown}
                     variant="outlined"
+                    size="small"
                     onChange={(e, option) => {
                         setActionFilter(option.value);
                         setPage(0);
@@ -101,16 +146,7 @@ export const ContentHistory = () => {
                 />
             </div>
 
-            <div className={styles.listContainer}>
-                <HistoryList
-                    isLoading={loading}
-                    error={error}
-                    entries={entries}
-                    data={data}
-                    uiLanguage={uiLanguage}
-                    t={t}
-                />
-            </div>
+            {list}
 
             {totalCount > 0 && (
                 <div className={styles.paginationContainer}>

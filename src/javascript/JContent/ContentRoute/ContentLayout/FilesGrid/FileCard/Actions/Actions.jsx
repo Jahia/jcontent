@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import {ButtonRendererNoLabel} from '~/utils/getButtonRenderer';
 
 export const Actions = ({className, node, action}) => (
-    <div className={className}>
+    // Stop propagation so that opening the menu does not toggle the card selection (same as table rows)
+    <div className={className} onClick={e => e.stopPropagation()}>
         <DisplayAction
             actionKey={action}
             path={node.path}

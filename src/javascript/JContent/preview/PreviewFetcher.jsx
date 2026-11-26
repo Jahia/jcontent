@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {PreviewViewers} from './viewers';
 import {NoView} from './viewers/NoView';
@@ -35,6 +36,7 @@ export const PreviewFetcher = React.memo(({
     onRefetchReady = null,
     onRefetchInvalidated = null
 }) => {
+    const {t} = useTranslation('jcontent');
     const {data, loading, error, refetch} = useContentPreview({
         ...previewContext,
         fetchPolicy: 'network-only'
@@ -68,7 +70,7 @@ export const PreviewFetcher = React.memo(({
 
     if (error) {
         console.error('Error while fetching preview', error);
-        return <NoView/>;
+        return <NoView message={t('jcontent:label.contentManager.contentPreview.noViewErrorMessage')}/>;
     }
 
     const pageCssHtml = hasCssSource ? (cssData?.jcr?.nodeByPath?.renderedContent?.output ?? '') : '';

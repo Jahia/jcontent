@@ -27,6 +27,8 @@ const useLabel = labelProps => {
 
     return {
         label: (labelStyle === 'none') ? null : label,
+        // An icon-only button keeps the label as its accessible name
+        ariaLabel: (labelStyle === 'none' && label) || undefined,
         tooltipLabel: showTooltip ? tooltipLabel ? t(tooltipLabel, tooltipParams) : label : null
     };
 };
@@ -53,7 +55,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
             dataSelRole
         } = props;
 
-        const {label, tooltipLabel: tooltip} = useLabel({
+        const {label, ariaLabel, tooltipLabel: tooltip} = useLabel({
             buttonLabelNamespace,
             labelStyle,
             buttonLabel,
@@ -71,6 +73,7 @@ export const getButtonRenderer = ({labelStyle, showTooltip, ellipsis, defaultBut
 
         const button = (
             <Button data-sel-role={dataSelRole || actionKey}
+                    aria-label={ariaLabel}
                     label={label}
                     icon={buttonIcon}
                     iconEnd={buttonIconEnd}

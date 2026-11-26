@@ -79,7 +79,7 @@ export class TagManager extends JContent {
 
     setRowsPerPage(rowsPerPage: number): TagManager {
         this.getPagination().get().find('[data-sel-role="table-pagination-dropdown-rows-per-page"]').click();
-        cy.get('menu.moonstone-menu[role="list"]').should('be.visible');
+        cy.get('menu').should('be.visible');
         cy.contains('menu.moonstone-menu [role="option"]', new RegExp(`^${rowsPerPage}$`)).click();
         return this;
     }
@@ -97,10 +97,8 @@ export class TagManager extends JContent {
     }
 
     openUsages(tagName: string): TagManager {
-        this.clickRowAction(tagName, 'tag-manager-view');
-        // Moves the focus into the drawer, as moonstone#1571 will, so the tooltip of the eye button closes (jcontent#2923)
-        this.getCloseDrawerButton().get().focus();
-        return this;
+        // The Drawer moves the focus inside when it opens, so the tooltip of the eye button closes (jcontent#2923)
+        return this.clickRowAction(tagName, 'tag-manager-view');
     }
 
     openRename(tagName: string): TagManager {

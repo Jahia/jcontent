@@ -90,6 +90,7 @@ const DetailRow = ({label, value, isCopyable = true, children}) => {
                     <Button
                         icon={<Copy/>}
                         variant="ghost"
+                        aria-label={t('jcontent:label.contentManager.copyPaste.copyValue', {label})}
                         className={styles.copyButton}
                         onClick={handleCopy}
                     />
@@ -143,6 +144,7 @@ const LinkRow = ({label, displayValue, copyValue, href}) => {
                 <Button
                     icon={<Copy/>}
                     variant="ghost"
+                    aria-label={t('jcontent:label.contentManager.downloadFile.copyUrl')}
                     className={styles.copyButton}
                     onClick={handleCopy}
                 />

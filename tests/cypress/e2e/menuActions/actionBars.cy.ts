@@ -25,16 +25,16 @@ describe('test jcontent actionbar', () => {
 
     it('test actionbar', () => {
         jcontent = JContent.visit('digitall', 'en', 'pages/home/about');
-        cy.get('div[role="toolbar"]').find('[data-sel-role="refresh"]').should('exist');
-        cy.get('div[role="toolbar"]').find('[data-sel-role="jnt:page"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('[data-sel-role="refresh"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('[data-sel-role="jnt:page"]').should('exist');
         jcontent.selectAccordion('content-folders');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContentFolder"]').should('exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createContent"]').should('exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="refresh"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="createContentFolder"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="createContent"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="refresh"]').should('exist');
         jcontent.selectAccordion('media');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="createFolder"]').should('exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="fileUpload"]').should('exist');
-        cy.get('div[role="toolbar"]').find('button[data-sel-role="refresh"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="createFolder"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="fileUpload"]').should('exist');
+        cy.get('[role="group"][aria-label="Page actions"]').find('button[data-sel-role="refresh"]').should('exist');
     });
 
     it('Checks actions inside 3 dots menu of a page in jcontent header', () => {

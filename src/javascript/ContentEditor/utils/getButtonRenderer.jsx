@@ -36,6 +36,9 @@ export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {})
             label = buttonLabelShort;
         }
 
+        // An icon-only button keeps the label as its accessible name
+        const ariaLabel = labelStyle === 'none' && buttonLabel ? t(buttonLabel, buttonLabelParams) : undefined;
+
         let icon;
         if (!noIcon) {
             icon = buttonIcon;
@@ -47,6 +50,7 @@ export const getButtonRenderer = ({labelStyle, defaultButtonProps, noIcon} = {})
 
         let button = (
             <Button data-sel-role={dataSelRole || actionKey}
+                    aria-label={ariaLabel}
                     className={className}
                     label={t(label, buttonLabelParams)}
                     icon={icon}

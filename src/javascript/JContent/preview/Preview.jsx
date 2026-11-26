@@ -4,6 +4,7 @@ import {Paper} from '@material-ui/core';
 import {Button, Maximize, Minimize} from '@jahia/moonstone';
 import styles from './Preview.scss';
 import {PreviewFetcher} from './PreviewFetcher';
+import {useTranslation} from 'react-i18next';
 
 /**
  * Shared Preview shell.
@@ -33,6 +34,7 @@ export const Preview = ({
     header = null,
     footer = null
 }) => {
+    const {t} = useTranslation('jcontent');
     const [useFallback, setUseFallback] = useState(false);
     const [shouldDisplay, setShouldDisplay] = useState(false);
 
@@ -64,6 +66,7 @@ export const Preview = ({
                             icon={isFullScreen ? <Minimize/> : <Maximize/>}
                             size="small"
                             variant="ghost"
+                            aria-label={t(isFullScreen ? 'jcontent:label.contentManager.contentPreview.collapse' : 'jcontent:label.contentManager.contentPreview.expand')}
                             onClick={onFullScreenToggle}
                         />
                     )}

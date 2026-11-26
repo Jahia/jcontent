@@ -304,7 +304,7 @@ describe('Content editor form', () => {
         contentEditor.save();
         cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'true');
+            .should('be.checked');
 
         // Uncheck
         cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
@@ -313,7 +313,7 @@ describe('Content editor form', () => {
         contentEditor.save();
         cy.get('[data-sel-content-editor-field="qant:allFields_boolean"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'false');
+            .should('not.be.checked');
         contentEditor.cancel();
     });
 
@@ -330,7 +330,7 @@ describe('Content editor form', () => {
         cy.get('input[name="qant:AllFieldsDefault_sharedDouble"]').should('have.value', '1.1');
         cy.get('[data-sel-content-editor-field="qant:AllFieldsDefault_sharedBoolean"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'true');
+            .should('be.checked');
         cy.frameLoaded('iframe.cke_wysiwyg_frame');
         cy.iframe('iframe.cke_wysiwyg_frame').should('contain', 'value 1');
         getBrowserTimezone().then(timezoneId => {
@@ -358,10 +358,10 @@ describe('Content editor form', () => {
         cy.get('input[name="qant:allFieldsMultipleDefault_sharedDouble[1]"]').should('have.value', '2.2');
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBoolean[0]"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'true');
+            .should('be.checked');
         cy.get('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBoolean[1]"]')
             .find('input[type="checkbox"]')
-            .should('have.attr', 'aria-checked', 'false');
+            .should('not.be.checked');
         cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[0]"] iframe.cke_wysiwyg_frame')
             .should('contain', 'value 1');
         cy.iframe('[data-sel-content-editor-multiple-generic-field="qant:allFieldsMultipleDefault_sharedBigtext[1]"] iframe.cke_wysiwyg_frame')

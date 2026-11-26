@@ -25,12 +25,12 @@ const contentTypeData = [
     {
         label: 'Content type 1',
         value: 'test:content1',
-        iconStart: <ImgWrapper src="/icon1.png"/>
+        iconStart: <ImgWrapper alt="" src="/icon1.png"/>
     },
     {
         label: 'Content type 2',
         value: 'test:content2',
-        iconStart: <ImgWrapper src="/icon2.png"/>
+        iconStart: <ImgWrapper alt="" src="/icon2.png"/>
     }
 ];
 

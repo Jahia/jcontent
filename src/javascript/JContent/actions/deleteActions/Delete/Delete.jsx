@@ -45,13 +45,14 @@ const DeleteContent = ({data, onClose, isLoading, isMutationLoading, dialogType,
                 <Button className={styles.button}
                         icon={<Information/>}
                         variant="ghost"
+                        aria-label={t('jcontent:label.contentManager.deleteAction.info.title')}
                         onClick={() => {
                             setInfoOpen(true);
                         }}
                 />
             </DialogTitle>
             {isMutationLoading ?
-                <Loader size="big" style={{width: '100%'}}/> :
+                <Loader size="big" style={{width: '100%'}} i18n={{loadingLabel: t('jcontent:label.loading')}}/> :
                 <DialogContent>
                     <DialogContentText className={styles.content} data-sel-role="delete-message">{label}</DialogContentText>
                     {hasUsages && count === 1 &&

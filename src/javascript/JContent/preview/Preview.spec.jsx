@@ -49,4 +49,12 @@ describe('Preview', () => {
         });
         expect(capturedFetcherProps.previewContext.workspace).toBe('edit');
     });
+
+    it('passes the report of a refusal of unsaved values to PreviewFetcher', () => {
+        const onUnsavedValuesRefused = jest.fn();
+        act(() => {
+            mount(<Preview previewContext={baseContext} onUnsavedValuesRefused={onUnsavedValuesRefused}/>);
+        });
+        expect(capturedFetcherProps.onUnsavedValuesRefused).toBe(onUnsavedValuesRefused);
+    });
 });

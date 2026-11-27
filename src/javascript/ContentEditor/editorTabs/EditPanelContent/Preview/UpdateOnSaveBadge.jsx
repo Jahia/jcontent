@@ -10,7 +10,7 @@ export const UpdateOnSaveBadge = () => {
     const {t} = useTranslation('jcontent');
 
     return dirty && (
-        <div>
+        <div data-sel-role="update-on-save-badge">
             <Badge className={styles.badge}
                    badgeContent={t('jcontent:label.contentEditor.preview.updateOnSave')}
                    variant="normal"

@@ -37,7 +37,14 @@ const base = {path: '/sites/site/contents/form', workspace: 'EDIT', language: 'e
 /** A fetcher, with unsaved values unless hasUnsavedValues is false, whose next result the test sets render after render. */
 const renderSequence = (hasUnsavedValues = true) => {
     let result = preview;
-    useContentPreview.mockImplementation(({contextConfiguration}) => (contextConfiguration === 'page' ? {loading: false} : result));
+    useContentPreview.mockImplementation(({contextConfiguration, unsavedValues, skip}) => {
+        if (contextConfiguration === 'page' || skip) {
+            return {loading: false};
+        }
+
+        // The render of the stored node, which a refusal with no kept render shows.
+        return unsavedValues === null ? stored : result;
+    });
     const onUnsavedValuesRefused = jest.fn();
     // A new context object at each render, as the preview of a form builds one at each change.
     const contextOf = () => (hasUnsavedValues ? {...base, unsavedValues: {node: 'node-uuid', properties: []}} : {...base});
@@ -60,6 +67,7 @@ const refused = {loading: false, error: refusal('refused'), data: {jcr: null}};
 // A render error under errorPolicy 'all' keeps the node with no render, so only the error keeps it out of the kept render.
 const refusedRender = {loading: false, error: refusal('render failed'), data: {jcr: {nodeByPath: {renderedContent: null}}}};
 const other = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>other</p>'}}}}, loading: false};
+const stored = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>stored</p>'}}}}, loading: false};
 
 describe('PreviewFetcher', () => {
     let log;
@@ -107,24 +115,24 @@ describe('PreviewFetcher', () => {
         expect(log).toHaveBeenCalledWith('Error while fetching preview', networkError);
     });
 
-    it('keeps no render of another language, which the editor switched to', () => {
-        const {cmp, next} = renderSequence();
+    it('shows the stored node, and no render of another language, when the server refuses the values', () => {
+        const {cmp, next, onUnsavedValuesRefused} = renderSequence();
         next({loading: true}, {language: 'fr'});
         expect(cmp.find('[data-testid="loader"]').exists()).toBe(true);
         next(refused, {language: 'fr'});
-        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
-        expect(cmp.find('[data-testid="viewers"]').exists()).toBe(false);
+        expect(output(cmp)).toBe('<p>stored</p>');
+        expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
     });
 
     it.each([
         ['view', {view: 'cm'}],
         ['path', {path: '/sites/site/contents/other'}],
         ['context configuration', {contextConfiguration: 'preview'}]
-    ])('keeps no render of another %s', (_, contextChange) => {
+    ])('shows the stored node, and no render of another %s, when the server refuses the values', (_, contextChange) => {
         const {cmp, next} = renderSequence();
         next(refused, contextChange);
-        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
-        expect(cmp.find('[data-testid="viewers"]').exists()).toBe(false);
+        expect(output(cmp)).toBe('<p>stored</p>');
+        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(false);
     });
 
     it('shows the next render with no error, and reports that the server accepts the values again', () => {

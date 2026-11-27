@@ -6,9 +6,11 @@ import {useQuery} from '@apollo/client';
 import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {readUnsavedValues, useUnsavedValues} from './useUnsavedValues';
 import {useUnsavedValuesContext} from '~/JContent/preview/useContentPreview';
+import {registry} from '@jahia/ui-extender';
 
 jest.mock('formik', () => ({useFormikContext: jest.fn()}));
 jest.mock('@apollo/client', () => ({useQuery: jest.fn()}));
+jest.mock('@jahia/ui-extender', () => ({registry: {find: jest.fn(() => [])}}));
 jest.mock('~/ContentEditor/utils', () => ({
     getDataToMutate: jest.fn(),
     getChildrenOrder: jest.fn(),
@@ -83,6 +85,17 @@ describe('readUnsavedValues', () => {
         expect(readUnsavedValues(form).isPartial).toBe(false);
         getChildrenOrder.mockReturnValue({shouldModifyChildren: true});
         expect(readUnsavedValues(form).isPartial).toBe(true);
+    });
+
+    it('tells that a contentEditor.onEdit hook of a module can change the save', () => {
+        getChildrenOrder.mockReturnValue({shouldModifyChildren: false});
+        getDataToMutate.mockReturnValue({propsToSave: [text], propsToDelete: []});
+        registry.find.mockImplementation(({type}) => (type === 'contentEditor.onEdit' ? [{onEdit: variables => variables}] : []));
+        try {
+            expect(readUnsavedValues(form).isPartial).toBe(true);
+        } finally {
+            registry.find.mockImplementation(() => []);
+        }
     });
 });
 
@@ -164,14 +177,16 @@ describe('useUnsavedValues', () => {
         expect(options.context).toBe(useUnsavedValuesContext.mock.results.at(-1).value);
     });
 
-    it('logs a failed probe, but not the refusal of an older server', () => {
+    it('logs a failed probe as an error, and a refusal of the server as information', () => {
         const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const info = jest.spyOn(console, 'info').mockImplementation(() => {});
         try {
             useFormikContext.mockReturnValue({dirty: false, values: {}});
             const refusal = Object.assign(new Error('Unknown argument unsavedValues'), {graphQLErrors: [{message: 'Unknown argument'}]});
             useQuery.mockReturnValue({data: undefined, error: refusal});
             mount(<Probe/>);
             expect(log).not.toHaveBeenCalledWith('The preview could not ask the server about unsaved values', refusal);
+            expect(info).toHaveBeenCalledWith('The preview shows the unsaved values on save only:', 'Unknown argument');
 
             const failure = Object.assign(new Error('Failed to fetch'), {graphQLErrors: [], networkError: new Error('offline')});
             useQuery.mockReturnValue({data: undefined, error: failure});
@@ -179,16 +194,20 @@ describe('useUnsavedValues', () => {
             expect(log).toHaveBeenCalledWith('The preview could not ask the server about unsaved values', failure);
         } finally {
             log.mockRestore();
+            info.mockRestore();
         }
     });
 
     it('sends nothing to a server that refuses unsaved values', () => {
-        useQuery.mockReturnValue({data: undefined, error: new Error('Reading unsaved values needs Jahia 8.2.4 or later')});
+        const message = 'Reading unsaved values needs the UnsavedValues API of the core, which this Jahia lacks';
+        const info = jest.spyOn(console, 'info').mockImplementation(() => {});
+        useQuery.mockReturnValue({data: undefined, error: Object.assign(new Error(message), {graphQLErrors: [{message}]})});
         useFormikContext.mockReturnValue({dirty: true, values: {text: 'typed'}});
         const cmp = mount(<Probe/>);
 
         wait(cmp);
         expect(cmp.find('div').prop('data-supported')).toBe('false');
         expect(valuesOf(cmp)).toBeNull();
+        info.mockRestore();
     });
 });

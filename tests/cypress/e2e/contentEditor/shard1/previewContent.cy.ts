@@ -4,8 +4,6 @@ import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 import {v4 as uuidv4} from 'uuid';
 import gql from 'graphql-tag';
 
-// The schema and the version of Jahia tell which answer unsavedValuesSupportQuery must give, so a broken probe fails
-// the suite instead of skipping its test.
 const unsavedValuesArgumentQuery = gql`
     query unsavedValuesArgument {
         __type(name: "InputJCRUnsavedValues") {
@@ -19,9 +17,7 @@ const isAtLeast824 = (release: string): boolean => {
     return major > 8 || (major === 8 && (minor > 2 || (minor === 2 && patch >= 4)));
 };
 
-// A server that shows unsaved values (Jahia 8.2.4 with graphql-dxm-provider 3.13) previews the values of a form
-// before its save, and answers this probe without an error. An older server shows the "Preview will update on save"
-// badge instead.
+// Jahia 8.2.4 with graphql-dxm-provider 3.13 shows unsaved values, and answers this probe without an error.
 const unsavedValuesSupportQuery = gql`
     query unsavedValuesSupport($node: String!) {
         jcr(workspace: EDIT, unsavedValues: {node: $node}) {
@@ -196,18 +192,18 @@ describe('CE Preview tests', () => {
         contentEditor.switchToSidePanelPreviewTab();
 
         cy.log('Check preview badge is not displayed');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should('not.exist');
 
         cy.log('Update content');
         contentEditor.getSmallTextField('jnt:text_text').addNewValue(updatedText);
 
         cy.log('Check preview badge is displayed, unless the preview shows the unsaved values');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should(isUnsavedValuesSupported ? 'not.exist' : 'exist');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should(isUnsavedValuesSupported ? 'not.exist' : 'exist');
 
         contentEditor.save();
 
         cy.log('Check preview badge is not displayed after save');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should('not.exist');
         contentEditor.validateContentIsVisibleInPreview(updatedText);
     });
 
@@ -226,11 +222,11 @@ describe('CE Preview tests', () => {
         });
 
         // The server runs no operation after a query of unsaved values in the same request, so that query travels alone.
-        const unsavedValuesBatchSizes: number[] = [];
+        const unsavedValuesRequests: {header: string, size: number}[] = [];
         cy.intercept('POST', '**/modules/graphql', request => {
             const operations = Array.isArray(request.body) ? request.body : [request.body];
-            if (operations.some(operation => operation?.variables?.unsavedValues)) {
-                unsavedValuesBatchSizes.push(operations.length);
+            if (operations.some(operation => operation?.query?.includes('unsavedValues'))) {
+                unsavedValuesRequests.push({header: String(request.headers['x-jahia-unsaved-values'] ?? ''), size: operations.length});
             }
         });
 
@@ -244,10 +240,10 @@ describe('CE Preview tests', () => {
         contentEditor.getSmallTextField('jnt:text_text').addNewValue(typedText);
 
         contentEditor.validateContentIsVisibleInPreview(typedText);
-        cy.contains('span', 'Preview will update on save').should('not.exist');
-        cy.wrap(unsavedValuesBatchSizes).should(sizes => {
-            expect(sizes.length, 'the preview sent the unsaved values').to.be.greaterThan(0);
-            expect(sizes.every(size => size === 1), `operations per request: ${sizes}`).to.equal(true);
+        cy.get('[data-sel-role="update-on-save-badge"]').should('not.exist');
+        cy.wrap(unsavedValuesRequests).should(requests => {
+            expect(requests.length, 'the preview sent the unsaved values').to.be.greaterThan(0);
+            expect(requests.every(({header, size}) => header !== '' && size === 1), `requests: ${JSON.stringify(requests)}`).to.equal(true);
         });
         cy.apollo({
             query: gql`query savedText($path: String!) {

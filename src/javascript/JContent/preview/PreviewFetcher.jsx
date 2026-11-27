@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {LoaderOverlay} from '~/ContentEditor/DesignSystem/LoaderOverlay';
 import {PreviewViewers} from './viewers';
@@ -20,12 +20,21 @@ import {useContentPreview} from './useContentPreview';
  * a content with no page of its own is rendered through the content-template wrapper, and the
  * preview does not wait for that render.
  *
+ * When previewContext.unsavedValues is set, the fetch renders the unsaved values of a form, outside
+ * the Apollo cache. While a new render loads, or when the load ends with a GraphQL error, a refusal of the values or a
+ * render error, the last render with no error of the same path, language, view and context configuration stays on
+ * screen. With no such render, a GraphQL error shows the stored node. A network error shows no view, as without
+ * unsaved values.
+ *
  * Props:
- *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
+ *   previewContext     — built by buildPreviewContexts, to which the content editor adds unsavedValues, or by
+ *                        buildPreviewContextsFromNode
  *   nodeData           — { isPage, path, displayableNode } — passed to IframeViewer for zoom logic
  *   onContentNotFound  — called when zoom anchor (#ce_preview_content) is missing
  *   onRefetchReady     — (refetch) => void  — called on mount; register with your refetch bus
  *   onRefetchInvalidated — () => void       — called on unmount; deregister from your refetch bus
+ *   onUnsavedValuesRefused — (isRefused) => void — called when a load ends: true when a load of unsaved values ends
+ *                            with a GraphQL error, a render error included, and false otherwise
  */
 export const PreviewFetcher = React.memo(({
     previewContext,
@@ -33,7 +42,8 @@ export const PreviewFetcher = React.memo(({
     isFullScreen = false,
     onContentNotFound,
     onRefetchReady = null,
-    onRefetchInvalidated = null
+    onRefetchInvalidated = null,
+    onUnsavedValuesRefused = null
 }) => {
     const {data, loading, error, refetch} = useContentPreview({
         ...previewContext,
@@ -52,6 +62,36 @@ export const PreviewFetcher = React.memo(({
         skip: !hasCssSource
     });
 
+    // Apollo keeps the data of a refused result as previousData, so the last render with no error is kept here, with the
+    // context that it renders: a language switch keeps the form, and must not keep the page of the other language.
+    const renderKey = [previewContext.path, previewContext.language, previewContext.view, previewContext.contextConfiguration].join('|');
+    const lastRender = useRef(null);
+    if (!loading && !error && data?.jcr?.nodeByPath) {
+        lastRender.current = {key: renderKey, data};
+    }
+
+    // The server refuses values with a GraphQL error, and a network error says nothing about the values.
+    const isRefused = Boolean(previewContext.unsavedValues && error?.graphQLErrors?.length);
+    const isKept = lastRender.current?.key === renderKey;
+    const {data: storedData, loading: storedLoading} = useContentPreview({
+        ...previewContext,
+        unsavedValues: null,
+        fetchPolicy: 'network-only',
+        skip: !isRefused || isKept
+    });
+    // A render that loads has not ended, so the last report stands until the load ends.
+    useEffect(() => {
+        if (!loading) {
+            onUnsavedValuesRefused?.(isRefused);
+        }
+    }, [loading, isRefused, onUnsavedValuesRefused]);
+
+    useEffect(() => {
+        if (error) {
+            console.error('Error while fetching preview', error);
+        }
+    }, [error]);
+
     useEffect(() => {
         onRefetchReady?.(refetch);
         return () => {
@@ -62,12 +102,13 @@ export const PreviewFetcher = React.memo(({
     // A content with no page renders itself through the content-template wrapper for its CSS. That render is as slow as
     // the preview and no other item shares it, so the preview shows first and takes the stylesheets when they arrive.
     const isCssSourceShared = !previewContext.cssSourceView;
-    if (loading || (hasCssSource && isCssSourceShared && cssLoading)) {
+    const keptData = previewContext.unsavedValues && (loading || isRefused) && isKept ? lastRender.current.data : null;
+    const shownData = keptData ?? (isRefused && !isKept ? storedData : null);
+    if ((loading && !keptData) || (isRefused && !isKept && storedLoading) || (hasCssSource && isCssSourceShared && cssLoading)) {
         return <LoaderOverlay/>;
     }
 
-    if (error) {
-        console.error('Error while fetching preview', error);
+    if (error && !shownData) {
         return <NoView/>;
     }
 
@@ -75,7 +116,7 @@ export const PreviewFetcher = React.memo(({
 
     return (
         <PreviewViewers
-            data={data?.jcr ?? {}}
+            data={(shownData ?? data)?.jcr ?? {}}
             isFullScreen={isFullScreen}
             nodeData={nodeData}
             pageCssHtml={pageCssHtml}
@@ -100,7 +141,8 @@ PreviewFetcher.propTypes = {
         requestParameters: PropTypes.array,
         mainResourcePath: PropTypes.string,
         mainResourceContextConfiguration: PropTypes.string,
-        cssSourcePath: PropTypes.string
+        cssSourcePath: PropTypes.string,
+        unsavedValues: PropTypes.object
     }).isRequired,
     nodeData: PropTypes.shape({
         isPage: PropTypes.bool,
@@ -112,5 +154,6 @@ PreviewFetcher.propTypes = {
     isFullScreen: PropTypes.bool,
     onContentNotFound: PropTypes.func.isRequired,
     onRefetchReady: PropTypes.func,
-    onRefetchInvalidated: PropTypes.func
+    onRefetchInvalidated: PropTypes.func,
+    onUnsavedValuesRefused: PropTypes.func
 };

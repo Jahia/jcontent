@@ -1,15 +1,49 @@
 import {PageComposer} from '../../../page-object/pageComposer';
-import {addNode, deleteNode, enableModule, disableModule} from '@jahia/cypress';
+import {addNode, deleteNode, enableModule, disableModule, getJahiaVersion} from '@jahia/cypress';
 import {ContentEditor, JContent, SidePanel} from '../../../page-object';
 import {v4 as uuidv4} from 'uuid';
+import gql from 'graphql-tag';
+
+const unsavedValuesArgumentQuery = gql`
+    query unsavedValuesArgument {
+        __type(name: "InputJCRUnsavedValues") {
+            name
+        }
+    }
+`;
+
+const isAtLeast824 = (release: string): boolean => {
+    const [major, minor, patch] = release.split(/[.-]/).map(part => Number.parseInt(part, 10));
+    return major > 8 || (major === 8 && (minor > 2 || (minor === 2 && patch >= 4)));
+};
+
+// Jahia 8.2.4 with graphql-dxm-provider 3.13 shows unsaved values, and answers this probe without an error.
+const unsavedValuesSupportQuery = gql`
+    query unsavedValuesSupport($node: String!) {
+        jcr(workspace: EDIT, unsavedValues: {node: $node}) {
+            workspace
+        }
+    }
+`;
 
 describe('CE Preview tests', () => {
     const siteKey = 'digitall';
     const sidePanel = new SidePanel().inCE();
     const simpleText = 'Simple Text ' + uuidv4();
     const updatedText = 'Updated Text ' + uuidv4();
+    let isUnsavedValuesSupported = false;
+    const unsavedTextName = 'unsavedText';
 
     before(() => {
+        cy.apollo({query: unsavedValuesSupportQuery, variables: {node: `/sites/${siteKey}`}, errorPolicy: 'all'}).then(response => {
+            isUnsavedValuesSupported = Boolean(response.data?.jcr?.workspace) && !response.errors;
+        });
+        cy.apollo({query: unsavedValuesArgumentQuery}).then(response => {
+            getJahiaVersion().then(version => {
+                const isExpected = Boolean(response.data.__type) && isAtLeast824(version.release);
+                expect(isUnsavedValuesSupported, 'the probe of unsaved values matches the schema and the version of Jahia').to.equal(isExpected);
+            });
+        });
         cy.apollo({mutationFile: 'jcontent/enableLegacyPageComposer.graphql'});
         enableModule('jcontent-test-module', siteKey);
         addNode({
@@ -28,6 +62,7 @@ describe('CE Preview tests', () => {
     });
 
     after(() => {
+        deleteNode(`/sites/${siteKey}/contents/${unsavedTextName}`);
         deleteNode(`/sites/${siteKey}/home/chocolate,-sweets,-cakes`);
         deleteNode(`/sites/${siteKey}/contents/simpleText`);
         disableModule('jcontent-test-module', siteKey);
@@ -157,19 +192,66 @@ describe('CE Preview tests', () => {
         contentEditor.switchToSidePanelPreviewTab();
 
         cy.log('Check preview badge is not displayed');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should('not.exist');
 
         cy.log('Update content');
         contentEditor.getSmallTextField('jnt:text_text').addNewValue(updatedText);
 
-        cy.log('Check preview badge is displayed');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('exist');
+        cy.log('Check preview badge is displayed, unless the preview shows the unsaved values');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should(isUnsavedValuesSupported ? 'not.exist' : 'exist');
 
         contentEditor.save();
 
         cy.log('Check preview badge is not displayed after save');
-        cy.contains('span', 'Preview will update on save', {timeout: 5000}).should('not.exist');
+        cy.get('[data-sel-role="update-on-save-badge"]', {timeout: 5000}).should('not.exist');
         contentEditor.validateContentIsVisibleInPreview(updatedText);
+    });
+
+    it('shows the typed value before save, and keeps the saved value in the JCR', function () {
+        if (!isUnsavedValuesSupported) {
+            this.skip();
+        }
+
+        const savedText = 'Saved Text ' + uuidv4();
+        const typedText = 'Typed Text ' + uuidv4();
+        addNode({
+            parentPathOrId: `/sites/${siteKey}/contents`,
+            name: unsavedTextName,
+            primaryNodeType: 'jnt:text',
+            properties: [{name: 'text', language: 'en', value: savedText}]
+        });
+
+        // The server runs no operation after a query of unsaved values in the same request, so that query travels alone.
+        const unsavedValuesRequests: {header: string, size: number}[] = [];
+        cy.intercept('POST', '**/modules/graphql', request => {
+            const operations = Array.isArray(request.body) ? request.body : [request.body];
+            if (operations.some(operation => operation?.query?.includes('unsavedValues'))) {
+                unsavedValuesRequests.push({header: String(request.headers['x-jahia-unsaved-values'] ?? ''), size: operations.length});
+            }
+        });
+
+        cy.loginAndStoreSession();
+        const jcontent = JContent.visit(siteKey, 'en', `content-folders/contents/${unsavedTextName}`);
+        const contentEditor = jcontent.editContent();
+        contentEditor.switchToAdvancedMode();
+        contentEditor.switchToSidePanelPreviewTab();
+        contentEditor.validateContentIsVisibleInPreview(savedText);
+
+        contentEditor.getSmallTextField('jnt:text_text').addNewValue(typedText);
+
+        contentEditor.validateContentIsVisibleInPreview(typedText);
+        cy.get('[data-sel-role="update-on-save-badge"]').should('not.exist');
+        cy.wrap(unsavedValuesRequests).should(requests => {
+            expect(requests.length, 'the preview sent the unsaved values').to.be.greaterThan(0);
+            expect(requests.every(({header, size}) => header !== '' && size === 1), `requests: ${JSON.stringify(requests)}`).to.equal(true);
+        });
+        cy.apollo({
+            query: gql`query savedText($path: String!) {
+                jcr { nodeByPath(path: $path) { property(name: "text", language: "en") { value } } }
+            }`,
+            variables: {path: `/sites/${siteKey}/contents/${unsavedTextName}`},
+            fetchPolicy: 'no-cache'
+        }).its('data.jcr.nodeByPath.property.value').should('equal', savedText);
     });
 
     describe('via PageComposer', {testIsolation: false}, () => {

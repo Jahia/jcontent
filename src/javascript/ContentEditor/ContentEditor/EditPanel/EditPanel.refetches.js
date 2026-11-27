@@ -14,8 +14,8 @@ const triggerRefetch = key => {
 };
 
 const setPreviewRefetcher = refetcherData => {
-    // In content editor only the path and the language can change for the preview query, so just this parameters to build a key
-    // ideally the key of a refetcher should be all it's queryParams.
+    // In content editor one preview fetcher registers for each path and language, so they build the key. The unsaved
+    // values of the form change the preview query too, and stay out of the key.
     editPanelRefetches[buildPreviewRefetcherKey(refetcherData.queryParams.path, refetcherData.queryParams.language)] = refetcherData;
 };
 

@@ -1,0 +1,213 @@
+import React from 'react';
+import {mount} from 'enzyme';
+import {act} from 'react-dom/test-utils';
+import {useFormikContext} from 'formik';
+import {useQuery} from '@apollo/client';
+import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
+import {readUnsavedValues, useUnsavedValues} from './useUnsavedValues';
+import {useUnsavedValuesContext} from '~/JContent/preview/useContentPreview';
+import {registry} from '@jahia/ui-extender';
+
+jest.mock('formik', () => ({useFormikContext: jest.fn()}));
+jest.mock('@apollo/client', () => ({useQuery: jest.fn()}));
+jest.mock('@jahia/ui-extender', () => ({registry: {find: jest.fn(() => [])}}));
+jest.mock('~/ContentEditor/utils', () => ({
+    getDataToMutate: jest.fn(),
+    getChildrenOrder: jest.fn(),
+    encodeSystemName: jest.requireActual('~/ContentEditor/utils/systemName.utils').encodeSystemName
+}));
+jest.mock('~/JContent/preview/useContentPreview', () => ({
+    useUnsavedValuesContext: jest.fn(kind => ({headers: {'X-Jahia-Unsaved-Values': kind}}))
+}));
+const mockNodeData = {uuid: 'node-uuid', name: 'a%5Bb%5D', primaryNodeType: {name: 'jnt:text'}, properties: [{name: 'jcr:title'}]};
+// The editor keeps these objects between renders, so only the state of the form restarts the delay.
+const mockI18nContext = {};
+const mockSections = [];
+jest.mock('~/ContentEditor/contexts', () => ({
+    useContentEditorContext: () => ({nodeData: mockNodeData, lang: 'en', i18nContext: mockI18nContext}),
+    useContentEditorSectionContext: () => ({sections: mockSections})
+}));
+
+const text = {name: 'text', type: 'STRING', value: 'typed', language: 'en'};
+const systemName = {name: 'ce:systemName', type: 'STRING', value: 'renamed', language: 'en'};
+const form = {nodeData: mockNodeData, values: {}, i18nContext: {}, sections: [], lang: 'en'};
+
+const Probe = () => {
+    const result = useUnsavedValues();
+    return <div data-supported={String(result.isSupported)} data-partial={String(result.isPartial)} data-values={JSON.stringify(result.unsavedValues)}/>;
+};
+
+const valuesOf = cmp => JSON.parse(cmp.find('div').prop('data-values'));
+
+const wait = cmp => {
+    act(() => {
+        jest.advanceTimersByTime(500);
+    });
+    cmp.update();
+};
+
+describe('readUnsavedValues', () => {
+    beforeEach(() => {
+        getChildrenOrder.mockReturnValue({shouldModifyChildren: false});
+    });
+
+    it('sends the properties and the mixins of the save, without the system name', () => {
+        getDataToMutate.mockReturnValue({
+            propsToSave: [text, systemName],
+            propsToDelete: [{name: 'jcr:title', language: 'en'}],
+            mixinsToAdd: ['jmix:keywords'],
+            mixinsToDelete: []
+        });
+
+        expect(readUnsavedValues(form).unsavedValues).toEqual({
+            node: 'node-uuid',
+            properties: [text],
+            propertiesToDelete: [{name: 'jcr:title', language: 'en'}],
+            mixinsToAdd: ['jmix:keywords'],
+            mixinsToDelete: []
+        });
+    });
+
+    it('leaves out the removal of a property that the node does not store', () => {
+        getDataToMutate.mockReturnValue({propsToSave: [systemName], propsToDelete: [{name: 'jcr:description', language: 'en'}]});
+
+        expect(readUnsavedValues(form).unsavedValues).toBeNull();
+    });
+
+    it('tells that a new system name or a new order of the children stays out of the preview', () => {
+        getDataToMutate.mockReturnValue({propsToSave: [systemName], propsToDelete: []});
+        expect(readUnsavedValues(form).isPartial).toBe(true);
+
+        getDataToMutate.mockReturnValue({propsToSave: [text], propsToDelete: []});
+        expect(readUnsavedValues(form).isPartial).toBe(false);
+        // An editable system name field sends the decoded name, and the save encodes it before it compares.
+        getDataToMutate.mockReturnValue({propsToSave: [text, {...systemName, value: 'a[b]'}], propsToDelete: []});
+        expect(readUnsavedValues(form).isPartial).toBe(false);
+        getChildrenOrder.mockReturnValue({shouldModifyChildren: true});
+        expect(readUnsavedValues(form).isPartial).toBe(true);
+    });
+
+    it('tells that a contentEditor.onEdit hook of a module can change the save', () => {
+        getChildrenOrder.mockReturnValue({shouldModifyChildren: false});
+        getDataToMutate.mockReturnValue({propsToSave: [text], propsToDelete: []});
+        registry.find.mockImplementation(({type}) => (type === 'contentEditor.onEdit' ? [{onEdit: variables => variables}] : []));
+        try {
+            expect(readUnsavedValues(form).isPartial).toBe(true);
+        } finally {
+            registry.find.mockImplementation(() => []);
+        }
+    });
+});
+
+describe('useUnsavedValues', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+        getChildrenOrder.mockReturnValue({shouldModifyChildren: false});
+        getDataToMutate.mockImplementation(({formValues}) => ({
+            propsToSave: [{...text, value: formValues.text}],
+            propsToDelete: [],
+            mixinsToAdd: [],
+            mixinsToDelete: []
+        }));
+        useQuery.mockReturnValue({data: {jcr: {workspace: 'EDIT'}}});
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
+    it('follows the values of a dirty form once the editor stops typing', () => {
+        useFormikContext.mockReturnValue({dirty: true, values: {text: 'typed'}});
+        const cmp = mount(<Probe/>);
+        expect(valuesOf(cmp)).toBeNull();
+
+        wait(cmp);
+        expect(getDataToMutate).toHaveBeenCalledWith(expect.objectContaining({formValues: {text: 'typed'}, nodeData: mockNodeData, lang: 'en'}));
+        expect(cmp.find('div').prop('data-supported')).toBe('true');
+        expect(valuesOf(cmp).properties[0].value).toBe('typed');
+    });
+
+    it('restarts the delay at each change and sends the last values', () => {
+        useFormikContext.mockReturnValue({dirty: true, values: {text: 'ty'}});
+        const cmp = mount(<Probe/>);
+        act(() => {
+            jest.advanceTimersByTime(300);
+        });
+        useFormikContext.mockReturnValue({dirty: true, values: {text: 'typed'}});
+        cmp.setProps({});
+        act(() => {
+            jest.advanceTimersByTime(300);
+        });
+        cmp.update();
+        expect(valuesOf(cmp)).toBeNull();
+
+        wait(cmp);
+        expect(valuesOf(cmp).properties[0].value).toBe('typed');
+    });
+
+    it('clears the values when the form becomes clean', () => {
+        useFormikContext.mockReturnValue({dirty: true, values: {text: 'typed'}});
+        const cmp = mount(<Probe/>);
+        wait(cmp);
+        expect(valuesOf(cmp)).not.toBeNull();
+
+        useFormikContext.mockReturnValue({dirty: false, values: {text: 'typed'}});
+        cmp.setProps({});
+        cmp.update();
+        expect(valuesOf(cmp)).toBeNull();
+    });
+
+    it('tells that the preview shows a new system name only on save', () => {
+        getDataToMutate.mockReturnValue({propsToSave: [systemName], propsToDelete: []});
+        useFormikContext.mockReturnValue({dirty: true, values: {}});
+        const cmp = mount(<Probe/>);
+
+        wait(cmp);
+        expect(cmp.find('div').prop('data-partial')).toBe('true');
+        expect(valuesOf(cmp)).toBeNull();
+    });
+
+    it('asks the server about the node of the form, in a request of its own', () => {
+        useFormikContext.mockReturnValue({dirty: false, values: {}});
+        mount(<Probe/>);
+        const options = useQuery.mock.calls.at(-1)[1];
+        expect(options.variables).toEqual({node: 'node-uuid'});
+        expect(useUnsavedValuesContext).toHaveBeenCalledWith('support');
+        // The query takes the context that the hook gave this caller, and no literal of the code.
+        expect(options.context).toBe(useUnsavedValuesContext.mock.results.at(-1).value);
+    });
+
+    it('logs a failed probe as an error, and a refusal of the server as information', () => {
+        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const info = jest.spyOn(console, 'info').mockImplementation(() => {});
+        try {
+            useFormikContext.mockReturnValue({dirty: false, values: {}});
+            const refusal = Object.assign(new Error('Unknown argument unsavedValues'), {graphQLErrors: [{message: 'Unknown argument'}]});
+            useQuery.mockReturnValue({data: undefined, error: refusal});
+            mount(<Probe/>);
+            expect(log).not.toHaveBeenCalledWith('The preview could not ask the server about unsaved values', refusal);
+            expect(info).toHaveBeenCalledWith('The preview shows the unsaved values on save only:', 'Unknown argument');
+
+            const failure = Object.assign(new Error('Failed to fetch'), {graphQLErrors: [], networkError: new Error('offline')});
+            useQuery.mockReturnValue({data: undefined, error: failure});
+            mount(<Probe/>);
+            expect(log).toHaveBeenCalledWith('The preview could not ask the server about unsaved values', failure);
+        } finally {
+            log.mockRestore();
+            info.mockRestore();
+        }
+    });
+
+    it('sends nothing to a server that refuses unsaved values', () => {
+        const message = 'Reading unsaved values needs the UnsavedValues API of the core, which this Jahia lacks';
+        const info = jest.spyOn(console, 'info').mockImplementation(() => {});
+        useQuery.mockReturnValue({data: undefined, error: Object.assign(new Error(message), {graphQLErrors: [{message}]})});
+        useFormikContext.mockReturnValue({dirty: true, values: {text: 'typed'}});
+        const cmp = mount(<Probe/>);
+
+        wait(cmp);
+        expect(cmp.find('div').prop('data-supported')).toBe('false');
+        expect(valuesOf(cmp)).toBeNull();
+        info.mockRestore();
+    });
+});

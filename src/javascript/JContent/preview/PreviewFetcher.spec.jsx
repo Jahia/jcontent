@@ -62,6 +62,15 @@ const refusedRender = {loading: false, error: refusal('render failed'), data: {j
 const other = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>other</p>'}}}}, loading: false};
 
 describe('PreviewFetcher', () => {
+    let log;
+    beforeEach(() => {
+        log = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+        log.mockRestore();
+    });
+
     it('keeps the last render on screen while the render of new unsaved values loads', () => {
         const {cmp, next} = renderSequence();
         next({loading: true});
@@ -69,8 +78,7 @@ describe('PreviewFetcher', () => {
         expect(output(cmp)).toBe('<p>form</p>');
     });
 
-    it('keeps the last render with no error through two refusals in a row, and logs each refusal', () => {
-        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+    it('keeps the last render with no error through two refusals in a row, and logs each refusal once', () => {
         const {cmp, next, onUnsavedValuesRefused} = renderSequence();
         next(refused);
         expect(log).toHaveBeenCalledWith('Error while fetching preview', refused.error);
@@ -84,29 +92,39 @@ describe('PreviewFetcher', () => {
         expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
         next(refusedRender);
         expect(output(cmp)).toBe('<p>form</p>');
-        log.mockRestore();
+        expect(log).toHaveBeenLastCalledWith('Error while fetching preview', refusedRender.error);
+        next(refusedRender);
+        // React logs its own warnings through console.error too, so only the lines of the preview count.
+        expect(log.mock.calls.filter(([message]) => message === 'Error while fetching preview')).toHaveLength(2);
     });
 
     it('shows no view for a network error, which is no refusal of the values, and logs it', () => {
-        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
         const {cmp, next, onUnsavedValuesRefused} = renderSequence();
         const networkError = Object.assign(new Error('Failed to fetch'), {graphQLErrors: [], networkError: new Error('offline')});
         next({loading: false, error: networkError, data: undefined});
         expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
         expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(false);
         expect(log).toHaveBeenCalledWith('Error while fetching preview', networkError);
-        log.mockRestore();
     });
 
     it('keeps no render of another language, which the editor switched to', () => {
-        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
         const {cmp, next} = renderSequence();
         next({loading: true}, {language: 'fr'});
         expect(cmp.find('[data-testid="loader"]').exists()).toBe(true);
         next(refused, {language: 'fr'});
         expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
         expect(cmp.find('[data-testid="viewers"]').exists()).toBe(false);
-        log.mockRestore();
+    });
+
+    it.each([
+        ['view', {view: 'cm'}],
+        ['path', {path: '/sites/site/contents/other'}],
+        ['context configuration', {contextConfiguration: 'preview'}]
+    ])('keeps no render of another %s', (_, contextChange) => {
+        const {cmp, next} = renderSequence();
+        next(refused, contextChange);
+        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
+        expect(cmp.find('[data-testid="viewers"]').exists()).toBe(false);
     });
 
     it('shows the next render with no error, and reports that the server accepts the values again', () => {

@@ -160,7 +160,26 @@ describe('useUnsavedValues', () => {
         const options = useQuery.mock.calls.at(-1)[1];
         expect(options.variables).toEqual({node: 'node-uuid'});
         expect(useUnsavedValuesContext).toHaveBeenCalledWith('support');
-        expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'support'});
+        // The query takes the context that the hook gave this caller, and no literal of the code.
+        expect(options.context).toBe(useUnsavedValuesContext.mock.results.at(-1).value);
+    });
+
+    it('logs a failed probe, but not the refusal of an older server', () => {
+        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+        try {
+            useFormikContext.mockReturnValue({dirty: false, values: {}});
+            const refusal = Object.assign(new Error('Unknown argument unsavedValues'), {graphQLErrors: [{message: 'Unknown argument'}]});
+            useQuery.mockReturnValue({data: undefined, error: refusal});
+            mount(<Probe/>);
+            expect(log).not.toHaveBeenCalledWith('The preview could not ask the server about unsaved values', refusal);
+
+            const failure = Object.assign(new Error('Failed to fetch'), {graphQLErrors: [], networkError: new Error('offline')});
+            useQuery.mockReturnValue({data: undefined, error: failure});
+            mount(<Probe/>);
+            expect(log).toHaveBeenCalledWith('The preview could not ask the server about unsaved values', failure);
+        } finally {
+            log.mockRestore();
+        }
     });
 
     it('sends nothing to a server that refuses unsaved values', () => {

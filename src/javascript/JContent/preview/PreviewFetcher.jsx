@@ -22,7 +22,7 @@ import {useContentPreview} from './useContentPreview';
  *
  * When previewContext.unsavedValues is set, the fetch renders the unsaved values of a form, outside
  * the Apollo cache. While a new render loads, or when the server refuses the values with a GraphQL error,
- * the last render with no error of the same path, language and view stays on screen, and
+ * the last render with no error of the same path, language, view and context configuration stays on screen, and
  * onUnsavedValuesRefused reports the refusal. A network error shows no view, as without unsaved values.
  *
  * Props:
@@ -31,7 +31,8 @@ import {useContentPreview} from './useContentPreview';
  *   onContentNotFound  — called when zoom anchor (#ce_preview_content) is missing
  *   onRefetchReady     — (refetch) => void  — called on mount; register with your refetch bus
  *   onRefetchInvalidated — () => void       — called on unmount; deregister from your refetch bus
- *   onUnsavedValuesRefused — (isRefused) => void — called when the server refuses or accepts the unsaved values
+ *   onUnsavedValuesRefused — (isRefused) => void — called when a load of unsaved values ends: true for a GraphQL
+ *                            refusal of the values, false for any other end, a network error included
  */
 export const PreviewFetcher = React.memo(({
     previewContext,
@@ -69,7 +70,7 @@ export const PreviewFetcher = React.memo(({
 
     // The server refuses values with a GraphQL error, and a network error says nothing about the values.
     const isRefused = Boolean(previewContext.unsavedValues && error?.graphQLErrors?.length);
-    // A render that loads has no answer yet, so the last answer stands until the server gives the next one.
+    // A render that loads has not ended, so the last report stands until the load ends.
     useEffect(() => {
         if (!loading) {
             onUnsavedValuesRefused?.(isRefused);

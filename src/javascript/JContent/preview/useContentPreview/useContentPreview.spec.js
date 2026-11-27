@@ -66,6 +66,15 @@ describe('useContentPreview', () => {
         expect(options.context.headers['X-Jahia-Unsaved-Values']).toMatch(/^preview-\d+$/);
     });
 
+    it('sends the queries of two fetchers in two batches', () => {
+        const unsavedValues = {node: 'node-uuid', properties: []};
+        callHook(useContentPreview, {...args, unsavedValues});
+        const first = useQuery.mock.calls.at(-1)[1].context.headers['X-Jahia-Unsaved-Values'];
+        callHook(useContentPreview, {...args, unsavedValues});
+        const second = useQuery.mock.calls.at(-1)[1].context.headers['X-Jahia-Unsaved-Values'];
+        expect(second).not.toBe(first);
+    });
+
     it('gives each caller a header value of its own, which stays at each render', () => {
         const first = callHook(useUnsavedValuesContext, 'support');
         const second = callHook(useUnsavedValuesContext, 'support');

@@ -64,6 +64,7 @@ describe('CE Preview', () => {
             }
         };
         useSidePanelContext.mockReturnValue(editorContext);
+        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
     });
 
     it('renders SharedPreview', () => {
@@ -97,7 +98,6 @@ describe('CE Preview', () => {
         const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
         expect(cmp.find('Preview').prop('previewContext').unsavedValues).toBe(unsavedValues);
         expect(cmp.find('Preview').prop('fallbackPreviewContext').unsavedValues).toBe(unsavedValues);
-        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
     });
 
     it('keeps the same preview context while the form renders with the same values', () => {
@@ -107,7 +107,12 @@ describe('CE Preview', () => {
         const first = cmp.find('Preview').prop('previewContext');
         cmp.setProps({});
         expect(cmp.find('Preview').prop('previewContext')).toBe(first);
-        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
+
+        const retyped = {node: 'test-uuid', properties: [{name: 'text', value: 'typed again', language: 'fr'}]};
+        useUnsavedValues.mockReturnValue({isSupported: true, unsavedValues: retyped});
+        cmp.setProps({});
+        expect(cmp.find('Preview').prop('previewContext')).not.toBe(first);
+        expect(cmp.find('Preview').prop('previewContext').unsavedValues).toBe(retyped);
     });
 
     it('shows the update-on-save badge for a change that the preview cannot show', () => {
@@ -133,7 +138,6 @@ describe('CE Preview', () => {
         cmp.setProps({});
         // No badge without unsaved values.
         expect(renderProp(cmp.find('Preview').prop('header')).find('UpdateOnSaveBadge').exists()).toBe(false);
-        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
     });
 
     it('shows no-preview badge in header for folder nodes', () => {

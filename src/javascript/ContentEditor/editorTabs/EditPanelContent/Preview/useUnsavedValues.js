@@ -61,6 +61,13 @@ export const useUnsavedValues = () => {
     const [state, setState] = useState(NO_UNSAVED_VALUES);
 
     useEffect(() => {
+        // An older server refuses the probe with a GraphQL error, so only another failure needs a trace.
+        if (error && !error.graphQLErrors?.length) {
+            console.error('The preview could not ask the server about unsaved values', error);
+        }
+    }, [error]);
+
+    useEffect(() => {
         if (!isSupported || !dirty) {
             setState(NO_UNSAVED_VALUES);
             return undefined;

@@ -45,18 +45,20 @@ const renderSequence = (hasUnsavedValues = true) => {
     return {
         cmp,
         onUnsavedValuesRefused,
-        next: nextResult => {
+        next: (nextResult, contextChange = {}) => {
             result = {refetch: jest.fn(), ...nextResult};
-            cmp.setProps({previewContext: contextOf()});
+            cmp.setProps({previewContext: {...contextOf(), ...contextChange}});
             cmp.update();
         }
     };
 };
 
 const output = cmp => cmp.find('[data-testid="viewers"]').prop('data-output');
-const refused = {loading: false, error: new Error('refused'), data: {jcr: null}};
+// The server refuses unsaved values with a GraphQL error, which Apollo puts in graphQLErrors.
+const refusal = message => Object.assign(new Error(message), {graphQLErrors: [{message}]});
+const refused = {loading: false, error: refusal('refused'), data: {jcr: null}};
 // A render error under errorPolicy 'all' keeps the node with no render, so only the error keeps it out of the kept render.
-const refusedRender = {loading: false, error: new Error('render failed'), data: {jcr: {nodeByPath: {renderedContent: null}}}};
+const refusedRender = {loading: false, error: refusal('render failed'), data: {jcr: {nodeByPath: {renderedContent: null}}}};
 const other = {data: {jcr: {nodeByPath: {renderedContent: {output: '<p>other</p>'}}}}, loading: false};
 
 describe('PreviewFetcher', () => {
@@ -67,9 +69,11 @@ describe('PreviewFetcher', () => {
         expect(output(cmp)).toBe('<p>form</p>');
     });
 
-    it('keeps the last render with no error through two refusals in a row', () => {
+    it('keeps the last render with no error through two refusals in a row, and logs each refusal', () => {
+        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
         const {cmp, next, onUnsavedValuesRefused} = renderSequence();
         next(refused);
+        expect(log).toHaveBeenCalledWith('Error while fetching preview', refused.error);
         expect(cmp.find('[data-testid="no-view"]').exists()).toBe(false);
         expect(output(cmp)).toBe('<p>form</p>');
         expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
@@ -80,6 +84,29 @@ describe('PreviewFetcher', () => {
         expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(true);
         next(refusedRender);
         expect(output(cmp)).toBe('<p>form</p>');
+        log.mockRestore();
+    });
+
+    it('shows no view for a network error, which is no refusal of the values, and logs it', () => {
+        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const {cmp, next, onUnsavedValuesRefused} = renderSequence();
+        const networkError = Object.assign(new Error('Failed to fetch'), {graphQLErrors: [], networkError: new Error('offline')});
+        next({loading: false, error: networkError, data: undefined});
+        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
+        expect(onUnsavedValuesRefused).toHaveBeenLastCalledWith(false);
+        expect(log).toHaveBeenCalledWith('Error while fetching preview', networkError);
+        log.mockRestore();
+    });
+
+    it('keeps no render of another language, which the editor switched to', () => {
+        const log = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const {cmp, next} = renderSequence();
+        next({loading: true}, {language: 'fr'});
+        expect(cmp.find('[data-testid="loader"]').exists()).toBe(true);
+        next(refused, {language: 'fr'});
+        expect(cmp.find('[data-testid="no-view"]').exists()).toBe(true);
+        expect(cmp.find('[data-testid="viewers"]').exists()).toBe(false);
+        log.mockRestore();
     });
 
     it('shows the next render with no error, and reports that the server accepts the values again', () => {

@@ -5,6 +5,7 @@ import {useFormikContext} from 'formik';
 import {useQuery} from '@apollo/client';
 import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {readUnsavedValues, useUnsavedValues} from './useUnsavedValues';
+import {useUnsavedValuesContext} from '~/JContent/preview/useContentPreview';
 
 jest.mock('formik', () => ({useFormikContext: jest.fn()}));
 jest.mock('@apollo/client', () => ({useQuery: jest.fn()}));
@@ -13,11 +14,16 @@ jest.mock('~/ContentEditor/utils', () => ({
     getChildrenOrder: jest.fn(),
     encodeSystemName: jest.requireActual('~/ContentEditor/utils/systemName.utils').encodeSystemName
 }));
-jest.mock('~/JContent/preview/useContentPreview', () => ({UNSAVED_VALUES_SUPPORT_CONTEXT: {headers: {'X-Jahia-Unsaved-Values': 'support'}}}));
+jest.mock('~/JContent/preview/useContentPreview', () => ({
+    useUnsavedValuesContext: jest.fn(kind => ({headers: {'X-Jahia-Unsaved-Values': kind}}))
+}));
 const mockNodeData = {uuid: 'node-uuid', name: 'a%5Bb%5D', primaryNodeType: {name: 'jnt:text'}, properties: [{name: 'jcr:title'}]};
+// The editor keeps these objects between renders, so only the state of the form restarts the delay.
+const mockI18nContext = {};
+const mockSections = [];
 jest.mock('~/ContentEditor/contexts', () => ({
-    useContentEditorContext: () => ({nodeData: mockNodeData, lang: 'en', i18nContext: {}}),
-    useContentEditorSectionContext: () => ({sections: []})
+    useContentEditorContext: () => ({nodeData: mockNodeData, lang: 'en', i18nContext: mockI18nContext}),
+    useContentEditorSectionContext: () => ({sections: mockSections})
 }));
 
 const text = {name: 'text', type: 'STRING', value: 'typed', language: 'en'};
@@ -153,6 +159,7 @@ describe('useUnsavedValues', () => {
         mount(<Probe/>);
         const options = useQuery.mock.calls.at(-1)[1];
         expect(options.variables).toEqual({node: 'node-uuid'});
+        expect(useUnsavedValuesContext).toHaveBeenCalledWith('support');
         expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'support'});
     });
 

@@ -21,8 +21,9 @@ import {useContentPreview} from './useContentPreview';
  * preview does not wait for that render.
  *
  * When previewContext.unsavedValues is set, the fetch renders the unsaved values of a form, outside
- * the Apollo cache. While a new render loads, or when the server refuses the values, the last render
- * that the server answered with no error stays on screen, and onUnsavedValuesRefused reports the refusal.
+ * the Apollo cache. While a new render loads, or when the server refuses the values with a GraphQL error,
+ * the last render with no error of the same path, language and view stays on screen, and
+ * onUnsavedValuesRefused reports the refusal. A network error shows no view, as without unsaved values.
  *
  * Props:
  *   previewContext     — built by buildCEPreviewContexts or buildPreviewContextsFromNode
@@ -58,19 +59,28 @@ export const PreviewFetcher = React.memo(({
         skip: !hasCssSource
     });
 
-    // Apollo keeps the data of a refused result as previousData, so the last render with no error is kept here.
+    // Apollo keeps the data of a refused result as previousData, so the last render with no error is kept here, with the
+    // context that it renders: a language switch keeps the form, and must not keep the page of the other language.
+    const renderKey = [previewContext.path, previewContext.language, previewContext.view, previewContext.contextConfiguration].join('|');
     const lastRender = useRef(null);
     if (!loading && !error && data?.jcr?.nodeByPath) {
-        lastRender.current = data;
+        lastRender.current = {key: renderKey, data};
     }
 
+    // The server refuses values with a GraphQL error, and a network error says nothing about the values.
+    const isRefused = Boolean(previewContext.unsavedValues && error?.graphQLErrors?.length);
     // A render that loads has no answer yet, so the last answer stands until the server gives the next one.
-    const isRefused = Boolean(previewContext.unsavedValues && error);
     useEffect(() => {
         if (!loading) {
             onUnsavedValuesRefused?.(isRefused);
         }
     }, [loading, isRefused, onUnsavedValuesRefused]);
+
+    useEffect(() => {
+        if (error) {
+            console.error('Error while fetching preview', error);
+        }
+    }, [error]);
 
     useEffect(() => {
         onRefetchReady?.(refetch);
@@ -82,15 +92,13 @@ export const PreviewFetcher = React.memo(({
     // A content with no page renders itself through the content-template wrapper for its CSS. That render is as slow as
     // the preview and no other item shares it, so the preview shows first and takes the stylesheets when they arrive.
     const isCssSourceShared = !previewContext.cssSourceView;
-    // While the render of new unsaved values loads, or when the server refuses them, such as a half-typed number, the
-    // last render stays on screen.
-    const keptData = previewContext.unsavedValues && (loading || error) ? lastRender.current : null;
+    const keptData = previewContext.unsavedValues && (loading || isRefused) && lastRender.current?.key === renderKey ?
+        lastRender.current.data : null;
     if ((loading && !keptData) || (hasCssSource && isCssSourceShared && cssLoading)) {
         return <LoaderOverlay/>;
     }
 
     if (error && !keptData) {
-        console.error('Error while fetching preview', error);
         return <NoView/>;
     }
 

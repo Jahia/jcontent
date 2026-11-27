@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Badge} from '@jahia/design-system-kit';
 import {useSidePanelContext} from '~/JContent/SidePanel';
@@ -26,23 +26,26 @@ const usePreviewContexts = (nodeData, language, mode) => {
     const pageComposerCurrentPage = useSelector(state => state.pagecomposer?.currentPage);
     const pageComposerActive = useSelector(state => state.pagecomposer?.active);
 
-    let closestPage = null;
-    let requestParameters = [];
+    // The form renders this component at each keystroke, and the same contexts keep the memo of the preview fetcher.
+    return useMemo(() => {
+        let closestPage = null;
+        let requestParameters = [];
 
-    if (pageComposerActive && pageComposerCurrentPage && !nodeData.isPage) {
-        closestPage = {
-            path: decodeURIComponent(pageComposerCurrentPage.path),
-            view: pageComposerCurrentPage.template
-        };
-        requestParameters = parseQueryString(pageComposerCurrentPage.queryString);
-    } else if (mode === 'pages' && !nodeData.isPage) {
-        const pageAncestor = nodeData.pageAncestors?.at(-1);
-        if (pageAncestor) {
-            closestPage = {path: pageAncestor.path};
+        if (pageComposerActive && pageComposerCurrentPage && !nodeData.isPage) {
+            closestPage = {
+                path: decodeURIComponent(pageComposerCurrentPage.path),
+                view: pageComposerCurrentPage.template
+            };
+            requestParameters = parseQueryString(pageComposerCurrentPage.queryString);
+        } else if (mode === 'pages' && !nodeData.isPage) {
+            const pageAncestor = nodeData.pageAncestors?.at(-1);
+            if (pageAncestor) {
+                closestPage = {path: pageAncestor.path};
+            }
         }
-    }
 
-    return buildPreviewContexts(nodeData, language, {closestPage, isCEPreview: true, requestParameters});
+        return buildPreviewContexts(nodeData, language, {closestPage, isCEPreview: true, requestParameters});
+    }, [nodeData, language, mode, pageComposerActive, pageComposerCurrentPage]);
 };
 
 export const CEPreview = () => {
@@ -54,12 +57,10 @@ export const CEPreview = () => {
     const {loading: emptyListLoading, component: emptyListComponent} = useEmptyListComponent(nodeData, mode);
     const {isSupported: isUnsavedValuesSupported, unsavedValues, isPartial} = useUnsavedValues();
     const [isRefused, setRefused] = useState(false);
-    // The badge tells that the preview waits for the save: on a server without unsaved values, for a change that the
-    // preview cannot show, and while the server refuses the values of the form.
     const showsUpdateOnSave = !isUnsavedValuesSupported || isPartial || (isRefused && Boolean(unsavedValues));
     // The preview shows the values that the editor typed, on the node of the form only.
-    const previewContext = unsavedValues ? {...primary, unsavedValues} : primary;
-    const fallbackPreviewContext = unsavedValues && fallback ? {...fallback, unsavedValues} : fallback;
+    const previewContext = useMemo(() => (unsavedValues ? {...primary, unsavedValues} : primary), [primary, unsavedValues]);
+    const fallbackPreviewContext = useMemo(() => (unsavedValues && fallback ? {...fallback, unsavedValues} : fallback), [fallback, unsavedValues]);
 
     const onRefetchReady = useCallback(refetch => {
         setPreviewRefetcher({

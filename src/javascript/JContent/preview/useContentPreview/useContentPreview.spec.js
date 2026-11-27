@@ -1,4 +1,6 @@
-import {useContentPreview, UNSAVED_VALUES_SUPPORT_CONTEXT} from './useContentPreview';
+import React from 'react';
+import {mount} from 'enzyme';
+import {useContentPreview, useUnsavedValuesContext} from './useContentPreview';
 import {useQuery} from '@apollo/client';
 import {CONTENT_PREVIEW_QUERY, CONTENT_PREVIEW_UNSAVED_VALUES_QUERY} from './useContentPreview.gql-queries';
 
@@ -9,6 +11,18 @@ jest.mock('@apollo/client', () => ({
         error: null
     }))
 }));
+
+/** The result of the hook, called by a component as React calls a hook. */
+const callHook = (hook, hookArgs) => {
+    let result;
+    const Probe = () => {
+        result = hook(hookArgs);
+        return null;
+    };
+
+    mount(React.createElement(Probe));
+    return result;
+};
 
 describe('useContentPreview', () => {
     let args;
@@ -25,16 +39,16 @@ describe('useContentPreview', () => {
     });
 
     it('should trigger a graphql request', () => {
-        useContentPreview(args);
+        callHook(useContentPreview, args);
         expect(useQuery).toHaveBeenCalled();
     });
 
     it('should return empty object when return empty data', () => {
-        expect(useContentPreview(args).data).toEqual({});
+        expect(callHook(useContentPreview, args).data).toEqual({});
     });
 
     it('reads the stored node without unsaved values', () => {
-        useContentPreview({...args, fetchPolicy: 'network-only'});
+        callHook(useContentPreview, {...args, fetchPolicy: 'network-only'});
         const [query, options] = useQuery.mock.calls.at(-1);
         expect(query).toBe(CONTENT_PREVIEW_QUERY);
         expect(options.variables.unsavedValues).toBeUndefined();
@@ -44,13 +58,29 @@ describe('useContentPreview', () => {
 
     it('sends unsaved values in a request of their own, outside the cache', () => {
         const unsavedValues = {node: 'node-uuid', properties: [{name: 'text', value: 'typed', language: 'fr'}]};
-        useContentPreview({...args, fetchPolicy: 'network-only', unsavedValues});
+        callHook(useContentPreview, {...args, fetchPolicy: 'network-only', unsavedValues});
         const [query, options] = useQuery.mock.calls.at(-1);
         expect(query).toBe(CONTENT_PREVIEW_UNSAVED_VALUES_QUERY);
         expect(options.variables.unsavedValues).toBe(unsavedValues);
         expect(options.fetchPolicy).toBe('no-cache');
-        expect(options.context.headers).toEqual({'X-Jahia-Unsaved-Values': 'preview'});
-        // The support query travels in a batch of its own too.
-        expect(UNSAVED_VALUES_SUPPORT_CONTEXT.headers).toEqual({'X-Jahia-Unsaved-Values': 'support'});
+        expect(options.context.headers['X-Jahia-Unsaved-Values']).toMatch(/^preview-\d+$/);
+    });
+
+    it('gives each caller a header value of its own, which stays at each render', () => {
+        const first = callHook(useUnsavedValuesContext, 'support');
+        const second = callHook(useUnsavedValuesContext, 'support');
+        expect(first.headers['X-Jahia-Unsaved-Values']).toMatch(/^support-\d+$/);
+        expect(second.headers['X-Jahia-Unsaved-Values']).not.toBe(first.headers['X-Jahia-Unsaved-Values']);
+
+        const contexts = [];
+        const Probe = () => {
+            contexts.push(useUnsavedValuesContext('preview'));
+            return null;
+        };
+
+        const cmp = mount(React.createElement(Probe));
+        cmp.setProps({});
+        expect(contexts).toHaveLength(2);
+        expect(contexts[1]).toBe(contexts[0]);
     });
 });

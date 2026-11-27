@@ -45,6 +45,7 @@ jest.mock('~/JContent/preview/Preview', () => ({
 
 import {CEPreview} from './CEPreview';
 import {useUnsavedValues} from './useUnsavedValues';
+import {buildPreviewContexts} from '~/JContent/preview/previewContext.utils';
 import {act} from 'react-dom/test-utils';
 
 // Helper: shallow-render a React element returned as a prop
@@ -84,6 +85,29 @@ describe('CE Preview', () => {
         expect(cmp.find('Preview').prop('previewContext').unsavedValues).toBe(unsavedValues);
         const header = renderProp(cmp.find('Preview').prop('header'));
         expect(header.find('UpdateOnSaveBadge').exists()).toBe(false);
+    });
+
+    it('sends the unsaved values to the fallback render of a content on a page too', () => {
+        const unsavedValues = {node: 'test-uuid', properties: [{name: 'text', value: 'typed', language: 'fr'}]};
+        buildPreviewContexts.mockReturnValueOnce({
+            primary: {workspace: 'edit', path: '/site/digitall/page', contextConfiguration: 'page', requestAttributes: []},
+            fallback: {workspace: 'edit', path: '/site/digitall', contextConfiguration: 'module', requestAttributes: []}
+        });
+        useUnsavedValues.mockReturnValue({isSupported: true, unsavedValues});
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        expect(cmp.find('Preview').prop('previewContext').unsavedValues).toBe(unsavedValues);
+        expect(cmp.find('Preview').prop('fallbackPreviewContext').unsavedValues).toBe(unsavedValues);
+        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
+    });
+
+    it('keeps the same preview context while the form renders with the same values', () => {
+        const unsavedValues = {node: 'test-uuid', properties: [{name: 'text', value: 'typed', language: 'fr'}]};
+        useUnsavedValues.mockReturnValue({isSupported: true, unsavedValues});
+        const cmp = shallowWithTheme(<CEPreview/>, {}, dsGenericTheme);
+        const first = cmp.find('Preview').prop('previewContext');
+        cmp.setProps({});
+        expect(cmp.find('Preview').prop('previewContext')).toBe(first);
+        useUnsavedValues.mockReturnValue({isSupported: false, unsavedValues: null});
     });
 
     it('shows the update-on-save badge for a change that the preview cannot show', () => {

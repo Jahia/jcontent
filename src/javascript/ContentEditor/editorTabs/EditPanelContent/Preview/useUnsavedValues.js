@@ -6,7 +6,7 @@ import {useContentEditorContext, useContentEditorSectionContext} from '~/Content
 import {getChildrenOrder, getDataToMutate} from '~/ContentEditor/utils';
 import {adaptUpdateRequest} from '~/ContentEditor/ContentEditor/updateNode/adaptUpdateRequest';
 import {Constants} from '~/ContentEditor/ContentEditor.constants';
-import {UNSAVED_VALUES_SUPPORT_CONTEXT} from '~/JContent/preview/useContentPreview';
+import {useUnsavedValuesContext} from '~/JContent/preview/useContentPreview';
 import {UnsavedValuesSupportQuery} from './useUnsavedValues.gql-queries';
 
 const DEBOUNCE_DELAY = 500;
@@ -50,11 +50,12 @@ export const useUnsavedValues = () => {
     const {dirty, values} = useFormikContext();
     const {nodeData, lang, i18nContext} = useContentEditorContext();
     const {sections} = useContentEditorSectionContext();
+    const supportContext = useUnsavedValuesContext('support');
     const {data, error} = useQuery(UnsavedValuesSupportQuery, {
         variables: {node: nodeData.uuid},
         fetchPolicy: 'cache-first',
         errorPolicy: 'all',
-        context: UNSAVED_VALUES_SUPPORT_CONTEXT
+        context: supportContext
     });
     const isSupported = Boolean(data?.jcr?.workspace) && !error;
     const [state, setState] = useState(NO_UNSAVED_VALUES);
